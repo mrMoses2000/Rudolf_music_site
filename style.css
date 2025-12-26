@@ -15,6 +15,14 @@
     -webkit-font-smoothing: antialiased;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+.font-serif {
+    font-family: 'DM Serif Text', serif;
+}
+
 body {
     font-family: var(--font-primary);
     background-color: var(--bg-color);
@@ -159,9 +167,9 @@ body {
 }
 
 .hero-sub {
-    font-size: 18px;
+    font-size: 28px;
     line-height: 1.5;
-    font-weight: 500;
+    font-weight: 700;
     color: #222;
     margin-bottom: 32px;
     opacity: 0;
@@ -170,11 +178,10 @@ body {
 }
 
 .hero-title {
-    font-family: var(--font-primary);
     font-size: 140px;
     /* Massive */
     font-weight: 700;
-    letter-spacing: -0.05em;
+    letter-spacing: 0em;
     /* Tight tracking for modern look */
     line-height: 0.9;
     margin-bottom: 56px;
@@ -201,10 +208,24 @@ body {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     transform: rotate(-3deg);
     transition: transform 0.4s ease;
+    animation: float 6s ease-in-out infinite;
 }
 
 .hero-icon-box:hover {
     transform: rotate(0deg) scale(1.05);
+    animation-play-state: paused;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: rotate(-3deg) translateY(0px);
+    }
+
+    50% {
+        transform: rotate(-3deg) translateY(-15px);
+    }
 }
 
 /* Button Green */
