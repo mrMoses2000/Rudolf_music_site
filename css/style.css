@@ -403,3 +403,79 @@ body {
         fadeInUp 0.8s ease-out forwards,
         softGlow 3s ease-in-out 1.5s infinite;
 }
+
+/* =============================================
+   AMBIENT BACKGROUND (Aurora Effect)
+   ============================================= */
+
+.ambient-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: #FFFFFF;
+    /* Fallback */
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: moveOrb 20s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, #00D64F 0%, rgba(0, 214, 79, 0) 70%);
+    animation-duration: 25s;
+}
+
+.orb-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, #ADD8E6 0%, rgba(173, 216, 230, 0) 70%);
+    /* Darker Light Blue */
+    animation-delay: -5s;
+    animation-duration: 28s;
+    opacity: 0.6;
+    /* Increased opacity */
+}
+
+.orb-3 {
+    top: 40%;
+    left: 40%;
+    width: 30vw;
+    height: 30vw;
+    background: radial-gradient(circle, rgba(0, 214, 79, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+    /* More visible green */
+    animation-delay: -10s;
+    animation-duration: 22s;
+    opacity: 0.5;
+}
+
+@keyframes moveOrb {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(5%, 10%) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-5%, 5%) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+}
