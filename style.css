@@ -23,7 +23,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #fafafa 100%);
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #fdfbf7 100%);
 }
 
 .container {
@@ -124,7 +124,25 @@ body {
 .btn-black:hover {
     background-color: #000;
     transform: translateY(-1px);
+    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-phone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition: background-color 0.2s;
+}
+
+.header-phone:hover {
+    background-color: #f3f4f6;
 }
 
 /* Hero */
@@ -213,6 +231,25 @@ body {
 .btn-green:active {
     transform: translate(4px, 5px);
     box-shadow: 0px 0px 0px #000;
+}
+
+/* Trust Strip */
+.trust-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 48px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 1.0s;
+}
+
+.trust-dot {
+    color: #ccc;
+    font-size: 10px;
 }
 
 .browser-icons {
