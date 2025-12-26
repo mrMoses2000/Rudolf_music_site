@@ -1,11 +1,21 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { content } from "../data/content";
 
 const Layout = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const location = useLocation();
+
+    // Close menu when route changes
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [location]);
+
     return (
         <div className="min-h-screen bg-midnight text-white font-inter selection:bg-gold selection:text-midnight">
             <header className="fixed top-0 w-full z-50 bg-[#050505]/80 backdrop-blur-md py-4 px-6 md:px-12 flex justify-between items-center border-b border-white/5">
-                <Link to="/" className="flex items-center gap-3 group">
+                <Link to="/" className="flex items-center gap-3 group relative z-50">
                     <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center font-outfit font-black text-midnight transition-transform group-hover:scale-110">
                         C
                     </div>
@@ -14,6 +24,7 @@ const Layout = () => {
                     </span>
                 </Link>
 
+                {/* Desktop Nav */}
                 <nav className="hidden md:flex gap-8 font-bold text-sm uppercase tracking-widest text-[#B3B3B3]">
                     <Link to="/" className="hover:text-white transition-colors">Start</Link>
                     <Link to="/about" className="hover:text-white transition-colors">Über uns</Link>
@@ -25,11 +36,61 @@ const Layout = () => {
                     <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="text-[#B3B3B3] font-bold text-sm hover:text-white transition-colors hidden lg:block">
                         {content.header.phone}
                     </a>
-                    <button className="bg-white text-black px-8 py-3 rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 transition-all active:scale-95 shadow-lg shadow-white/5">
+
+                    {/* Anmelden Button - Fixed */}
+                    <Link to="/contact" className="hidden sm:block bg-white text-black px-8 py-3 rounded-full font-black text-sm uppercase tracking-widest hover:scale-105 transition-all active:scale-95 shadow-lg shadow-white/5">
                         {content.header.cta}
+                    </Link>
+
+                    {/* Mobile Hamburger */}
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="md:hidden relative z-50 w-10 h-10 flex flex-col justify-center items-end gap-1.5 group"
+                    >
+                        <motion.span
+                            animate={isMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                            className="w-8 h-[2px] bg-white block origin-center"
+                        />
+                        <motion.span
+                            animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+                            className="w-6 h-[2px] bg-white block"
+                        />
+                        <motion.span
+                            animate={isMenuOpen ? { rotate: -45, y: -6, width: 32 } : { rotate: 0, y: 0, width: 16 }}
+                            className="w-4 h-[2px] bg-white block origin-center group-hover:w-8 transition-all"
+                        />
                     </button>
                 </div>
             </header>
+
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {isMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="fixed inset-0 z-40 bg-[#050505] pt-32 px-6 flex flex-col"
+                    >
+                        <nav className="flex flex-col gap-8 text-3xl font-black uppercase tracking-tighter">
+                            <Link to="/" className="text-white hover:text-gold">Start</Link>
+                            <Link to="/about" className="text-white hover:text-gold">Über uns</Link>
+                            <Link to="/offer" className="text-white hover:text-gold">Angebot</Link>
+                            <Link to="/contact" className="text-white hover:text-gold">Kontakt</Link>
+                            <Link to="/contact" className="text-gold mt-4">Probestunde buchen →</Link>
+                        </nav>
+
+                        <div className="mt-auto pb-12 space-y-8">
+                            <div className="space-y-2">
+                                <p className="text-[#B3B3B3] text-xs font-black uppercase tracking-widest">Kontakt</p>
+                                <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="block text-xl font-bold text-white">
+                                    {content.header.phone}
+                                </a>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <main className="">
                 <Outlet />
