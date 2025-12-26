@@ -472,8 +472,8 @@ body {
     /* More visible green */
     animation-delay: -10s;
     animation-duration: 22s;
-    opacity: 0.4;
-    /* Reduced    opacity: 0.4; /* Reduced from 0.5 */
+    opacity: 0.3;
+    /* Reduced from 0.4 */
 }
 
 /* =============================================
@@ -487,8 +487,8 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.05;
-    /* Subtle grain */
+    opacity: 0.09;
+    /* Increased for visibility */
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
