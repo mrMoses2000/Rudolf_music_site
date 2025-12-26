@@ -4,22 +4,37 @@
 
 :root {
   font-family: 'Inter', sans-serif;
-  background-color: #0F172A;
-  color: #F8FAFC;
+  background-color: #050505;
+  color: #FFFFFF;
 }
 
-h1, h2, h3, h4 {
+body {
+  background-color: #050505;
+  @apply antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
   font-family: 'Outfit', sans-serif;
+  @apply tracking-tight;
+}
+
+.spotify-card {
+  @apply bg-[#181818] p-4 rounded-lg transition-all duration-300 hover:bg-[#282828] cursor-pointer;
+}
+
+.spotify-gradient {
+  background: linear-gradient(180deg, rgba(29, 185, 84, 0.2) 0%, rgba(18, 18, 18, 0) 100%);
+}
+
+.gold-gradient {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(5, 5, 5, 0) 100%);
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-gold {
-  background: rgba(245, 158, 11, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }

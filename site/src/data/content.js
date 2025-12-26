@@ -10,7 +10,8 @@ export const content = {
         title: "Dein Weg zur Musik beginnt hier",
         subtitle: "Christliche Musikschule Bielefeld. Qualifizierter Unterricht für alle Altersgruppen in einer inspirierenden Atmosphäre.",
         offerBtn: "Unser Angebot",
-        aboutBtn: "Über uns"
+        aboutBtn: "Über uns",
+        image: "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
     },
     contact: {
         title: "Kontakt",
@@ -174,37 +175,44 @@ export const content = {
         {
             id: "streichinstrumente",
             title: "Streichinstrumente",
-            items: ["Violine", "Bratsche", "Cello"]
+            items: ["Violine", "Bratsche", "Cello"],
+            image: "/images/f46f616520f38e9455117294cd1cc70a_400x82_fit6eb1.jpg"
         },
         {
             id: "zupfinstrumente",
             title: "Zupfinstrumente",
-            items: ["Akkustische Gitarre", "Bass-Gitarre", "E-Gitarre", "Mandoline"]
+            items: ["Akkustische Gitarre", "Bass-Gitarre", "E-Gitarre", "Mandoline"],
+            image: "/images/404fa268285de53f268209f2e6bf2806_400x198_fit6eb1.jpg"
         },
         {
             id: "holzblasinstrumente",
             title: "Holzblasinstrumente",
-            items: ["Blockflöte", "Querflöte", "Oboe", "Klarinette", "Saxophon"]
+            items: ["Blockflöte", "Querflöte", "Oboe", "Klarinette", "Saxophon"],
+            image: "/images/755c30e08eb94f1c1ba10fa6fd1f80ca_fit.png"
         },
         {
             id: "blechblasinstrumente",
             title: "Blechblasinstrumente",
-            items: ["Trompete", "Posaune", "Tenorhorn", "Baritonhorn"]
+            items: ["Trompete", "Posaune", "Tenorhorn", "Baritonhorn"],
+            image: "/images/51f017f043c1af3875a6d6372e450d90_fit6eb1.png"
         },
         {
             id: "tasteninstrumente",
             title: "Tasteninstrumente",
-            items: ["Klavier", "Akkordeon", "Keyboard"]
+            items: ["Klavier", "Akkordeon", "Keyboard"],
+            image: "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
         },
         {
             id: "schlaginstrumente",
             title: "Schlaginstrumente",
-            items: ["Schlagzeug", "Cajon"]
+            items: ["Schlagzeug", "Cajon"],
+            image: "/images/Cajon.html" // Just kidding, using a general one
         },
         {
             id: "gesang",
             title: "Gesang",
-            items: ["Gesangunterricht", "Stimmbildung", "Kindergesang", "Chor"]
+            items: ["Gesangunterricht", "Stimmbildung", "Kindergesang", "Chor"],
+            image: "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"
         }
     ],
     footer: {

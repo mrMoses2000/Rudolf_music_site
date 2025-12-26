@@ -7,7 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        midnight: '#0F172A',
+        midnight: '#050505', // Deeper black
+        'spotify-black': '#121212',
+        'spotify-dark': '#181818',
+        'spotify-grey': '#282828',
+        'spotify-light': '#B3B3B3',
         gold: '#F59E0B',
         cloud: '#F8FAFC',
       },
