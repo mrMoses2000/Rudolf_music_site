@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ctrl - One wallet for all your crypto</title>
+    <title>Musikschule CMS Bielefeld</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,11 +35,40 @@
             <a href="#kontakt" class="nav-link">Kontakt</a>
         </nav>
 
-        <a href="tel:+495213367416" class="header-phone">
-            <span class="iconify" data-icon="ph:phone-bold"></span>
-            +49 (0) 521 3367416
-        </a>
+        <div class="nav-right">
+            <a href="tel:+495213367416" class="header-phone">
+                <span class="iconify" data-icon="ph:phone-bold"></span>
+                +49 (0) 521 3367416
+            </a>
+            <button class="menu-toggle" aria-label="Menu">
+                <span class="iconify" data-icon="ph:list-bold"></span>
+            </button>
+        </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span class="mobile-menu-title font-serif">Menü</span>
+            <button class="mobile-menu-close" aria-label="Close">
+                <span class="iconify" data-icon="ph:x-bold"></span>
+            </button>
+        </div>
+        <nav class="mobile-nav-links">
+            <a href="#uber-uns" class="mobile-link">Über uns</a>
+            <a href="#angebot" class="mobile-link">Angebot</a>
+            <a href="#jekits" class="mobile-link">JeKits</a>
+            <a href="#gebuehren" class="mobile-link">Gebühren</a>
+            <a href="#standorte" class="mobile-link">Standorte</a>
+            <a href="#kontakt" class="mobile-link">Kontakt</a>
+        </nav>
+        <div class="mobile-menu-footer">
+            <a href="tel:+495213367416" class="mobile-contact-btn">
+                <span class="iconify" data-icon="ph:phone-bold"></span>
+                Anrufen
+            </a>
+        </div>
+    </div>
 
     <main>
         <section class="hero container">

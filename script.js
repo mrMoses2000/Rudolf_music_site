@@ -18,16 +18,47 @@ const fadeInObserver = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all fade-in elements
+// Initialize everything on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Fade In Observations
     const fadeElements = document.querySelectorAll('.fade-in-element');
     fadeElements.forEach(element => {
         fadeInObserver.observe(element);
     });
 
-    // Carousel functionality
+    // Init components
     initCarousel();
+    initAccordion();
+    initMobileMenu();
 });
+
+// Mobile Menu
+function initMobileMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menuClose = document.querySelector('.mobile-menu-close');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    if (!menuToggle || !mobileMenu) return;
+
+    function openMenu() {
+        mobileMenu.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeMenu() {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    menuToggle.addEventListener('click', openMenu);
+    menuClose?.addEventListener('click', closeMenu);
+
+    // Close on link click
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+}
 
 // Gallery Carousel
 function initCarousel() {
@@ -92,5 +123,4 @@ function initAccordion() {
     });
 }
 
-// Initialize accordion on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', initAccordion);
+
