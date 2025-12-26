@@ -1588,22 +1588,26 @@ body::after {
    ============================================ */
 
 .locations-section {
-    padding: 120px 0;
+    padding: 80px 0 60px 0;
     position: relative;
 }
 
 .locations-header {
     text-align: center;
-    margin-bottom: 80px;
+    margin-bottom: 0;
+}
+
+.locations-header .about-text {
+    margin-bottom: 0 !important;
 }
 
 /* Location List - Clean Minimal Design */
 .location-list {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 25px auto 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
 }
 
 .location-item {
@@ -1611,25 +1615,21 @@ body::after {
     justify-content: space-between;
     align-items: center;
     padding: 24px;
-    background: #fff;
-    border: 2px solid #000;
+    background: transparent;
+    border: 2px solid transparent;
     border-radius: 16px;
     transition: all 0.2s ease;
 }
 
 .location-item:hover {
-    transform: translate(-3px, -3px);
-    box-shadow: 6px 6px 0px #000;
+    border-color: #000;
+    box-shadow: 4px 4px 0px #000;
 }
 
 /* Main location highlight */
-.location-item.location-main {
-    border-color: var(--accent-green);
-    background: linear-gradient(135deg, rgba(0, 209, 80, 0.05) 0%, #fff 100%);
-}
-
 .location-item.location-main:hover {
-    box-shadow: 6px 6px 0px var(--accent-green);
+    border-color: var(--accent-green);
+    box-shadow: 4px 4px 0px var(--accent-green);
 }
 
 .location-left {
@@ -1677,7 +1677,7 @@ body::after {
     justify-content: center;
     width: 48px;
     height: 48px;
-    background: var(--accent-green);
+    background: #fff;
     border: 2px solid #000;
     border-radius: 12px;
     color: #000;
@@ -1688,10 +1688,7 @@ body::after {
 }
 
 .location-btn:hover {
-    background: #000;
-    color: var(--accent-green);
-    transform: translate(1px, 1px);
-    box-shadow: none;
+    background: var(--accent-green);
 }
 
 /* Responsive */
