@@ -221,11 +221,22 @@ body {
     transition: all 0.2s ease;
     opacity: 0;
     animation: fadeInUp 0.8s ease-out forwards 0.8s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-green:hover {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0px #000;
+}
+
+.btn-green:hover .arrow-icon {
+    transform: translateX(4px);
+}
+
+.arrow-icon {
+    transition: transform 0.2s ease;
 }
 
 .btn-green:active {
