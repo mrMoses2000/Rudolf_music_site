@@ -68,5 +68,5 @@ function initCarousel() {
     // Auto-play (optional)
     setInterval(() => {
         showSlide(currentIndex + 1);
-    }, 5000);
+    }, 7000);
 }
