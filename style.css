@@ -527,60 +527,94 @@ body::after {
     margin: 0 auto 60px;
 }
 
-.about-values {
+/* Feature Cards (Detailed) */
+.about-values-detailed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
+    gap: 32px;
     margin-bottom: 80px;
 }
 
-.value-card {
-    background: #fff;
-    padding: 48px 32px;
+.feature-card {
+    background: rgba(255, 255, 255, 0.6);
+    /* Semi transparent */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 24px;
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    padding: 40px;
+    text-align: left;
+    transition: all 0.4s ease;
 }
 
-.value-card:hover {
+.feature-card:hover {
+    background: #fff;
+    border-color: #000;
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
-.value-icon {
-    width: 72px;
-    height: 72px;
-    background: var(--accent-green);
-    border-radius: 20px;
+.feature-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 0 auto 24px;
-    font-size: 32px;
-    color: #000;
-    box-shadow: 3px 4px 0px #000;
-    border: 2px solid #000;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
-.value-card:hover .value-icon {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 2px 0px #000;
-}
-
-.value-title {
-    font-size: 20px;
+.feature-number {
+    font-size: 14px;
     font-weight: 700;
-    color: #000;
-    margin-bottom: 8px;
+    color: var(--accent-green);
+    background: #000;
+    padding: 4px 10px;
+    border-radius: 99px;
 }
 
-.value-desc {
+.feature-title {
+    font-size: 20px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.feature-sub {
+    font-size: 16px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+.feature-body {
     font-size: 15px;
-    color: #666;
     line-height: 1.6;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.feature-list li .iconify {
+    color: var(--accent-green);
+    font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .about-values-detailed {
+        grid-template-columns: 1fr;
+    }
 }
 
 .about-quote {
@@ -665,6 +699,105 @@ body::after {
     }
 
     .quote-text {
-        font-size: 22px;
+        font-size: 28px;
+    }
+
+    .about-quote::before {
+        font-size: 140px;
+    }
+}
+
+/* ============================================
+   OFFER SECTION - ZERO BLOCK STYLE
+   ============================================ */
+
+.offer-section {
+    padding: 120px 0;
+    position: relative;
+}
+
+.offer-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.offer-title {
+    font-size: 56px;
+    font-weight: 400;
+    color: #000;
+    line-height: 1.2;
+}
+
+.offer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+}
+
+.offer-card {
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+    padding: 40px 32px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: default;
+    /* Glassmorphism subtle hint */
+    backdrop-filter: blur(5px);
+}
+
+.offer-card:hover {
+    border-color: #000;
+    transform: translateY(-8px);
+    background: #fff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.offer-icon {
+    width: 64px;
+    height: 64px;
+    background: transparent;
+    border-radius: 999px;
+    /* Circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 32px;
+    color: #000;
+    border: 1px solid #000;
+    transition: all 0.3s ease;
+}
+
+.offer-card:hover .offer-icon {
+    background: var(--accent-green);
+    border-color: #000;
+    transform: scale(1.1);
+}
+
+.offer-cat-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+.offer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Responsive for Offer */
+@media (max-width: 768px) {
+    .offer-title {
+        font-size: 36px;
+    }
+
+    .offer-grid {
+        grid-template-columns: 1fr;
     }
 }
