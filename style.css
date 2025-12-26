@@ -1101,18 +1101,6 @@ body::after {
     justify-content: center;
 }
 
-/* Background decorative number */
-.visual-bg-text {
-    position: absolute;
-    font-size: 280px;
-    font-family: 'DM Serif Text', serif;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.03);
-    z-index: 0;
-    user-select: none;
-    line-height: 1;
-}
-
 .visual-circle {
     display: none;
 }
@@ -1170,21 +1158,20 @@ body::after {
     animation: float 4s ease-in-out infinite 0.2s;
 }
 
-/* Badge label */
-.visual-badge {
+/* Subtle noise blob - organic shape */
+.visual-blob {
     position: absolute;
-    bottom: 60px;
-    right: 80px;
-    background: #0A1F16;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: 2px solid #000;
-    box-shadow: 3px 3px 0px #000;
+    width: 280px;
+    height: 220px;
+    background: rgba(0, 209, 80, 0.2);
+    /* Organic irregular shape */
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    z-index: 0;
+    /* Center behind the icon */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(35px);
 }
 
 .shape-1,
