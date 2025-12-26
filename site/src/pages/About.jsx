@@ -1,12 +1,13 @@
 
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { content } from "../data/content";
 
 const About = () => {
     return (
         <div className="bg-[#050505] min-h-screen">
             {/* About Hero */}
-            <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 overflow-hidden">
+            <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 overflow-hidden pt-32">
                 <div className="absolute inset-0 z-0">
                     <img
                         src="/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"

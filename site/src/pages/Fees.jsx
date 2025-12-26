@@ -7,7 +7,7 @@ const Fees = () => {
     return (
         <div className="bg-[#050505] min-h-screen">
             {/* Fees Hero */}
-            <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-white/5">
+            <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-white/5 pt-32">
                 <div className="absolute inset-0 z-0">
                     <img
                         src="/images/Jekitz-ts16957280966eb1.jpg"
