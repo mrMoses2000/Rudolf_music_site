@@ -527,93 +527,135 @@ body::after {
     margin: 0 auto 60px;
 }
 
-/* Feature Cards (Detailed) */
+/* Feature Cards (Zero Block "Air" Edition) */
 .about-values-detailed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-bottom: 80px;
+    gap: 64px;
+    /* Massive gap for "Air" */
+    margin-bottom: 120px;
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.6);
-    /* Semi transparent */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 24px;
-    padding: 40px;
+    background: transparent;
+    /* No background by default = AIR */
+    border: 1px solid transparent;
+    /* No border by default */
+    padding: 20px;
     text-align: left;
-    transition: all 0.4s ease;
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    /* Clean composition */
+    display: flex;
+    flex-direction: column;
 }
 
+/* Hover: The "Card" materializes */
 .feature-card:hover {
     background: #fff;
-    border-color: #000;
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+    /* Deep soft shadow */
+    transform: translateY(-10px) scale(1.02);
+    padding: 40px 30px;
+    /* Expands on hover */
+    margin: -20px -10px;
+    /* Compensate for padding increase to keep layout stable */
+    z-index: 10;
 }
 
 .feature-header {
     display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
+    flex-direction: column;
+    /* Stacked for vertical rhythm */
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 32px;
+    position: relative;
 }
 
+/* Number as Architectural Element */
 .feature-number {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 80px;
+    font-family: 'DM Serif Text', serif;
+    color: #e5e5e5;
+    line-height: 1;
+    position: absolute;
+    top: -40px;
+    right: 0;
+    transition: all 0.5s ease;
+    opacity: 0.5;
+}
+
+.feature-card:hover .feature-number {
     color: var(--accent-green);
-    background: #000;
-    padding: 4px 10px;
-    border-radius: 99px;
+    opacity: 0.2;
+    transform: translateX(10px);
 }
 
 .feature-title {
-    font-size: 20px;
+    font-size: 32px;
+    /* Larger title */
     margin: 0;
-    line-height: 1.2;
+    line-height: 1.1;
+    position: relative;
+    z-index: 2;
 }
 
 .feature-sub {
-    font-size: 16px;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-green);
+    margin-bottom: 24px;
 }
 
 .feature-body {
-    font-size: 15px;
-    line-height: 1.6;
-    color: #666;
-    margin-bottom: 24px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 32px;
+    flex-grow: 1;
 }
 
 .feature-list {
     list-style: none;
-    padding: 0;
+    padding: 24px 0 0 0;
     margin: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .feature-list li {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 8px;
+    gap: 12px;
+    font-size: 15px;
+    color: #222;
+    margin-bottom: 12px;
     font-weight: 500;
 }
 
 .feature-list li .iconify {
     color: var(--accent-green);
-    font-size: 18px;
+    font-size: 20px;
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .about-values-detailed {
         grid-template-columns: 1fr;
+        gap: 80px;
+    }
+
+    .feature-card {
+        padding: 0;
+    }
+
+    .feature-card:hover {
+        padding: 30px;
+        margin: -30px 0;
     }
 }
 
@@ -799,5 +841,196 @@ body::after {
 
     .offer-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   JEKITS SECTION
+   ============================================ */
+
+.jekits-section {
+    padding: 120px 0;
+    position: relative;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.jekits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.jekits-badge {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: linear-gradient(135deg, #FF0080 0%, #7928CA 100%);
+    /* NRW/Culture colors abstract */
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+
+.jekits-title {
+    font-size: 56px;
+    line-height: 1;
+    margin: 0 0 16px 0;
+    color: #000;
+}
+
+.jekits-sub {
+    font-size: 24px;
+    font-weight: 400;
+    color: #555;
+    margin: 0 0 32px 0;
+}
+
+.jekits-text {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 48px;
+    max-width: 500px;
+}
+
+.jekits-cards {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.jekits-card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.jekits-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.jekits-card.highlight {
+    border-color: var(--accent-green);
+    background: rgba(0, 209, 80, 0.03);
+}
+
+.jekits-year {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #888;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.jekits-card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #000;
+}
+
+.jekits-card p {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+}
+
+.jekits-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.text-link {
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+    transition: opacity 0.2s;
+}
+
+.text-link:hover {
+    opacity: 0.6;
+}
+
+/* Visual Abstract Side */
+.jekits-visual {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visual-circle {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    opacity: 0.5;
+}
+
+.visual-icon-box {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: #fff;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #000;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    animation: float 5s ease-in-out infinite;
+    z-index: 2;
+}
+
+.shape-1 {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    width: 60px;
+    height: 60px;
+    border: 4px solid var(--accent-green);
+    border-radius: 50%;
+    opacity: 0.2;
+}
+
+.shape-2 {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    width: 40px;
+    height: 40px;
+    background: #000;
+    border-radius: 10px;
+    transform: rotate(15deg);
+    opacity: 0.05;
+}
+
+@media (max-width: 900px) {
+    .jekits-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .jekits-visual {
+        display: none;
+    }
+
+    .jekits-cards {
+        flex-direction: column;
     }
 }
