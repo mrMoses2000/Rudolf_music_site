@@ -248,8 +248,26 @@ body {
 }
 
 .trust-dot {
-    color: #ccc;
+    color: var(--accent-green);
     font-size: 10px;
+    text-shadow: 0 0 8px rgba(0, 209, 80, 0.4);
+    animation: dotPulse 2s infinite ease-in-out;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+        text-shadow: 0 0 4px rgba(0, 209, 80, 0.2);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+        text-shadow: 0 0 12px rgba(0, 209, 80, 0.8);
+    }
 }
 
 .browser-icons {
