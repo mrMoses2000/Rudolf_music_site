@@ -1,0 +1,439 @@
+node_key,type,className,sourcePath,group,is_trigger,credentials,credentials_count
+Brandfetch,n8n-nodes-base.Brandfetch,Brandfetch,dist/nodes/Brandfetch/Brandfetch.node.js,Brandfetch,False,brandfetchApi,1
+actionNetwork,n8n-nodes-base.actionNetwork,ActionNetwork,dist/nodes/ActionNetwork/ActionNetwork.node.js,ActionNetwork,False,actionNetworkApi,1
+activeCampaign,n8n-nodes-base.activeCampaign,ActiveCampaign,dist/nodes/ActiveCampaign/ActiveCampaign.node.js,ActiveCampaign,False,activeCampaignApi,1
+activeCampaignTrigger,n8n-nodes-base.activeCampaignTrigger,ActiveCampaignTrigger,dist/nodes/ActiveCampaign/ActiveCampaignTrigger.node.js,ActiveCampaign,True,activeCampaignApi,1
+acuitySchedulingTrigger,n8n-nodes-base.acuitySchedulingTrigger,AcuitySchedulingTrigger,dist/nodes/AcuityScheduling/AcuitySchedulingTrigger.node.js,AcuityScheduling,True,"acuitySchedulingApi, acuitySchedulingOAuth2Api",2
+adalo,n8n-nodes-base.adalo,Adalo,dist/nodes/Adalo/Adalo.node.js,Adalo,False,adaloApi,1
+affinity,n8n-nodes-base.affinity,Affinity,dist/nodes/Affinity/Affinity.node.js,Affinity,False,affinityApi,1
+affinityTrigger,n8n-nodes-base.affinityTrigger,AffinityTrigger,dist/nodes/Affinity/AffinityTrigger.node.js,Affinity,True,affinityApi,1
+aggregate,n8n-nodes-base.aggregate,Aggregate,dist/nodes/Transform/Aggregate/Aggregate.node.js,Transform,False,,0
+agileCrm,n8n-nodes-base.agileCrm,AgileCrm,dist/nodes/AgileCrm/AgileCrm.node.js,AgileCrm,False,agileCrmApi,1
+aiTransform,n8n-nodes-base.aiTransform,AiTransform,dist/nodes/AiTransform/AiTransform.node.js,AiTransform,False,,0
+airtable,n8n-nodes-base.airtable,Airtable,dist/nodes/Airtable/Airtable.node.js,Airtable,False,"airtableApi, airtableOAuth2Api, airtableTokenApi",3
+airtableTrigger,n8n-nodes-base.airtableTrigger,AirtableTrigger,dist/nodes/Airtable/AirtableTrigger.node.js,Airtable,True,"airtableApi, airtableOAuth2Api, airtableTokenApi",3
+airtop,n8n-nodes-base.airtop,Airtop,dist/nodes/Airtop/Airtop.node.js,Airtop,False,airtopApi,1
+amqp,n8n-nodes-base.amqp,Amqp,dist/nodes/Amqp/Amqp.node.js,Amqp,False,amqp,1
+amqpTrigger,n8n-nodes-base.amqpTrigger,AmqpTrigger,dist/nodes/Amqp/AmqpTrigger.node.js,Amqp,True,amqp,1
+apiTemplateIo,n8n-nodes-base.apiTemplateIo,ApiTemplateIo,dist/nodes/ApiTemplateIo/ApiTemplateIo.node.js,ApiTemplateIo,False,apiTemplateIoApi,1
+asana,n8n-nodes-base.asana,Asana,dist/nodes/Asana/Asana.node.js,Asana,False,"asanaApi, asanaOAuth2Api",2
+asanaTrigger,n8n-nodes-base.asanaTrigger,AsanaTrigger,dist/nodes/Asana/AsanaTrigger.node.js,Asana,True,"asanaApi, asanaOAuth2Api",2
+automizy,n8n-nodes-base.automizy,Automizy,dist/nodes/Automizy/Automizy.node.js,Automizy,False,automizyApi,1
+autopilot,n8n-nodes-base.autopilot,Autopilot,dist/nodes/Autopilot/Autopilot.node.js,Autopilot,False,autopilotApi,1
+autopilotTrigger,n8n-nodes-base.autopilotTrigger,AutopilotTrigger,dist/nodes/Autopilot/AutopilotTrigger.node.js,Autopilot,True,autopilotApi,1
+awsCertificateManager,n8n-nodes-base.awsCertificateManager,AwsCertificateManager,dist/nodes/Aws/CertificateManager/AwsCertificateManager.node.js,Aws,False,aws,1
+awsCognito,n8n-nodes-base.awsCognito,AwsCognito,dist/nodes/Aws/Cognito/AwsCognito.node.js,Aws,False,aws,1
+awsComprehend,n8n-nodes-base.awsComprehend,AwsComprehend,dist/nodes/Aws/Comprehend/AwsComprehend.node.js,Aws,False,aws,1
+awsDynamoDb,n8n-nodes-base.awsDynamoDb,AwsDynamoDB,dist/nodes/Aws/DynamoDB/AwsDynamoDB.node.js,Aws,False,aws,1
+awsElb,n8n-nodes-base.awsElb,AwsElb,dist/nodes/Aws/ELB/AwsElb.node.js,Aws,False,aws,1
+awsIam,n8n-nodes-base.awsIam,AwsIam,dist/nodes/Aws/IAM/AwsIam.node.js,Aws,False,aws,1
+awsLambda,n8n-nodes-base.awsLambda,AwsLambda,dist/nodes/Aws/AwsLambda.node.js,Aws,False,aws,1
+awsRekognition,n8n-nodes-base.awsRekognition,AwsRekognition,dist/nodes/Aws/Rekognition/AwsRekognition.node.js,Aws,False,aws,1
+awsS3,n8n-nodes-base.awsS3,AwsS3,dist/nodes/Aws/S3/AwsS3.node.js,Aws,False,aws,1
+awsSes,n8n-nodes-base.awsSes,AwsSes,dist/nodes/Aws/SES/AwsSes.node.js,Aws,False,aws,1
+awsSns,n8n-nodes-base.awsSns,AwsSns,dist/nodes/Aws/AwsSns.node.js,Aws,False,aws,1
+awsSnsTrigger,n8n-nodes-base.awsSnsTrigger,AwsSnsTrigger,dist/nodes/Aws/AwsSnsTrigger.node.js,Aws,True,aws,1
+awsSqs,n8n-nodes-base.awsSqs,AwsSqs,dist/nodes/Aws/SQS/AwsSqs.node.js,Aws,False,aws,1
+awsTextract,n8n-nodes-base.awsTextract,AwsTextract,dist/nodes/Aws/Textract/AwsTextract.node.js,Aws,False,aws,1
+awsTranscribe,n8n-nodes-base.awsTranscribe,AwsTranscribe,dist/nodes/Aws/Transcribe/AwsTranscribe.node.js,Aws,False,aws,1
+azureCosmosDb,n8n-nodes-base.azureCosmosDb,AzureCosmosDb,dist/nodes/Microsoft/AzureCosmosDb/AzureCosmosDb.node.js,Microsoft,False,microsoftAzureCosmosDbSharedKeyApi,1
+azureStorage,n8n-nodes-base.azureStorage,AzureStorage,dist/nodes/Microsoft/Storage/AzureStorage.node.js,Microsoft,False,"azureStorageOAuth2Api, azureStorageSharedKeyApi",2
+bambooHr,n8n-nodes-base.bambooHr,BambooHr,dist/nodes/BambooHr/BambooHr.node.js,BambooHr,False,bambooHrApi,1
+bannerbear,n8n-nodes-base.bannerbear,Bannerbear,dist/nodes/Bannerbear/Bannerbear.node.js,Bannerbear,False,bannerbearApi,1
+baserow,n8n-nodes-base.baserow,Baserow,dist/nodes/Baserow/Baserow.node.js,Baserow,False,baserowApi,1
+beeminder,n8n-nodes-base.beeminder,Beeminder,dist/nodes/Beeminder/Beeminder.node.js,Beeminder,False,"beeminderApi, beeminderOAuth2Api",2
+bitbucketTrigger,n8n-nodes-base.bitbucketTrigger,BitbucketTrigger,dist/nodes/Bitbucket/BitbucketTrigger.node.js,Bitbucket,True,bitbucketApi,1
+bitly,n8n-nodes-base.bitly,Bitly,dist/nodes/Bitly/Bitly.node.js,Bitly,False,"bitlyApi, bitlyOAuth2Api",2
+bitwarden,n8n-nodes-base.bitwarden,Bitwarden,dist/nodes/Bitwarden/Bitwarden.node.js,Bitwarden,False,bitwardenApi,1
+box,n8n-nodes-base.box,Box,dist/nodes/Box/Box.node.js,Box,False,boxOAuth2Api,1
+boxTrigger,n8n-nodes-base.boxTrigger,BoxTrigger,dist/nodes/Box/BoxTrigger.node.js,Box,True,boxOAuth2Api,1
+bubble,n8n-nodes-base.bubble,Bubble,dist/nodes/Bubble/Bubble.node.js,Bubble,False,bubbleApi,1
+calTrigger,n8n-nodes-base.calTrigger,CalTrigger,dist/nodes/Cal/CalTrigger.node.js,Cal,True,calApi,1
+calendlyTrigger,n8n-nodes-base.calendlyTrigger,CalendlyTrigger,dist/nodes/Calendly/CalendlyTrigger.node.js,Calendly,True,"calendlyApi, calendlyOAuth2Api",2
+chargebee,n8n-nodes-base.chargebee,Chargebee,dist/nodes/Chargebee/Chargebee.node.js,Chargebee,False,chargebeeApi,1
+chargebeeTrigger,n8n-nodes-base.chargebeeTrigger,ChargebeeTrigger,dist/nodes/Chargebee/ChargebeeTrigger.node.js,Chargebee,True,,0
+circleCi,n8n-nodes-base.circleCi,CircleCi,dist/nodes/CircleCi/CircleCi.node.js,CircleCi,False,circleCiApi,1
+ciscoWebex,n8n-nodes-base.ciscoWebex,CiscoWebex,dist/nodes/Cisco/Webex/CiscoWebex.node.js,Cisco,False,ciscoWebexOAuth2Api,1
+ciscoWebexTrigger,n8n-nodes-base.ciscoWebexTrigger,CiscoWebexTrigger,dist/nodes/Cisco/Webex/CiscoWebexTrigger.node.js,Cisco,True,ciscoWebexOAuth2Api,1
+citrixAdc,n8n-nodes-base.citrixAdc,NetscalerAdc,dist/nodes/Netscaler/ADC/NetscalerAdc.node.js,Netscaler,False,citrixAdcApi,1
+clearbit,n8n-nodes-base.clearbit,Clearbit,dist/nodes/Clearbit/Clearbit.node.js,Clearbit,False,clearbitApi,1
+clickUp,n8n-nodes-base.clickUp,ClickUp,dist/nodes/ClickUp/ClickUp.node.js,ClickUp,False,"clickUpApi, clickUpOAuth2Api",2
+clickUpTrigger,n8n-nodes-base.clickUpTrigger,ClickUpTrigger,dist/nodes/ClickUp/ClickUpTrigger.node.js,ClickUp,True,"clickUpApi, clickUpOAuth2Api",2
+clockify,n8n-nodes-base.clockify,Clockify,dist/nodes/Clockify/Clockify.node.js,Clockify,False,clockifyApi,1
+clockifyTrigger,n8n-nodes-base.clockifyTrigger,ClockifyTrigger,dist/nodes/Clockify/ClockifyTrigger.node.js,Clockify,True,clockifyApi,1
+cloudflare,n8n-nodes-base.cloudflare,Cloudflare,dist/nodes/Cloudflare/Cloudflare.node.js,Cloudflare,False,cloudflareApi,1
+cockpit,n8n-nodes-base.cockpit,Cockpit,dist/nodes/Cockpit/Cockpit.node.js,Cockpit,False,cockpitApi,1
+coda,n8n-nodes-base.coda,Coda,dist/nodes/Coda/Coda.node.js,Coda,False,codaApi,1
+code,n8n-nodes-base.code,Code,dist/nodes/Code/Code.node.js,Code,False,,0
+coinGecko,n8n-nodes-base.coinGecko,CoinGecko,dist/nodes/CoinGecko/CoinGecko.node.js,CoinGecko,False,,0
+compareDatasets,n8n-nodes-base.compareDatasets,CompareDatasets,dist/nodes/CompareDatasets/CompareDatasets.node.js,CompareDatasets,False,,0
+compression,n8n-nodes-base.compression,Compression,dist/nodes/Compression/Compression.node.js,Compression,False,,0
+contentful,n8n-nodes-base.contentful,Contentful,dist/nodes/Contentful/Contentful.node.js,Contentful,False,contentfulApi,1
+convertKit,n8n-nodes-base.convertKit,ConvertKit,dist/nodes/ConvertKit/ConvertKit.node.js,ConvertKit,False,convertKitApi,1
+convertKitTrigger,n8n-nodes-base.convertKitTrigger,ConvertKitTrigger,dist/nodes/ConvertKit/ConvertKitTrigger.node.js,ConvertKit,True,convertKitApi,1
+convertToFile,n8n-nodes-base.convertToFile,ConvertToFile,dist/nodes/Files/ConvertToFile/ConvertToFile.node.js,Files,False,,0
+copper,n8n-nodes-base.copper,Copper,dist/nodes/Copper/Copper.node.js,Copper,False,copperApi,1
+copperTrigger,n8n-nodes-base.copperTrigger,CopperTrigger,dist/nodes/Copper/CopperTrigger.node.js,Copper,True,copperApi,1
+cortex,n8n-nodes-base.cortex,Cortex,dist/nodes/Cortex/Cortex.node.js,Cortex,False,cortexApi,1
+crateDb,n8n-nodes-base.crateDb,CrateDb,dist/nodes/CrateDb/CrateDb.node.js,CrateDb,False,crateDb,1
+cron,n8n-nodes-base.cron,Cron,dist/nodes/Cron/Cron.node.js,Cron,False,,0
+crowdDev,n8n-nodes-base.crowdDev,CrowdDev,dist/nodes/CrowdDev/CrowdDev.node.js,CrowdDev,False,crowdDevApi,1
+crowdDevTrigger,n8n-nodes-base.crowdDevTrigger,CrowdDevTrigger,dist/nodes/CrowdDev/CrowdDevTrigger.node.js,CrowdDev,True,crowdDevApi,1
+crypto,n8n-nodes-base.crypto,Crypto,dist/nodes/Crypto/Crypto.node.js,Crypto,False,,0
+customerIo,n8n-nodes-base.customerIo,CustomerIo,dist/nodes/CustomerIo/CustomerIo.node.js,CustomerIo,False,customerIoApi,1
+customerIoTrigger,n8n-nodes-base.customerIoTrigger,CustomerIoTrigger,dist/nodes/CustomerIo/CustomerIoTrigger.node.js,CustomerIo,True,customerIoApi,1
+dataTable,n8n-nodes-base.dataTable,DataTable,dist/nodes/DataTable/DataTable.node.js,DataTable,False,,0
+dateTime,n8n-nodes-base.dateTime,DateTime,dist/nodes/DateTime/DateTime.node.js,DateTime,False,,0
+debugHelper,n8n-nodes-base.debugHelper,DebugHelper,dist/nodes/DebugHelper/DebugHelper.node.js,DebugHelper,False,,0
+deepL,n8n-nodes-base.deepL,DeepL,dist/nodes/DeepL/DeepL.node.js,DeepL,False,deepLApi,1
+demio,n8n-nodes-base.demio,Demio,dist/nodes/Demio/Demio.node.js,Demio,False,demioApi,1
+dhl,n8n-nodes-base.dhl,Dhl,dist/nodes/Dhl/Dhl.node.js,Dhl,False,dhlApi,1
+discord,n8n-nodes-base.discord,Discord,dist/nodes/Discord/Discord.node.js,Discord,False,"discordBotApi, discordOAuth2Api, discordWebhookApi",3
+discourse,n8n-nodes-base.discourse,Discourse,dist/nodes/Discourse/Discourse.node.js,Discourse,False,discourseApi,1
+disqus,n8n-nodes-base.disqus,Disqus,dist/nodes/Disqus/Disqus.node.js,Disqus,False,disqusApi,1
+drift,n8n-nodes-base.drift,Drift,dist/nodes/Drift/Drift.node.js,Drift,False,"driftApi, driftOAuth2Api",2
+dropbox,n8n-nodes-base.dropbox,Dropbox,dist/nodes/Dropbox/Dropbox.node.js,Dropbox,False,"dropboxApi, dropboxOAuth2Api",2
+dropcontact,n8n-nodes-base.dropcontact,Dropcontact,dist/nodes/Dropcontact/Dropcontact.node.js,Dropcontact,False,dropcontactApi,1
+e2eTest,n8n-nodes-base.e2eTest,E2eTest,dist/nodes/E2eTest/E2eTest.node.js,E2eTest,False,,0
+editImage,n8n-nodes-base.editImage,EditImage,dist/nodes/EditImage/EditImage.node.js,EditImage,False,,0
+egoi,n8n-nodes-base.egoi,Egoi,dist/nodes/Egoi/Egoi.node.js,Egoi,False,egoiApi,1
+elasticSecurity,n8n-nodes-base.elasticSecurity,ElasticSecurity,dist/nodes/Elastic/ElasticSecurity/ElasticSecurity.node.js,Elastic,False,elasticSecurityApi,1
+elasticsearch,n8n-nodes-base.elasticsearch,Elasticsearch,dist/nodes/Elastic/Elasticsearch/Elasticsearch.node.js,Elastic,False,elasticsearchApi,1
+emailReadImap,n8n-nodes-base.emailReadImap,EmailReadImap,dist/nodes/EmailReadImap/EmailReadImap.node.js,EmailReadImap,False,imap,1
+emailSend,n8n-nodes-base.emailSend,EmailSend,dist/nodes/EmailSend/EmailSend.node.js,EmailSend,False,smtp,1
+emelia,n8n-nodes-base.emelia,Emelia,dist/nodes/Emelia/Emelia.node.js,Emelia,False,emeliaApi,1
+emeliaTrigger,n8n-nodes-base.emeliaTrigger,EmeliaTrigger,dist/nodes/Emelia/EmeliaTrigger.node.js,Emelia,True,emeliaApi,1
+erpNext,n8n-nodes-base.erpNext,ERPNext,dist/nodes/ERPNext/ERPNext.node.js,ERPNext,False,erpNextApi,1
+errorTrigger,n8n-nodes-base.errorTrigger,ErrorTrigger,dist/nodes/ErrorTrigger/ErrorTrigger.node.js,ErrorTrigger,True,,0
+evaluation,n8n-nodes-base.evaluation,Evaluation,dist/nodes/Evaluation/Evaluation/Evaluation.node.ee.js,Evaluation,False,"googleApi, googleSheetsOAuth2Api",2
+evaluationTrigger,n8n-nodes-base.evaluationTrigger,EvaluationTrigger,dist/nodes/Evaluation/EvaluationTrigger/EvaluationTrigger.node.ee.js,Evaluation,True,"googleApi, googleSheetsOAuth2Api",2
+eventbriteTrigger,n8n-nodes-base.eventbriteTrigger,EventbriteTrigger,dist/nodes/Eventbrite/EventbriteTrigger.node.js,Eventbrite,True,"eventbriteApi, eventbriteOAuth2Api",2
+executeCommand,n8n-nodes-base.executeCommand,ExecuteCommand,dist/nodes/ExecuteCommand/ExecuteCommand.node.js,ExecuteCommand,False,,0
+executeWorkflow,n8n-nodes-base.executeWorkflow,ExecuteWorkflow,dist/nodes/ExecuteWorkflow/ExecuteWorkflow/ExecuteWorkflow.node.js,ExecuteWorkflow,False,,0
+executeWorkflowTrigger,n8n-nodes-base.executeWorkflowTrigger,ExecuteWorkflowTrigger,dist/nodes/ExecuteWorkflow/ExecuteWorkflowTrigger/ExecuteWorkflowTrigger.node.js,ExecuteWorkflow,True,,0
+executionData,n8n-nodes-base.executionData,ExecutionData,dist/nodes/ExecutionData/ExecutionData.node.js,ExecutionData,False,,0
+extractFromFile,n8n-nodes-base.extractFromFile,ExtractFromFile,dist/nodes/Files/ExtractFromFile/ExtractFromFile.node.js,Files,False,,0
+facebookGraphApi,n8n-nodes-base.facebookGraphApi,FacebookGraphApi,dist/nodes/Facebook/FacebookGraphApi.node.js,Facebook,False,facebookGraphApi,1
+facebookLeadAdsTrigger,n8n-nodes-base.facebookLeadAdsTrigger,FacebookLeadAdsTrigger,dist/nodes/FacebookLeadAds/FacebookLeadAdsTrigger.node.js,FacebookLeadAds,True,facebookLeadAdsOAuth2Api,1
+facebookTrigger,n8n-nodes-base.facebookTrigger,FacebookTrigger,dist/nodes/Facebook/FacebookTrigger.node.js,Facebook,True,facebookGraphAppApi,1
+figmaTrigger,n8n-nodes-base.figmaTrigger,FigmaTrigger,dist/nodes/Figma/FigmaTrigger.node.js,Figma,True,figmaApi,1
+filemaker,n8n-nodes-base.filemaker,FileMaker,dist/nodes/FileMaker/FileMaker.node.js,FileMaker,False,fileMaker,1
+filter,n8n-nodes-base.filter,Filter,dist/nodes/Filter/Filter.node.js,Filter,False,,0
+flow,n8n-nodes-base.flow,Flow,dist/nodes/Flow/Flow.node.js,Flow,False,flowApi,1
+flowTrigger,n8n-nodes-base.flowTrigger,FlowTrigger,dist/nodes/Flow/FlowTrigger.node.js,Flow,True,flowApi,1
+form,n8n-nodes-base.form,Form,dist/nodes/Form/Form.node.js,Form,False,,0
+formIoTrigger,n8n-nodes-base.formIoTrigger,FormIoTrigger,dist/nodes/FormIo/FormIoTrigger.node.js,FormIo,True,formIoApi,1
+formTrigger,n8n-nodes-base.formTrigger,FormTrigger,dist/nodes/Form/FormTrigger.node.js,Form,True,httpBasicAuth,1
+formstackTrigger,n8n-nodes-base.formstackTrigger,FormstackTrigger,dist/nodes/Formstack/FormstackTrigger.node.js,Formstack,True,"formstackApi, formstackOAuth2Api",2
+freshdesk,n8n-nodes-base.freshdesk,Freshdesk,dist/nodes/Freshdesk/Freshdesk.node.js,Freshdesk,False,freshdeskApi,1
+freshservice,n8n-nodes-base.freshservice,Freshservice,dist/nodes/Freshservice/Freshservice.node.js,Freshservice,False,freshserviceApi,1
+freshworksCrm,n8n-nodes-base.freshworksCrm,FreshworksCrm,dist/nodes/FreshworksCrm/FreshworksCrm.node.js,FreshworksCrm,False,freshworksCrmApi,1
+ftp,n8n-nodes-base.ftp,Ftp,dist/nodes/Ftp/Ftp.node.js,Ftp,False,"ftp, sftp",2
+function,n8n-nodes-base.function,Function,dist/nodes/Function/Function.node.js,Function,False,,0
+functionItem,n8n-nodes-base.functionItem,FunctionItem,dist/nodes/FunctionItem/FunctionItem.node.js,FunctionItem,False,,0
+gSuiteAdmin,n8n-nodes-base.gSuiteAdmin,GSuiteAdmin,dist/nodes/Google/GSuiteAdmin/GSuiteAdmin.node.js,Google,False,gSuiteAdminOAuth2Api,1
+getResponse,n8n-nodes-base.getResponse,GetResponse,dist/nodes/GetResponse/GetResponse.node.js,GetResponse,False,"getResponseApi, getResponseOAuth2Api",2
+getResponseTrigger,n8n-nodes-base.getResponseTrigger,GetResponseTrigger,dist/nodes/GetResponse/GetResponseTrigger.node.js,GetResponse,True,"getResponseApi, getResponseOAuth2Api",2
+ghost,n8n-nodes-base.ghost,Ghost,dist/nodes/Ghost/Ghost.node.js,Ghost,False,"ghostAdminApi, ghostContentApi",2
+git,n8n-nodes-base.git,Git,dist/nodes/Git/Git.node.js,Git,False,gitPassword,1
+github,n8n-nodes-base.github,Github,dist/nodes/Github/Github.node.js,Github,False,"githubApi, githubOAuth2Api",2
+githubTrigger,n8n-nodes-base.githubTrigger,GithubTrigger,dist/nodes/Github/GithubTrigger.node.js,Github,True,"githubApi, githubOAuth2Api",2
+gitlab,n8n-nodes-base.gitlab,Gitlab,dist/nodes/Gitlab/Gitlab.node.js,Gitlab,False,"gitlabApi, gitlabOAuth2Api",2
+gitlabTrigger,n8n-nodes-base.gitlabTrigger,GitlabTrigger,dist/nodes/Gitlab/GitlabTrigger.node.js,Gitlab,True,"gitlabApi, gitlabOAuth2Api",2
+gmail,n8n-nodes-base.gmail,Gmail,dist/nodes/Google/Gmail/Gmail.node.js,Google,False,"gmailOAuth2, googleApi",2
+gmailTrigger,n8n-nodes-base.gmailTrigger,GmailTrigger,dist/nodes/Google/Gmail/GmailTrigger.node.js,Google,True,"gmailOAuth2, googleApi",2
+goToWebinar,n8n-nodes-base.goToWebinar,GoToWebinar,dist/nodes/GoToWebinar/GoToWebinar.node.js,GoToWebinar,False,goToWebinarOAuth2Api,1
+gong,n8n-nodes-base.gong,Gong,dist/nodes/Gong/Gong.node.js,Gong,False,"gongApi, gongOAuth2Api",2
+googleAds,n8n-nodes-base.googleAds,GoogleAds,dist/nodes/Google/Ads/GoogleAds.node.js,Google,False,googleAdsOAuth2Api,1
+googleAnalytics,n8n-nodes-base.googleAnalytics,GoogleAnalytics,dist/nodes/Google/Analytics/GoogleAnalytics.node.js,Google,False,googleAnalyticsOAuth2,1
+googleBigQuery,n8n-nodes-base.googleBigQuery,GoogleBigQuery,dist/nodes/Google/BigQuery/GoogleBigQuery.node.js,Google,False,"googleApi, googleBigQueryOAuth2Api",2
+googleBooks,n8n-nodes-base.googleBooks,GoogleBooks,dist/nodes/Google/Books/GoogleBooks.node.js,Google,False,"googleApi, googleBooksOAuth2Api",2
+googleBusinessProfile,n8n-nodes-base.googleBusinessProfile,GoogleBusinessProfile,dist/nodes/Google/BusinessProfile/GoogleBusinessProfile.node.js,Google,False,googleBusinessProfileOAuth2Api,1
+googleBusinessProfileTrigger,n8n-nodes-base.googleBusinessProfileTrigger,GoogleBusinessProfileTrigger,dist/nodes/Google/BusinessProfile/GoogleBusinessProfileTrigger.node.js,Google,True,googleBusinessProfileOAuth2Api,1
+googleCalendar,n8n-nodes-base.googleCalendar,GoogleCalendar,dist/nodes/Google/Calendar/GoogleCalendar.node.js,Google,False,googleCalendarOAuth2Api,1
+googleCalendarTrigger,n8n-nodes-base.googleCalendarTrigger,GoogleCalendarTrigger,dist/nodes/Google/Calendar/GoogleCalendarTrigger.node.js,Google,True,googleCalendarOAuth2Api,1
+googleChat,n8n-nodes-base.googleChat,GoogleChat,dist/nodes/Google/Chat/GoogleChat.node.js,Google,False,"googleApi, googleChatOAuth2Api",2
+googleCloudNaturalLanguage,n8n-nodes-base.googleCloudNaturalLanguage,GoogleCloudNaturalLanguage,dist/nodes/Google/CloudNaturalLanguage/GoogleCloudNaturalLanguage.node.js,Google,False,googleCloudNaturalLanguageOAuth2Api,1
+googleCloudStorage,n8n-nodes-base.googleCloudStorage,GoogleCloudStorage,dist/nodes/Google/CloudStorage/GoogleCloudStorage.node.js,Google,False,googleCloudStorageOAuth2Api,1
+googleContacts,n8n-nodes-base.googleContacts,GoogleContacts,dist/nodes/Google/Contacts/GoogleContacts.node.js,Google,False,googleContactsOAuth2Api,1
+googleDocs,n8n-nodes-base.googleDocs,GoogleDocs,dist/nodes/Google/Docs/GoogleDocs.node.js,Google,False,"googleApi, googleDocsOAuth2Api",2
+googleDrive,n8n-nodes-base.googleDrive,GoogleDrive,dist/nodes/Google/Drive/GoogleDrive.node.js,Google,False,"googleApi, googleDriveOAuth2Api",2
+googleDriveTrigger,n8n-nodes-base.googleDriveTrigger,GoogleDriveTrigger,dist/nodes/Google/Drive/GoogleDriveTrigger.node.js,Google,True,"googleApi, googleDriveOAuth2Api",2
+googleFirebaseCloudFirestore,n8n-nodes-base.googleFirebaseCloudFirestore,GoogleFirebaseCloudFirestore,dist/nodes/Google/Firebase/CloudFirestore/GoogleFirebaseCloudFirestore.node.js,Google,False,"googleApi, googleFirebaseCloudFirestoreOAuth2Api",2
+googleFirebaseRealtimeDatabase,n8n-nodes-base.googleFirebaseRealtimeDatabase,GoogleFirebaseRealtimeDatabase,dist/nodes/Google/Firebase/RealtimeDatabase/GoogleFirebaseRealtimeDatabase.node.js,Google,False,googleFirebaseRealtimeDatabaseOAuth2Api,1
+googlePerspective,n8n-nodes-base.googlePerspective,GooglePerspective,dist/nodes/Google/Perspective/GooglePerspective.node.js,Google,False,googlePerspectiveOAuth2Api,1
+googleSheets,n8n-nodes-base.googleSheets,GoogleSheets,dist/nodes/Google/Sheet/GoogleSheets.node.js,Google,False,"googleApi, googleSheetsOAuth2Api",2
+googleSheetsTrigger,n8n-nodes-base.googleSheetsTrigger,GoogleSheetsTrigger,dist/nodes/Google/Sheet/GoogleSheetsTrigger.node.js,Google,True,googleSheetsTriggerOAuth2Api,1
+googleSlides,n8n-nodes-base.googleSlides,GoogleSlides,dist/nodes/Google/Slides/GoogleSlides.node.js,Google,False,"googleApi, googleSlidesOAuth2Api",2
+googleTasks,n8n-nodes-base.googleTasks,GoogleTasks,dist/nodes/Google/Task/GoogleTasks.node.js,Google,False,googleTasksOAuth2Api,1
+googleTranslate,n8n-nodes-base.googleTranslate,GoogleTranslate,dist/nodes/Google/Translate/GoogleTranslate.node.js,Google,False,"googleApi, googleTranslateOAuth2Api",2
+gotify,n8n-nodes-base.gotify,Gotify,dist/nodes/Gotify/Gotify.node.js,Gotify,False,gotifyApi,1
+grafana,n8n-nodes-base.grafana,Grafana,dist/nodes/Grafana/Grafana.node.js,Grafana,False,grafanaApi,1
+graphql,n8n-nodes-base.graphql,GraphQL,dist/nodes/GraphQL/GraphQL.node.js,GraphQL,False,"httpBasicAuth, httpCustomAuth, httpDigestAuth, httpHeaderAuth, httpQueryAuth, oAuth1Api, oAuth2Api",7
+grist,n8n-nodes-base.grist,Grist,dist/nodes/Grist/Grist.node.js,Grist,False,gristApi,1
+gumroadTrigger,n8n-nodes-base.gumroadTrigger,GumroadTrigger,dist/nodes/Gumroad/GumroadTrigger.node.js,Gumroad,True,gumroadApi,1
+hackerNews,n8n-nodes-base.hackerNews,HackerNews,dist/nodes/HackerNews/HackerNews.node.js,HackerNews,False,,0
+haloPSA,n8n-nodes-base.haloPSA,HaloPSA,dist/nodes/HaloPSA/HaloPSA.node.js,HaloPSA,False,haloPSAApi,1
+harvest,n8n-nodes-base.harvest,Harvest,dist/nodes/Harvest/Harvest.node.js,Harvest,False,"harvestApi, harvestOAuth2Api",2
+helpScout,n8n-nodes-base.helpScout,HelpScout,dist/nodes/HelpScout/HelpScout.node.js,HelpScout,False,helpScoutOAuth2Api,1
+helpScoutTrigger,n8n-nodes-base.helpScoutTrigger,HelpScoutTrigger,dist/nodes/HelpScout/HelpScoutTrigger.node.js,HelpScout,True,helpScoutOAuth2Api,1
+highLevel,n8n-nodes-base.highLevel,HighLevel,dist/nodes/HighLevel/HighLevel.node.js,HighLevel,False,"highLevelApi, highLevelOAuth2Api",2
+homeAssistant,n8n-nodes-base.homeAssistant,HomeAssistant,dist/nodes/HomeAssistant/HomeAssistant.node.js,HomeAssistant,False,homeAssistantApi,1
+html,n8n-nodes-base.html,Html,dist/nodes/Html/Html.node.js,Html,False,,0
+htmlExtract,n8n-nodes-base.htmlExtract,HtmlExtract,dist/nodes/HtmlExtract/HtmlExtract.node.js,HtmlExtract,False,,0
+httpRequest,n8n-nodes-base.httpRequest,HttpRequest,dist/nodes/HttpRequest/HttpRequest.node.js,HttpRequest,False,"httpBasicAuth, httpDigestAuth, httpHeaderAuth, httpQueryAuth, httpSslAuth, oAuth1Api, oAuth2Api",7
+hubspot,n8n-nodes-base.hubspot,Hubspot,dist/nodes/Hubspot/Hubspot.node.js,Hubspot,False,"hubspotApi, hubspotAppToken, hubspotOAuth2Api",3
+hubspotTrigger,n8n-nodes-base.hubspotTrigger,HubspotTrigger,dist/nodes/Hubspot/HubspotTrigger.node.js,Hubspot,True,hubspotDeveloperApi,1
+humanticAi,n8n-nodes-base.humanticAi,HumanticAi,dist/nodes/HumanticAI/HumanticAi.node.js,HumanticAI,False,humanticAiApi,1
+hunter,n8n-nodes-base.hunter,Hunter,dist/nodes/Hunter/Hunter.node.js,Hunter,False,hunterApi,1
+iCal,n8n-nodes-base.iCal,ICalendar,dist/nodes/ICalendar/ICalendar.node.js,ICalendar,False,,0
+if,n8n-nodes-base.if,If,dist/nodes/If/If.node.js,If,False,,0
+intercom,n8n-nodes-base.intercom,Intercom,dist/nodes/Intercom/Intercom.node.js,Intercom,False,intercomApi,1
+interval,n8n-nodes-base.interval,Interval,dist/nodes/Interval/Interval.node.js,Interval,False,,0
+invoiceNinja,n8n-nodes-base.invoiceNinja,InvoiceNinja,dist/nodes/InvoiceNinja/InvoiceNinja.node.js,InvoiceNinja,False,invoiceNinjaApi,1
+invoiceNinjaTrigger,n8n-nodes-base.invoiceNinjaTrigger,InvoiceNinjaTrigger,dist/nodes/InvoiceNinja/InvoiceNinjaTrigger.node.js,InvoiceNinja,True,invoiceNinjaApi,1
+itemLists,n8n-nodes-base.itemLists,ItemLists,dist/nodes/ItemLists/ItemLists.node.js,ItemLists,False,,0
+iterable,n8n-nodes-base.iterable,Iterable,dist/nodes/Iterable/Iterable.node.js,Iterable,False,iterableApi,1
+jenkins,n8n-nodes-base.jenkins,Jenkins,dist/nodes/Jenkins/Jenkins.node.js,Jenkins,False,jenkinsApi,1
+jinaAi,n8n-nodes-base.jinaAi,JinaAi,dist/nodes/JinaAI/JinaAi.node.js,JinaAI,False,jinaAiApi,1
+jira,n8n-nodes-base.jira,Jira,dist/nodes/Jira/Jira.node.js,Jira,False,"jiraSoftwareCloudApi, jiraSoftwareServerApi, jiraSoftwareServerPatApi",3
+jiraTrigger,n8n-nodes-base.jiraTrigger,JiraTrigger,dist/nodes/Jira/JiraTrigger.node.js,Jira,True,"httpQueryAuth, httpQueryAuth, jiraSoftwareCloudApi, jiraSoftwareServerApi, jiraSoftwareServerPatApi",5
+jotFormTrigger,n8n-nodes-base.jotFormTrigger,JotFormTrigger,dist/nodes/JotForm/JotFormTrigger.node.js,JotForm,True,jotFormApi,1
+jwt,n8n-nodes-base.jwt,Jwt,dist/nodes/Jwt/Jwt.node.js,Jwt,False,jwtAuth,1
+kafka,n8n-nodes-base.kafka,Kafka,dist/nodes/Kafka/Kafka.node.js,Kafka,False,kafka,1
+kafkaTrigger,n8n-nodes-base.kafkaTrigger,KafkaTrigger,dist/nodes/Kafka/KafkaTrigger.node.js,Kafka,True,kafka,1
+keap,n8n-nodes-base.keap,Keap,dist/nodes/Keap/Keap.node.js,Keap,False,keapOAuth2Api,1
+keapTrigger,n8n-nodes-base.keapTrigger,KeapTrigger,dist/nodes/Keap/KeapTrigger.node.js,Keap,True,keapOAuth2Api,1
+kitemaker,n8n-nodes-base.kitemaker,Kitemaker,dist/nodes/Kitemaker/Kitemaker.node.js,Kitemaker,False,kitemakerApi,1
+koBoToolbox,n8n-nodes-base.koBoToolbox,KoBoToolbox,dist/nodes/KoBoToolbox/KoBoToolbox.node.js,KoBoToolbox,False,koBoToolboxApi,1
+koBoToolboxTrigger,n8n-nodes-base.koBoToolboxTrigger,KoBoToolboxTrigger,dist/nodes/KoBoToolbox/KoBoToolboxTrigger.node.js,KoBoToolbox,True,koBoToolboxApi,1
+ldap,n8n-nodes-base.ldap,Ldap,dist/nodes/Ldap/Ldap.node.js,Ldap,False,ldap,1
+lemlist,n8n-nodes-base.lemlist,Lemlist,dist/nodes/Lemlist/Lemlist.node.js,Lemlist,False,lemlistApi,1
+lemlistTrigger,n8n-nodes-base.lemlistTrigger,LemlistTrigger,dist/nodes/Lemlist/LemlistTrigger.node.js,Lemlist,True,lemlistApi,1
+limit,n8n-nodes-base.limit,Limit,dist/nodes/Transform/Limit/Limit.node.js,Transform,False,,0
+line,n8n-nodes-base.line,Line,dist/nodes/Line/Line.node.js,Line,False,lineNotifyOAuth2Api,1
+linear,n8n-nodes-base.linear,Linear,dist/nodes/Linear/Linear.node.js,Linear,False,"linearApi, linearOAuth2Api",2
+linearTrigger,n8n-nodes-base.linearTrigger,LinearTrigger,dist/nodes/Linear/LinearTrigger.node.js,Linear,True,"linearApi, linearOAuth2Api",2
+lingvaNex,n8n-nodes-base.lingvaNex,LingvaNex,dist/nodes/LingvaNex/LingvaNex.node.js,LingvaNex,False,lingvaNexApi,1
+linkedIn,n8n-nodes-base.linkedIn,LinkedIn,dist/nodes/LinkedIn/LinkedIn.node.js,LinkedIn,False,"linkedInCommunityManagementOAuth2Api, linkedInOAuth2Api",2
+localFileTrigger,n8n-nodes-base.localFileTrigger,LocalFileTrigger,dist/nodes/LocalFileTrigger/LocalFileTrigger.node.js,LocalFileTrigger,True,,0
+loneScale,n8n-nodes-base.loneScale,LoneScale,dist/nodes/LoneScale/LoneScale.node.js,LoneScale,False,loneScaleApi,1
+loneScaleTrigger,n8n-nodes-base.loneScaleTrigger,LoneScaleTrigger,dist/nodes/LoneScale/LoneScaleTrigger.node.js,LoneScale,True,loneScaleApi,1
+magento2,n8n-nodes-base.magento2,Magento2,dist/nodes/Magento/Magento2.node.js,Magento,False,magento2Api,1
+mailcheck,n8n-nodes-base.mailcheck,Mailcheck,dist/nodes/Mailcheck/Mailcheck.node.js,Mailcheck,False,mailcheckApi,1
+mailchimp,n8n-nodes-base.mailchimp,Mailchimp,dist/nodes/Mailchimp/Mailchimp.node.js,Mailchimp,False,"mailchimpApi, mailchimpOAuth2Api",2
+mailchimpTrigger,n8n-nodes-base.mailchimpTrigger,MailchimpTrigger,dist/nodes/Mailchimp/MailchimpTrigger.node.js,Mailchimp,True,"mailchimpApi, mailchimpOAuth2Api",2
+mailerLite,n8n-nodes-base.mailerLite,MailerLite,dist/nodes/MailerLite/MailerLite.node.js,MailerLite,False,mailerLiteApi,1
+mailerLiteTrigger,n8n-nodes-base.mailerLiteTrigger,MailerLiteTrigger,dist/nodes/MailerLite/MailerLiteTrigger.node.js,MailerLite,True,mailerLiteApi,1
+mailgun,n8n-nodes-base.mailgun,Mailgun,dist/nodes/Mailgun/Mailgun.node.js,Mailgun,False,mailgunApi,1
+mailjet,n8n-nodes-base.mailjet,Mailjet,dist/nodes/Mailjet/Mailjet.node.js,Mailjet,False,"mailjetEmailApi, mailjetSmsApi",2
+mailjetTrigger,n8n-nodes-base.mailjetTrigger,MailjetTrigger,dist/nodes/Mailjet/MailjetTrigger.node.js,Mailjet,True,mailjetEmailApi,1
+mandrill,n8n-nodes-base.mandrill,Mandrill,dist/nodes/Mandrill/Mandrill.node.js,Mandrill,False,mandrillApi,1
+manualTrigger,n8n-nodes-base.manualTrigger,ManualTrigger,dist/nodes/ManualTrigger/ManualTrigger.node.js,ManualTrigger,True,,0
+markdown,n8n-nodes-base.markdown,Markdown,dist/nodes/Markdown/Markdown.node.js,Markdown,False,,0
+marketstack,n8n-nodes-base.marketstack,Marketstack,dist/nodes/Marketstack/Marketstack.node.js,Marketstack,False,marketstackApi,1
+matrix,n8n-nodes-base.matrix,Matrix,dist/nodes/Matrix/Matrix.node.js,Matrix,False,matrixApi,1
+mattermost,n8n-nodes-base.mattermost,Mattermost,dist/nodes/Mattermost/Mattermost.node.js,Mattermost,False,mattermostApi,1
+mautic,n8n-nodes-base.mautic,Mautic,dist/nodes/Mautic/Mautic.node.js,Mautic,False,"mauticApi, mauticOAuth2Api",2
+mauticTrigger,n8n-nodes-base.mauticTrigger,MauticTrigger,dist/nodes/Mautic/MauticTrigger.node.js,Mautic,True,"mauticApi, mauticOAuth2Api",2
+medium,n8n-nodes-base.medium,Medium,dist/nodes/Medium/Medium.node.js,Medium,False,"mediumApi, mediumOAuth2Api",2
+merge,n8n-nodes-base.merge,Merge,dist/nodes/Merge/Merge.node.js,Merge,False,,0
+messageBird,n8n-nodes-base.messageBird,MessageBird,dist/nodes/MessageBird/MessageBird.node.js,MessageBird,False,messageBirdApi,1
+metabase,n8n-nodes-base.metabase,Metabase,dist/nodes/Metabase/Metabase.node.js,Metabase,False,metabaseApi,1
+microsoftDynamicsCrm,n8n-nodes-base.microsoftDynamicsCrm,MicrosoftDynamicsCrm,dist/nodes/Microsoft/Dynamics/MicrosoftDynamicsCrm.node.js,Microsoft,False,microsoftDynamicsOAuth2Api,1
+microsoftEntra,n8n-nodes-base.microsoftEntra,MicrosoftEntra,dist/nodes/Microsoft/Entra/MicrosoftEntra.node.js,Microsoft,False,microsoftEntraOAuth2Api,1
+microsoftExcel,n8n-nodes-base.microsoftExcel,MicrosoftExcel,dist/nodes/Microsoft/Excel/MicrosoftExcel.node.js,Microsoft,False,microsoftExcelOAuth2Api,1
+microsoftGraphSecurity,n8n-nodes-base.microsoftGraphSecurity,MicrosoftGraphSecurity,dist/nodes/Microsoft/GraphSecurity/MicrosoftGraphSecurity.node.js,Microsoft,False,microsoftGraphSecurityOAuth2Api,1
+microsoftOneDrive,n8n-nodes-base.microsoftOneDrive,MicrosoftOneDrive,dist/nodes/Microsoft/OneDrive/MicrosoftOneDrive.node.js,Microsoft,False,microsoftOneDriveOAuth2Api,1
+microsoftOneDriveTrigger,n8n-nodes-base.microsoftOneDriveTrigger,MicrosoftOneDriveTrigger,dist/nodes/Microsoft/OneDrive/MicrosoftOneDriveTrigger.node.js,Microsoft,True,microsoftOneDriveOAuth2Api,1
+microsoftOutlook,n8n-nodes-base.microsoftOutlook,MicrosoftOutlook,dist/nodes/Microsoft/Outlook/MicrosoftOutlook.node.js,Microsoft,False,microsoftOutlookOAuth2Api,1
+microsoftOutlookTrigger,n8n-nodes-base.microsoftOutlookTrigger,MicrosoftOutlookTrigger,dist/nodes/Microsoft/Outlook/MicrosoftOutlookTrigger.node.js,Microsoft,True,microsoftOutlookOAuth2Api,1
+microsoftSharePoint,n8n-nodes-base.microsoftSharePoint,MicrosoftSharePoint,dist/nodes/Microsoft/SharePoint/MicrosoftSharePoint.node.js,Microsoft,False,microsoftSharePointOAuth2Api,1
+microsoftSql,n8n-nodes-base.microsoftSql,MicrosoftSql,dist/nodes/Microsoft/Sql/MicrosoftSql.node.js,Microsoft,False,microsoftSql,1
+microsoftTeams,n8n-nodes-base.microsoftTeams,MicrosoftTeams,dist/nodes/Microsoft/Teams/MicrosoftTeams.node.js,Microsoft,False,microsoftTeamsOAuth2Api,1
+microsoftTeamsTrigger,n8n-nodes-base.microsoftTeamsTrigger,MicrosoftTeamsTrigger,dist/nodes/Microsoft/Teams/MicrosoftTeamsTrigger.node.js,Microsoft,True,microsoftTeamsOAuth2Api,1
+microsoftToDo,n8n-nodes-base.microsoftToDo,MicrosoftToDo,dist/nodes/Microsoft/ToDo/MicrosoftToDo.node.js,Microsoft,False,microsoftToDoOAuth2Api,1
+mindee,n8n-nodes-base.mindee,Mindee,dist/nodes/Mindee/Mindee.node.js,Mindee,False,"mindeeInvoiceApi, mindeeReceiptApi",2
+misp,n8n-nodes-base.misp,Misp,dist/nodes/Misp/Misp.node.js,Misp,False,mispApi,1
+mistralAi,n8n-nodes-base.mistralAi,MistralAi,dist/nodes/MistralAI/MistralAi.node.js,MistralAI,False,,0
+mocean,n8n-nodes-base.mocean,Mocean,dist/nodes/Mocean/Mocean.node.js,Mocean,False,moceanApi,1
+mondayCom,n8n-nodes-base.mondayCom,MondayCom,dist/nodes/MondayCom/MondayCom.node.js,MondayCom,False,"mondayComApi, mondayComOAuth2Api",2
+mongoDb,n8n-nodes-base.mongoDb,MongoDb,dist/nodes/MongoDb/MongoDb.node.js,MongoDb,False,mongoDb,1
+monicaCrm,n8n-nodes-base.monicaCrm,MonicaCrm,dist/nodes/MonicaCrm/MonicaCrm.node.js,MonicaCrm,False,monicaCrmApi,1
+moveBinaryData,n8n-nodes-base.moveBinaryData,MoveBinaryData,dist/nodes/MoveBinaryData/MoveBinaryData.node.js,MoveBinaryData,False,,0
+mqtt,n8n-nodes-base.mqtt,Mqtt,dist/nodes/MQTT/Mqtt.node.js,MQTT,False,mqtt,1
+mqttTrigger,n8n-nodes-base.mqttTrigger,MqttTrigger,dist/nodes/MQTT/MqttTrigger.node.js,MQTT,True,mqtt,1
+msg91,n8n-nodes-base.msg91,Msg91,dist/nodes/Msg91/Msg91.node.js,Msg91,False,msg91Api,1
+mySql,n8n-nodes-base.mySql,MySql,dist/nodes/MySql/MySql.node.js,MySql,False,mySql,1
+n8n,n8n-nodes-base.n8n,N8n,dist/nodes/N8n/N8n.node.js,N8n,False,n8nApi,1
+n8nTrainingCustomerDatastore,n8n-nodes-base.n8nTrainingCustomerDatastore,N8nTrainingCustomerDatastore,dist/nodes/N8nTrainingCustomerDatastore/N8nTrainingCustomerDatastore.node.js,N8nTrainingCustomerDatastore,False,,0
+n8nTrainingCustomerMessenger,n8n-nodes-base.n8nTrainingCustomerMessenger,N8nTrainingCustomerMessenger,dist/nodes/N8nTrainingCustomerMessenger/N8nTrainingCustomerMessenger.node.js,N8nTrainingCustomerMessenger,False,,0
+n8nTrigger,n8n-nodes-base.n8nTrigger,N8nTrigger,dist/nodes/N8nTrigger/N8nTrigger.node.js,N8nTrigger,True,,0
+nasa,n8n-nodes-base.nasa,Nasa,dist/nodes/Nasa/Nasa.node.js,Nasa,False,nasaApi,1
+netlify,n8n-nodes-base.netlify,Netlify,dist/nodes/Netlify/Netlify.node.js,Netlify,False,netlifyApi,1
+netlifyTrigger,n8n-nodes-base.netlifyTrigger,NetlifyTrigger,dist/nodes/Netlify/NetlifyTrigger.node.js,Netlify,True,netlifyApi,1
+nextCloud,n8n-nodes-base.nextCloud,NextCloud,dist/nodes/NextCloud/NextCloud.node.js,NextCloud,False,"nextCloudApi, nextCloudOAuth2Api",2
+noOp,n8n-nodes-base.noOp,NoOp,dist/nodes/NoOp/NoOp.node.js,NoOp,False,,0
+nocoDb,n8n-nodes-base.nocoDb,NocoDB,dist/nodes/NocoDB/NocoDB.node.js,NocoDB,False,"nocoDb, nocoDbApiToken",2
+notion,n8n-nodes-base.notion,Notion,dist/nodes/Notion/Notion.node.js,Notion,False,notionApi,1
+notionTrigger,n8n-nodes-base.notionTrigger,NotionTrigger,dist/nodes/Notion/NotionTrigger.node.js,Notion,True,notionApi,1
+npm,n8n-nodes-base.npm,Npm,dist/nodes/Npm/Npm.node.js,Npm,False,npmApi,1
+odoo,n8n-nodes-base.odoo,Odoo,dist/nodes/Odoo/Odoo.node.js,Odoo,False,odooApi,1
+okta,n8n-nodes-base.okta,Okta,dist/nodes/Okta/Okta.node.js,Okta,False,oktaApi,1
+oneSimpleApi,n8n-nodes-base.oneSimpleApi,OneSimpleApi,dist/nodes/OneSimpleApi/OneSimpleApi.node.js,OneSimpleApi,False,oneSimpleApi,1
+onfleet,n8n-nodes-base.onfleet,Onfleet,dist/nodes/Onfleet/Onfleet.node.js,Onfleet,False,onfleetApi,1
+onfleetTrigger,n8n-nodes-base.onfleetTrigger,OnfleetTrigger,dist/nodes/Onfleet/OnfleetTrigger.node.js,Onfleet,True,onfleetApi,1
+openAi,n8n-nodes-base.openAi,OpenAi,dist/nodes/OpenAi/OpenAi.node.js,OpenAi,False,openAiApi,1
+openThesaurus,n8n-nodes-base.openThesaurus,OpenThesaurus,dist/nodes/OpenThesaurus/OpenThesaurus.node.js,OpenThesaurus,False,,0
+openWeatherMap,n8n-nodes-base.openWeatherMap,OpenWeatherMap,dist/nodes/OpenWeatherMap/OpenWeatherMap.node.js,OpenWeatherMap,False,openWeatherMapApi,1
+orbit,n8n-nodes-base.orbit,Orbit,dist/nodes/Orbit/Orbit.node.js,Orbit,False,orbitApi,1
+oura,n8n-nodes-base.oura,Oura,dist/nodes/Oura/Oura.node.js,Oura,False,ouraApi,1
+paddle,n8n-nodes-base.paddle,Paddle,dist/nodes/Paddle/Paddle.node.js,Paddle,False,paddleApi,1
+pagerDuty,n8n-nodes-base.pagerDuty,PagerDuty,dist/nodes/PagerDuty/PagerDuty.node.js,PagerDuty,False,"pagerDutyApi, pagerDutyOAuth2Api",2
+payPal,n8n-nodes-base.payPal,PayPal,dist/nodes/PayPal/PayPal.node.js,PayPal,False,payPalApi,1
+payPalTrigger,n8n-nodes-base.payPalTrigger,PayPalTrigger,dist/nodes/PayPal/PayPalTrigger.node.js,PayPal,True,payPalApi,1
+peekalink,n8n-nodes-base.peekalink,Peekalink,dist/nodes/Peekalink/Peekalink.node.js,Peekalink,False,peekalinkApi,1
+perplexity,n8n-nodes-base.perplexity,Perplexity,dist/nodes/Perplexity/Perplexity.node.js,Perplexity,False,perplexityApi,1
+phantombuster,n8n-nodes-base.phantombuster,Phantombuster,dist/nodes/Phantombuster/Phantombuster.node.js,Phantombuster,False,phantombusterApi,1
+philipsHue,n8n-nodes-base.philipsHue,PhilipsHue,dist/nodes/PhilipsHue/PhilipsHue.node.js,PhilipsHue,False,philipsHueOAuth2Api,1
+pipedrive,n8n-nodes-base.pipedrive,Pipedrive,dist/nodes/Pipedrive/Pipedrive.node.js,Pipedrive,False,"pipedriveApi, pipedriveOAuth2Api",2
+pipedriveTrigger,n8n-nodes-base.pipedriveTrigger,PipedriveTrigger,dist/nodes/Pipedrive/PipedriveTrigger.node.js,Pipedrive,True,"httpBasicAuth, pipedriveApi, pipedriveOAuth2Api",3
+plivo,n8n-nodes-base.plivo,Plivo,dist/nodes/Plivo/Plivo.node.js,Plivo,False,plivoApi,1
+postBin,n8n-nodes-base.postBin,PostBin,dist/nodes/PostBin/PostBin.node.js,PostBin,False,,0
+postHog,n8n-nodes-base.postHog,PostHog,dist/nodes/PostHog/PostHog.node.js,PostHog,False,postHogApi,1
+postgres,n8n-nodes-base.postgres,Postgres,dist/nodes/Postgres/Postgres.node.js,Postgres,False,postgres,1
+postgresTrigger,n8n-nodes-base.postgresTrigger,PostgresTrigger,dist/nodes/Postgres/PostgresTrigger.node.js,Postgres,True,postgres,1
+postmarkTrigger,n8n-nodes-base.postmarkTrigger,PostmarkTrigger,dist/nodes/Postmark/PostmarkTrigger.node.js,Postmark,True,postmarkApi,1
+profitWell,n8n-nodes-base.profitWell,ProfitWell,dist/nodes/ProfitWell/ProfitWell.node.js,ProfitWell,False,profitWellApi,1
+pushbullet,n8n-nodes-base.pushbullet,Pushbullet,dist/nodes/Pushbullet/Pushbullet.node.js,Pushbullet,False,pushbulletOAuth2Api,1
+pushcut,n8n-nodes-base.pushcut,Pushcut,dist/nodes/Pushcut/Pushcut.node.js,Pushcut,False,pushcutApi,1
+pushcutTrigger,n8n-nodes-base.pushcutTrigger,PushcutTrigger,dist/nodes/Pushcut/PushcutTrigger.node.js,Pushcut,True,pushcutApi,1
+pushover,n8n-nodes-base.pushover,Pushover,dist/nodes/Pushover/Pushover.node.js,Pushover,False,pushoverApi,1
+questDb,n8n-nodes-base.questDb,QuestDb,dist/nodes/QuestDb/QuestDb.node.js,QuestDb,False,questDb,1
+quickChart,n8n-nodes-base.quickChart,QuickChart,dist/nodes/QuickChart/QuickChart.node.js,QuickChart,False,,0
+quickbase,n8n-nodes-base.quickbase,QuickBase,dist/nodes/QuickBase/QuickBase.node.js,QuickBase,False,quickbaseApi,1
+quickbooks,n8n-nodes-base.quickbooks,QuickBooks,dist/nodes/QuickBooks/QuickBooks.node.js,QuickBooks,False,quickBooksOAuth2Api,1
+rabbitmq,n8n-nodes-base.rabbitmq,RabbitMQ,dist/nodes/RabbitMQ/RabbitMQ.node.js,RabbitMQ,False,rabbitmq,1
+rabbitmqTrigger,n8n-nodes-base.rabbitmqTrigger,RabbitMQTrigger,dist/nodes/RabbitMQ/RabbitMQTrigger.node.js,RabbitMQ,True,rabbitmq,1
+raindrop,n8n-nodes-base.raindrop,Raindrop,dist/nodes/Raindrop/Raindrop.node.js,Raindrop,False,raindropOAuth2Api,1
+readBinaryFile,n8n-nodes-base.readBinaryFile,ReadBinaryFile,dist/nodes/ReadBinaryFile/ReadBinaryFile.node.js,ReadBinaryFile,False,,0
+readBinaryFiles,n8n-nodes-base.readBinaryFiles,ReadBinaryFiles,dist/nodes/ReadBinaryFiles/ReadBinaryFiles.node.js,ReadBinaryFiles,False,,0
+readPDF,n8n-nodes-base.readPDF,ReadPDF,dist/nodes/ReadPdf/ReadPDF.node.js,ReadPdf,False,,0
+readWriteFile,n8n-nodes-base.readWriteFile,ReadWriteFile,dist/nodes/Files/ReadWriteFile/ReadWriteFile.node.js,Files,False,,0
+reddit,n8n-nodes-base.reddit,Reddit,dist/nodes/Reddit/Reddit.node.js,Reddit,False,redditOAuth2Api,1
+redis,n8n-nodes-base.redis,Redis,dist/nodes/Redis/Redis.node.js,Redis,False,redis,1
+redisTrigger,n8n-nodes-base.redisTrigger,RedisTrigger,dist/nodes/Redis/RedisTrigger.node.js,Redis,True,redis,1
+removeDuplicates,n8n-nodes-base.removeDuplicates,RemoveDuplicates,dist/nodes/Transform/RemoveDuplicates/RemoveDuplicates.node.js,Transform,False,,0
+renameKeys,n8n-nodes-base.renameKeys,RenameKeys,dist/nodes/RenameKeys/RenameKeys.node.js,RenameKeys,False,,0
+respondToWebhook,n8n-nodes-base.respondToWebhook,RespondToWebhook,dist/nodes/RespondToWebhook/RespondToWebhook.node.js,RespondToWebhook,True,jwtAuth,1
+rocketchat,n8n-nodes-base.rocketchat,Rocketchat,dist/nodes/Rocketchat/Rocketchat.node.js,Rocketchat,False,rocketchatApi,1
+rssFeedRead,n8n-nodes-base.rssFeedRead,RssFeedRead,dist/nodes/RssFeedRead/RssFeedRead.node.js,RssFeedRead,False,,0
+rssFeedReadTrigger,n8n-nodes-base.rssFeedReadTrigger,RssFeedReadTrigger,dist/nodes/RssFeedRead/RssFeedReadTrigger.node.js,RssFeedRead,True,,0
+rundeck,n8n-nodes-base.rundeck,Rundeck,dist/nodes/Rundeck/Rundeck.node.js,Rundeck,False,rundeckApi,1
+s3,n8n-nodes-base.s3,S3,dist/nodes/S3/S3.node.js,S3,False,s3,1
+salesforce,n8n-nodes-base.salesforce,Salesforce,dist/nodes/Salesforce/Salesforce.node.js,Salesforce,False,"salesforceJwtApi, salesforceOAuth2Api",2
+salesforceTrigger,n8n-nodes-base.salesforceTrigger,SalesforceTrigger,dist/nodes/Salesforce/SalesforceTrigger.node.js,Salesforce,True,salesforceOAuth2Api,1
+salesmate,n8n-nodes-base.salesmate,Salesmate,dist/nodes/Salesmate/Salesmate.node.js,Salesmate,False,salesmateApi,1
+scheduleTrigger,n8n-nodes-base.scheduleTrigger,ScheduleTrigger,dist/nodes/Schedule/ScheduleTrigger.node.js,Schedule,True,,0
+seaTable,n8n-nodes-base.seaTable,SeaTable,dist/nodes/SeaTable/SeaTable.node.js,SeaTable,False,seaTableApi,1
+seaTableTrigger,n8n-nodes-base.seaTableTrigger,SeaTableTrigger,dist/nodes/SeaTable/SeaTableTrigger.node.js,SeaTable,True,seaTableApi,1
+securityScorecard,n8n-nodes-base.securityScorecard,SecurityScorecard,dist/nodes/SecurityScorecard/SecurityScorecard.node.js,SecurityScorecard,False,securityScorecardApi,1
+segment,n8n-nodes-base.segment,Segment,dist/nodes/Segment/Segment.node.js,Segment,False,segmentApi,1
+sendGrid,n8n-nodes-base.sendGrid,SendGrid,dist/nodes/SendGrid/SendGrid.node.js,SendGrid,False,sendGridApi,1
+sendInBlue,n8n-nodes-base.sendInBlue,Brevo,dist/nodes/Brevo/Brevo.node.js,Brevo,False,sendInBlueApi,1
+sendInBlueTrigger,n8n-nodes-base.sendInBlueTrigger,BrevoTrigger,dist/nodes/Brevo/BrevoTrigger.node.js,Brevo,True,sendInBlueApi,1
+sendy,n8n-nodes-base.sendy,Sendy,dist/nodes/Sendy/Sendy.node.js,Sendy,False,sendyApi,1
+sentryIo,n8n-nodes-base.sentryIo,SentryIo,dist/nodes/SentryIo/SentryIo.node.js,SentryIo,False,"sentryIoApi, sentryIoOAuth2Api, sentryIoServerApi",3
+serviceNow,n8n-nodes-base.serviceNow,ServiceNow,dist/nodes/ServiceNow/ServiceNow.node.js,ServiceNow,False,"serviceNowBasicApi, serviceNowOAuth2Api",2
+set,n8n-nodes-base.set,Set,dist/nodes/Set/Set.node.js,Set,False,,0
+shopify,n8n-nodes-base.shopify,Shopify,dist/nodes/Shopify/Shopify.node.js,Shopify,False,"shopifyAccessTokenApi, shopifyApi, shopifyOAuth2Api",3
+shopifyTrigger,n8n-nodes-base.shopifyTrigger,ShopifyTrigger,dist/nodes/Shopify/ShopifyTrigger.node.js,Shopify,True,"shopifyAccessTokenApi, shopifyApi, shopifyOAuth2Api",3
+signl4,n8n-nodes-base.signl4,Signl4,dist/nodes/Signl4/Signl4.node.js,Signl4,False,signl4Api,1
+simulate,n8n-nodes-base.simulate,Simulate,dist/nodes/Simulate/Simulate.node.js,Simulate,False,,0
+simulateTrigger,n8n-nodes-base.simulateTrigger,SimulateTrigger,dist/nodes/Simulate/SimulateTrigger.node.js,Simulate,True,,0
+slack,n8n-nodes-base.slack,Slack,dist/nodes/Slack/Slack.node.js,Slack,False,"slackApi, slackOAuth2Api",2
+slackTrigger,n8n-nodes-base.slackTrigger,SlackTrigger,dist/nodes/Slack/SlackTrigger.node.js,Slack,True,slackApi,1
+sms77,n8n-nodes-base.sms77,Sms77,dist/nodes/Sms77/Sms77.node.js,Sms77,False,sms77Api,1
+snowflake,n8n-nodes-base.snowflake,Snowflake,dist/nodes/Snowflake/Snowflake.node.js,Snowflake,False,snowflake,1
+sort,n8n-nodes-base.sort,Sort,dist/nodes/Transform/Sort/Sort.node.js,Transform,False,,0
+splitInBatches,n8n-nodes-base.splitInBatches,SplitInBatches,dist/nodes/SplitInBatches/SplitInBatches.node.js,SplitInBatches,False,,0
+splitOut,n8n-nodes-base.splitOut,SplitOut,dist/nodes/Transform/SplitOut/SplitOut.node.js,Transform,False,,0
+splunk,n8n-nodes-base.splunk,Splunk,dist/nodes/Splunk/Splunk.node.js,Splunk,False,splunkApi,1
+spontit,n8n-nodes-base.spontit,Spontit,dist/nodes/Spontit/Spontit.node.js,Spontit,False,spontitApi,1
+spotify,n8n-nodes-base.spotify,Spotify,dist/nodes/Spotify/Spotify.node.js,Spotify,False,spotifyOAuth2Api,1
+spreadsheetFile,n8n-nodes-base.spreadsheetFile,SpreadsheetFile,dist/nodes/SpreadsheetFile/SpreadsheetFile.node.js,SpreadsheetFile,False,,0
+sseTrigger,n8n-nodes-base.sseTrigger,SseTrigger,dist/nodes/SseTrigger/SseTrigger.node.js,SseTrigger,True,,0
+ssh,n8n-nodes-base.ssh,Ssh,dist/nodes/Ssh/Ssh.node.js,Ssh,False,"sshPassword, sshPrivateKey",2
+stackby,n8n-nodes-base.stackby,Stackby,dist/nodes/Stackby/Stackby.node.js,Stackby,False,stackbyApi,1
+start,n8n-nodes-base.start,Start,dist/nodes/Start/Start.node.js,Start,False,,0
+stickyNote,n8n-nodes-base.stickyNote,StickyNote,dist/nodes/StickyNote/StickyNote.node.js,StickyNote,False,,0
+stopAndError,n8n-nodes-base.stopAndError,StopAndError,dist/nodes/StopAndError/StopAndError.node.js,StopAndError,False,,0
+storyblok,n8n-nodes-base.storyblok,Storyblok,dist/nodes/Storyblok/Storyblok.node.js,Storyblok,False,"storyblokContentApi, storyblokManagementApi",2
+strapi,n8n-nodes-base.strapi,Strapi,dist/nodes/Strapi/Strapi.node.js,Strapi,False,"strapiApi, strapiTokenApi",2
+strava,n8n-nodes-base.strava,Strava,dist/nodes/Strava/Strava.node.js,Strava,False,stravaOAuth2Api,1
+stravaTrigger,n8n-nodes-base.stravaTrigger,StravaTrigger,dist/nodes/Strava/StravaTrigger.node.js,Strava,True,stravaOAuth2Api,1
+stripe,n8n-nodes-base.stripe,Stripe,dist/nodes/Stripe/Stripe.node.js,Stripe,False,stripeApi,1
+stripeTrigger,n8n-nodes-base.stripeTrigger,StripeTrigger,dist/nodes/Stripe/StripeTrigger.node.js,Stripe,True,stripeApi,1
+summarize,n8n-nodes-base.summarize,Summarize,dist/nodes/Transform/Summarize/Summarize.node.js,Transform,False,,0
+supabase,n8n-nodes-base.supabase,Supabase,dist/nodes/Supabase/Supabase.node.js,Supabase,False,supabaseApi,1
+surveyMonkeyTrigger,n8n-nodes-base.surveyMonkeyTrigger,SurveyMonkeyTrigger,dist/nodes/SurveyMonkey/SurveyMonkeyTrigger.node.js,SurveyMonkey,True,"surveyMonkeyApi, surveyMonkeyOAuth2Api",2
+switch,n8n-nodes-base.switch,Switch,dist/nodes/Switch/Switch.node.js,Switch,False,,0
+syncroMsp,n8n-nodes-base.syncroMsp,SyncroMsp,dist/nodes/SyncroMSP/SyncroMsp.node.js,SyncroMSP,False,syncroMspApi,1
+taiga,n8n-nodes-base.taiga,Taiga,dist/nodes/Taiga/Taiga.node.js,Taiga,False,taigaApi,1
+taigaTrigger,n8n-nodes-base.taigaTrigger,TaigaTrigger,dist/nodes/Taiga/TaigaTrigger.node.js,Taiga,True,taigaApi,1
+tapfiliate,n8n-nodes-base.tapfiliate,Tapfiliate,dist/nodes/Tapfiliate/Tapfiliate.node.js,Tapfiliate,False,tapfiliateApi,1
+telegram,n8n-nodes-base.telegram,Telegram,dist/nodes/Telegram/Telegram.node.js,Telegram,False,telegramApi,1
+telegramTrigger,n8n-nodes-base.telegramTrigger,TelegramTrigger,dist/nodes/Telegram/TelegramTrigger.node.js,Telegram,True,telegramApi,1
+theHive,n8n-nodes-base.theHive,TheHive,dist/nodes/TheHive/TheHive.node.js,TheHive,False,theHiveApi,1
+theHiveProject,n8n-nodes-base.theHiveProject,TheHiveProject,dist/nodes/TheHiveProject/TheHiveProject.node.js,TheHiveProject,False,theHiveProjectApi,1
+theHiveProjectTrigger,n8n-nodes-base.theHiveProjectTrigger,TheHiveProjectTrigger,dist/nodes/TheHiveProject/TheHiveProjectTrigger.node.js,TheHiveProject,True,,0
+theHiveTrigger,n8n-nodes-base.theHiveTrigger,TheHiveTrigger,dist/nodes/TheHive/TheHiveTrigger.node.js,TheHive,True,,0
+timescaleDb,n8n-nodes-base.timescaleDb,TimescaleDb,dist/nodes/TimescaleDb/TimescaleDb.node.js,TimescaleDb,False,timescaleDb,1
+todoist,n8n-nodes-base.todoist,Todoist,dist/nodes/Todoist/Todoist.node.js,Todoist,False,"todoistApi, todoistOAuth2Api",2
+togglTrigger,n8n-nodes-base.togglTrigger,TogglTrigger,dist/nodes/Toggl/TogglTrigger.node.js,Toggl,True,togglApi,1
+totp,n8n-nodes-base.totp,Totp,dist/nodes/Totp/Totp.node.js,Totp,False,totpApi,1
+travisCi,n8n-nodes-base.travisCi,TravisCi,dist/nodes/TravisCi/TravisCi.node.js,TravisCi,False,travisCiApi,1
+trello,n8n-nodes-base.trello,Trello,dist/nodes/Trello/Trello.node.js,Trello,False,trelloApi,1
+trelloTrigger,n8n-nodes-base.trelloTrigger,TrelloTrigger,dist/nodes/Trello/TrelloTrigger.node.js,Trello,True,trelloApi,1
+twake,n8n-nodes-base.twake,Twake,dist/nodes/Twake/Twake.node.js,Twake,False,twakeCloudApi,1
+twilio,n8n-nodes-base.twilio,Twilio,dist/nodes/Twilio/Twilio.node.js,Twilio,False,twilioApi,1
+twilioTrigger,n8n-nodes-base.twilioTrigger,TwilioTrigger,dist/nodes/Twilio/TwilioTrigger.node.js,Twilio,True,twilioApi,1
+twist,n8n-nodes-base.twist,Twist,dist/nodes/Twist/Twist.node.js,Twist,False,twistOAuth2Api,1
+twitter,n8n-nodes-base.twitter,Twitter,dist/nodes/Twitter/Twitter.node.js,Twitter,False,"twitterOAuth1Api, twitterOAuth2Api",2
+typeformTrigger,n8n-nodes-base.typeformTrigger,TypeformTrigger,dist/nodes/Typeform/TypeformTrigger.node.js,Typeform,True,"typeformApi, typeformOAuth2Api",2
+unleashedSoftware,n8n-nodes-base.unleashedSoftware,UnleashedSoftware,dist/nodes/UnleashedSoftware/UnleashedSoftware.node.js,UnleashedSoftware,False,unleashedSoftwareApi,1
+uplead,n8n-nodes-base.uplead,Uplead,dist/nodes/Uplead/Uplead.node.js,Uplead,False,upleadApi,1
+uproc,n8n-nodes-base.uproc,UProc,dist/nodes/UProc/UProc.node.js,UProc,False,uprocApi,1
+uptimeRobot,n8n-nodes-base.uptimeRobot,UptimeRobot,dist/nodes/UptimeRobot/UptimeRobot.node.js,UptimeRobot,False,uptimeRobotApi,1
+urlScanIo,n8n-nodes-base.urlScanIo,UrlScanIo,dist/nodes/UrlScanIo/UrlScanIo.node.js,UrlScanIo,False,urlScanIoApi,1
+venafiTlsProtectCloud,n8n-nodes-base.venafiTlsProtectCloud,VenafiTlsProtectCloud,dist/nodes/Venafi/ProtectCloud/VenafiTlsProtectCloud.node.js,Venafi,False,venafiTlsProtectCloudApi,1
+venafiTlsProtectCloudTrigger,n8n-nodes-base.venafiTlsProtectCloudTrigger,VenafiTlsProtectCloudTrigger,dist/nodes/Venafi/ProtectCloud/VenafiTlsProtectCloudTrigger.node.js,Venafi,True,venafiTlsProtectCloudApi,1
+venafiTlsProtectDatacenter,n8n-nodes-base.venafiTlsProtectDatacenter,VenafiTlsProtectDatacenter,dist/nodes/Venafi/Datacenter/VenafiTlsProtectDatacenter.node.js,Venafi,False,venafiTlsProtectDatacenterApi,1
+vero,n8n-nodes-base.vero,Vero,dist/nodes/Vero/Vero.node.js,Vero,False,veroApi,1
+vonage,n8n-nodes-base.vonage,Vonage,dist/nodes/Vonage/Vonage.node.js,Vonage,False,vonageApi,1
+wait,n8n-nodes-base.wait,Wait,dist/nodes/Wait/Wait.node.js,Wait,False,"httpBasicAuth, httpHeaderAuth, jwtAuth",3
+webflow,n8n-nodes-base.webflow,Webflow,dist/nodes/Webflow/Webflow.node.js,Webflow,False,"webflowApi, webflowOAuth2Api",2
+webflowTrigger,n8n-nodes-base.webflowTrigger,WebflowTrigger,dist/nodes/Webflow/WebflowTrigger.node.js,Webflow,True,"webflowApi, webflowOAuth2Api",2
+webhook,n8n-nodes-base.webhook,Webhook,dist/nodes/Webhook/Webhook.node.js,Webhook,True,"httpBasicAuth, httpHeaderAuth, jwtAuth",3
+wekan,n8n-nodes-base.wekan,Wekan,dist/nodes/Wekan/Wekan.node.js,Wekan,False,wekanApi,1
+whatsApp,n8n-nodes-base.whatsApp,WhatsApp,dist/nodes/WhatsApp/WhatsApp.node.js,WhatsApp,False,whatsAppApi,1
+whatsAppTrigger,n8n-nodes-base.whatsAppTrigger,WhatsAppTrigger,dist/nodes/WhatsApp/WhatsAppTrigger.node.js,WhatsApp,True,whatsAppTriggerApi,1
+wise,n8n-nodes-base.wise,Wise,dist/nodes/Wise/Wise.node.js,Wise,False,wiseApi,1
+wiseTrigger,n8n-nodes-base.wiseTrigger,WiseTrigger,dist/nodes/Wise/WiseTrigger.node.js,Wise,True,wiseApi,1
+wooCommerce,n8n-nodes-base.wooCommerce,WooCommerce,dist/nodes/WooCommerce/WooCommerce.node.js,WooCommerce,False,wooCommerceApi,1
+wooCommerceTrigger,n8n-nodes-base.wooCommerceTrigger,WooCommerceTrigger,dist/nodes/WooCommerce/WooCommerceTrigger.node.js,WooCommerce,True,wooCommerceApi,1
+wordpress,n8n-nodes-base.wordpress,Wordpress,dist/nodes/Wordpress/Wordpress.node.js,Wordpress,False,wordpressApi,1
+workableTrigger,n8n-nodes-base.workableTrigger,WorkableTrigger,dist/nodes/Workable/WorkableTrigger.node.js,Workable,True,workableApi,1
+workflowTrigger,n8n-nodes-base.workflowTrigger,WorkflowTrigger,dist/nodes/WorkflowTrigger/WorkflowTrigger.node.js,WorkflowTrigger,True,,0
+writeBinaryFile,n8n-nodes-base.writeBinaryFile,WriteBinaryFile,dist/nodes/WriteBinaryFile/WriteBinaryFile.node.js,WriteBinaryFile,False,,0
+wufooTrigger,n8n-nodes-base.wufooTrigger,WufooTrigger,dist/nodes/Wufoo/WufooTrigger.node.js,Wufoo,True,wufooApi,1
+xero,n8n-nodes-base.xero,Xero,dist/nodes/Xero/Xero.node.js,Xero,False,xeroOAuth2Api,1
+xml,n8n-nodes-base.xml,Xml,dist/nodes/Xml/Xml.node.js,Xml,False,,0
+youTube,n8n-nodes-base.youTube,YouTube,dist/nodes/Google/YouTube/YouTube.node.js,Google,False,youTubeOAuth2Api,1
+yourls,n8n-nodes-base.yourls,Yourls,dist/nodes/Yourls/Yourls.node.js,Yourls,False,yourlsApi,1
+zammad,n8n-nodes-base.zammad,Zammad,dist/nodes/Zammad/Zammad.node.js,Zammad,False,"zammadBasicAuthApi, zammadTokenAuthApi",2
+zendesk,n8n-nodes-base.zendesk,Zendesk,dist/nodes/Zendesk/Zendesk.node.js,Zendesk,False,"zendeskApi, zendeskOAuth2Api",2
+zendeskTrigger,n8n-nodes-base.zendeskTrigger,ZendeskTrigger,dist/nodes/Zendesk/ZendeskTrigger.node.js,Zendesk,True,"zendeskApi, zendeskOAuth2Api",2
+zohoCrm,n8n-nodes-base.zohoCrm,ZohoCrm,dist/nodes/Zoho/ZohoCrm.node.js,Zoho,False,zohoOAuth2Api,1
+zoom,n8n-nodes-base.zoom,Zoom,dist/nodes/Zoom/Zoom.node.js,Zoom,False,"zoomApi, zoomOAuth2Api",2
+zulip,n8n-nodes-base.zulip,Zulip,dist/nodes/Zulip/Zulip.node.js,Zulip,False,zulipApi,1

@@ -1,0 +1,1160 @@
+         n8n: справочник по workflow JSON и нодам (включая AI Agent)
+             n8n — справочник по workflow
+                     JSON, нодам и AI Agent
+                              Версия документа: 2025-12-20
+            Для разработчиков и ИИ агентов: как собирать и понимать workflow
+          JSON, как устроены ноды и креденшелсы, и как работает AI Agent (Tools
+                                         Agent).
+          Снимок каталога: n8n-nodes-base v1.113.2 (438 нод) и креденшелсы (385).
+          Примечание: список нод/креденшелсов можно автоматически обновлять (см. раздел
+          5).
+                                                                            Стр. 1
+          n8n: справочник по workflow JSON и нодам (включая AI Agent)
+           Содержание
+           Содержание                                                                       2
+           1. Базовые понятия n8n                                                           3
+           2. Workflow JSON: структура и правила                                            3
+             2.1. Минимальный пример workflow JSON .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 3
+             2.2. Поля объекта node  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 4
+             2.3. Поля connections: как описываются связи .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 4
+             2.4. Expressions и доступ к данным .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 4
+           3. Типы нод и типовые строки type                                                4
+           4. AI Agent (Tools Agent) в n8n                                                  5
+             4.1. Что изменилось в новых версиях .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 5
+             4.2. Как собрать AI Agent workflow по «каноническому» паттерну  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 5
+           5. Как автоматически получить «все данные по нодам» (схемы параметров)           5
+             5.1. Два уровня данных  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 5
+             5.2. Пример извлечения схемы ноды через Node.js  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 6
+             5.3. Массовая выгрузка схем всех нод  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 6
+           6. Источники и как обновлять снимок                                              6
+           Приложение A. Каталог нод (n8n-nodes-base v1.113.2)                              8
+           Приложение B. Каталог креденшелсов (n8n-nodes-base v1.113.2)                   22
+                                                                                         Стр. 2
+       n8n: справочник по workflow JSON и нодам (включая AI Agent)
+        1. Базовые понятия n8n
+        n8n — платформа автоматизации (workflow automation), где вы соединяете ноды
+        (nodes) в граф, запускаемый триггерами и/или вручную. Нода принимает items (массив
+        объектов), делает обработку и отдаёт items дальше по веткам.
+        • Workflow — граф из нод и соединений.
+        • Node — операция/интеграция (HTTP запрос, чтение из Google Sheets, отправка
+        сообщения в Telegram и т.д.).
+        • Credential — сохранённые секреты/ключи (API key, OAuth2 и т.д.), к которым
+        привязываются ноды.
+        • Execution — конкретный запуск workflow (с логами и данными).
+        • Expressions — шаблоны в стиле {{ ... }}, чтобы подставлять данные из потока в
+        параметры нод.
+        Важно: один и тот же workflow можно собирать визуально в UI и/или программно через
+        JSON-описание, которое экспортируется/импортируется.
+        2. Workflow JSON: структура и правила
+        Экспорт workflow в n8n — это JSON с ключевыми секциями nodes и connections. Ниже —
+        практическая «спецификация» того, что ИИ агенту чаще всего нужно знать для
+        генерации корректного workflow JSON.
+        2.1. Минимальный пример workflow JSON
+            {
+              "name": "Demo: HTTP → Set",
+              "nodes": [
+                {
+                  "id": "1",
+                  "name": "HTTP Request",
+                  "type": "n8n-nodes-base.httpRequest",
+                  "typeVersion": 4,
+                  "position": [420, 300],
+                  "parameters": {
+                    "url": "https://example.com/api",
+                    "method": "GET",
+                    "responseFormat": "json"
+                  }
+                },
+                {
+                  "id": "2",
+                  "name": "Set",
+                  "type": "n8n-nodes-base.set",
+                  "typeVersion": 3,
+                  "position": [700, 300],
+                  "parameters": {
+                    "keepOnlySet": true,
+                    "values": {
+                      "string": [
+                        { "name": "source", "value": "={{ $node['HTTP Request'].json.url || 'example' }}" }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "connections": {
+                                                            Стр. 3
+       n8n: справочник по workflow JSON и нодам (включая AI Agent)
+                "HTTP Request": {
+                  "main": [
+                    [
+                      { "node": "Set", "type": "main", "index": 0 }
+                    ]
+                  ]
+                }
+              },
+              "active": false,
+              "settings": {}
+            }
+        Критично: объект connections ссылается на name нод (не на id). Поэтому имена должны
+        быть уникальными внутри workflow.
+        2.2. Поля объекта node
+        • id: строка-идентификатор (часто UUID, но при импорте может быть и простое
+        значение).
+        • name: отображаемое имя ноды. Используется в connections.
+        • type: тип ноды, например n8n-nodes-base.httpRequest.
+        • typeVersion: версия описания ноды (важно для совместимости).
+        • position: [x, y] координаты на канвасе.
+        • parameters: параметры ноды (то, что вы заполняете в UI).
+        • credentials (опц.): какие креды использует нода, например { "telegramApi": { "id":
+        "...", "name": "..." } }.
+        • disabled, continueOnFail, alwaysOutputData и др. (опц.): поведение выполнения.
+        2.3. Поля connections: как описываются связи
+        Связи описываются от выходов одной ноды к входам другой. В большинстве нод
+        основной выход называется main и имеет массив выходных «портов».
+            "connections": {
+              "If": {
+                "main": [
+                  [ { "node": "Send True", "type": "main", "index": 0 } ],
+                  [ { "node": "Send False", "type": "main", "index": 0 } ]
+                ]
+              }
+            }
+        Пример выше: у ноды If два выхода (ветки True/False). Каждый выход — список
+        подключений.
+        2.4. Expressions и доступ к данным
+        Expressions в n8n пишутся внутри ={{ ... }} и позволяют обращаться к данным
+        текущего item и к результатам других нод.
+            ={{ $json.email }}
+            ={{ $node["HTTP Request"].json.data.id }}
+            ={{ $items("Some Node")[0].json }}
+        Для генерации workflow JSON ИИ агенту важно: выражения — это строки, а не
+        отдельный тип. Они живут внутри параметров нод.
+        3. Типы нод и типовые строки type
+                                                             Стр. 4
+       n8n: справочник по workflow JSON и нодам (включая AI Agent)
+        В workflow JSON поле type задаёт реализацию ноды. Для базовых нод (пакет
+        n8n-nodes-base) типы выглядят как n8n-nodes-base.<node_key>.
+        Список node_key и соответствующие файлы реализации можно получить из
+        dist/known/nodes.json пакета n8n-nodes-base (см. приложение).
+        4. AI Agent (Tools Agent) в n8n
+        AI Agent — root-нода из AI/LLM «кластерных» нод. Она связывается с Chat Model,
+        Memory и инструментами (Tools), чтобы агент мог вызывать действия.
+        4.1. Что изменилось в новых версиях
+        В документации n8n отмечено, что до версии 1.82.0 в AI Agent можно было выбирать
+        разные типы агента, но это убрали: теперь все AI Agent ноды работают как Tools Agent
+        (рекомендованный и самый используемый режим).
+        Также указано, что к AI Agent нужно подключить как минимум один tool (sub-node).
+            Ключевая мысль:
+            - современный AI Agent = Tools Agent
+            - без tool-подключений агент работать не будет (нужно минимум 1 tool)
+        4.2. Как собрать AI Agent workflow по «каноническому»
+        паттерну
+        • Chat Model: отдельная sub-нода (например OpenAI Chat Model / Anthropic Chat Model /
+        Ollama Chat Model).
+        • Memory: Simple Memory / Redis Chat Memory / Postgres Chat Memory и т.п.
+        (опционально, но почти всегда нужно).
+        • Tools: один или несколько инструментов (например: Calculator, Custom Code Tool, Call
+        n8n Workflow Tool, HTTP Request Tool и др.).
+        • Root: AI Agent нода, к которой сходятся Chat Model + Tools (+ Memory).
+        Рекомендация для JSON-генерации: сначала сгенерируйте skeleton (root + sub-nodes +
+        connections), затем заполняйте параметры моделей/инструментов.
+        5. Как автоматически получить «все данные
+        по нодам» (схемы параметров)
+        Полный список нод — это только первый шаг. Чтобы ИИ агент «понимал, как строить
+        ноды», ему нужна схема параметров (NodeDescription) каждой ноды. Это реально
+        получить автоматически из npm-пакетов n8n.
+        5.1. Два уровня данных
+        • Каталог типов: имя ноды (node_key), строка type, путь к файлу реализации. Это
+        лежит в dist/known/nodes.json.
+        • Схема параметров: содержимое node.description (properties, inputs/outputs, defaults,
+        etc.). Это находится внутри JS-класса ноды.
+                                                            Стр. 5
+       n8n: справочник по workflow JSON и нодам (включая AI Agent)
+        5.2. Пример извлечения схемы ноды через Node.js
+            // 1) Установите пакет с нодами
+            //    npm i n8n-nodes-base
+            // 2) Импортируйте класс ноды и выведите её описание (schema)
+            const { HttpRequest } = require('n8n-nodes-base/dist/nodes/HttpRequest/HttpRequest.node');
+            const node = new HttpRequest();
+            console.log(node.description); // <-- здесь вся схема параметров (NodeDescription)
+        5.3. Массовая выгрузка схем всех нод
+            /**
+             * Идея:
+             * 1) прочитать dist/known/nodes.json
+             * 2) для каждого node_key взять sourcePath
+             * 3) require() по sourcePath, создать экземпляр, взять .description
+             * 4) сохранить в единый JSON (node_key -> description)
+             */
+            const fs = require('fs');
+            const known = JSON.parse(fs.readFileSync('node_modules/n8n-nodes-base/dist/known/nodes.json', 'utf8'));
+            const out = {};
+            for (const [nodeKey, meta] of Object.entries(known)) {
+              const mod = require('n8n-nodes-base/' + meta.sourcePath);
+              const Cls = mod[meta.className];
+              const inst = new Cls();
+              out[nodeKey] = inst.description;
+            }
+            fs.writeFileSync('ALL_NODE_DESCRIPTIONS.json', JSON.stringify(out, null, 2));
+        Результат ALL_NODE_DESCRIPTIONS.json — это практически «полная база знаний по
+        нодам», которую удобно «скормить» вашему ИИ агенту.
+        6. Источники и как обновлять снимок
+        Этот документ собран на основе официальной документации n8n и содержимого
+        опубликованных npm-пакетов (UNPKG). Чтобы обновить снимок:
+        • Откройте в UNPKG нужную версию n8n-nodes-base и скачайте dist/known/nodes.json
+        и dist/known/credentials.json.
+        • Пересоберите таблицы (каталог нод/кредов) и при необходимости выгрузите
+        .description всех нод по скрипту выше.
+        • Для AI/LLM нод используйте пакет @n8n/n8n-nodes-langchain (аналогичный подход).
+        В конце документа — приложения с полными таблицами нод и креденшелсов для
+        n8n-nodes-base v1.113.2.
+                                                            Стр. 6
+       n8n: справочник по workflow JSON и нодам (включая AI Agent)
+                                                          Стр. 7
+               Приложение: каталог нод и креденшелсов (snapshot)
+                Приложение A. Каталог нод (n8n-nodes-base v1.113.2)
+                Колонки: node_key, type, credentials (keys), sourcePath.
+               node_key                 type                                       credentials                                       sourcePath
+               Brandfetch               n8n-nodes-base.Brandfetch                  brandfetchApi                                     dist/nodes/Brandfetch/Brandfetch.node.js
+               actionNetwork            n8n-nodes-base.actionNetwork               actionNetworkApi                                  dist/nodes/ActionNetwork/ActionNetwork.node.js
+               activeCampaign           n8n-nodes-base.activeCampaign              activeCampaignApi                                 dist/nodes/ActiveCampaign/ActiveCampaign.node.js
+               activeCampaignTrigger    n8n-nodes-base.activeCampaignTrigger       activeCampaignApi                                 dist/nodes/ActiveCampaign/ActiveCampaignTrigger.node.js
+               acuitySchedulingTrigger  n8n-nodes-base.acuitySchedulingTrigger     acuitySchedulingApi, acuitySchedulingOAuth2Api    dist/nodes/AcuityScheduling/AcuitySchedulingTrigger.node.js
+               adalo                    n8n-nodes-base.adalo                       adaloApi                                          dist/nodes/Adalo/Adalo.node.js
+               affinity                 n8n-nodes-base.affinity                    affinityApi                                       dist/nodes/Affinity/Affinity.node.js
+               affinityTrigger          n8n-nodes-base.affinityTrigger             affinityApi                                       dist/nodes/Affinity/AffinityTrigger.node.js
+               aggregate                n8n-nodes-base.aggregate                                                                     dist/nodes/Transform/Aggregate/Aggregate.node.js
+               agileCrm                 n8n-nodes-base.agileCrm                    agileCrmApi                                       dist/nodes/AgileCrm/AgileCrm.node.js
+               aiTransform              n8n-nodes-base.aiTransform                                                                   dist/nodes/AiTransform/AiTransform.node.js
+               airtable                 n8n-nodes-base.airtable                    airtableApi, airtableOAuth2Api, airtableTokenApi  dist/nodes/Airtable/Airtable.node.js
+               airtableTrigger          n8n-nodes-base.airtableTrigger             airtableApi, airtableOAuth2Api, airtableTokenApi  dist/nodes/Airtable/AirtableTrigger.node.js
+               airtop                   n8n-nodes-base.airtop                      airtopApi                                         dist/nodes/Airtop/Airtop.node.js
+               amqp                     n8n-nodes-base.amqp                        amqp                                              dist/nodes/Amqp/Amqp.node.js
+               amqpTrigger              n8n-nodes-base.amqpTrigger                 amqp                                              dist/nodes/Amqp/AmqpTrigger.node.js
+               apiTemplateIo            n8n-nodes-base.apiTemplateIo               apiTemplateIoApi                                  dist/nodes/ApiTemplateIo/ApiTemplateIo.node.js
+               asana                    n8n-nodes-base.asana                       asanaApi, asanaOAuth2Api                          dist/nodes/Asana/Asana.node.js
+               asanaTrigger             n8n-nodes-base.asanaTrigger                asanaApi, asanaOAuth2Api                          dist/nodes/Asana/AsanaTrigger.node.js
+               automizy                 n8n-nodes-base.automizy                    automizyApi                                       dist/nodes/Automizy/Automizy.node.js
+               autopilot                n8n-nodes-base.autopilot                   autopilotApi                                      dist/nodes/Autopilot/Autopilot.node.js
+               autopilotTrigger         n8n-nodes-base.autopilotTrigger            autopilotApi                                      dist/nodes/Autopilot/AutopilotTrigger.node.js
+               awsCertificateManager    n8n-nodes-base.awsCertificateManager       aws                                               dist/nodes/Aws/CertificateManager/AwsCertificateManager.node.js
+               awsCognito               n8n-nodes-base.awsCognito                  aws                                               dist/nodes/Aws/Cognito/AwsCognito.node.js
+               awsComprehend            n8n-nodes-base.awsComprehend               aws                                               dist/nodes/Aws/Comprehend/AwsComprehend.node.js
+               awsDynamoDb              n8n-nodes-base.awsDynamoDb                 aws                                               dist/nodes/Aws/DynamoDB/AwsDynamoDB.node.js
+               awsElb                   n8n-nodes-base.awsElb                      aws                                               dist/nodes/Aws/ELB/AwsElb.node.js
+               awsIam                   n8n-nodes-base.awsIam                      aws                                               dist/nodes/Aws/IAM/AwsIam.node.js
+               awsLambda                n8n-nodes-base.awsLambda                   aws                                               dist/nodes/Aws/AwsLambda.node.js
+               awsRekognition           n8n-nodes-base.awsRekognition              aws                                               dist/nodes/Aws/Rekognition/AwsRekognition.node.js
+                                                                                                                                Стр. 8
+               Приложение: каталог нод и креденшелсов (snapshot)
+               node_key                 type                                      credentials                                      sourcePath
+               awsS3                    n8n-nodes-base.awsS3                      aws                                              dist/nodes/Aws/S3/AwsS3.node.js
+               awsSes                   n8n-nodes-base.awsSes                     aws                                              dist/nodes/Aws/SES/AwsSes.node.js
+               awsSns                   n8n-nodes-base.awsSns                     aws                                              dist/nodes/Aws/AwsSns.node.js
+               awsSnsTrigger            n8n-nodes-base.awsSnsTrigger              aws                                              dist/nodes/Aws/AwsSnsTrigger.node.js
+               awsSqs                   n8n-nodes-base.awsSqs                     aws                                              dist/nodes/Aws/SQS/AwsSqs.node.js
+               awsTextract              n8n-nodes-base.awsTextract                aws                                              dist/nodes/Aws/Textract/AwsTextract.node.js
+               awsTranscribe            n8n-nodes-base.awsTranscribe              aws                                              dist/nodes/Aws/Transcribe/AwsTranscribe.node.js
+               azureCosmosDb            n8n-nodes-base.azureCosmosDb              microsoftAzureCosmosDbSharedKeyApi               dist/nodes/Microsoft/AzureCosmosDb/AzureCosmosDb.node.js
+               azureStorage             n8n-nodes-base.azureStorage               azureStorageOAuth2Api, azureStorageSharedKeyApi  dist/nodes/Microsoft/Storage/AzureStorage.node.js
+               bambooHr                 n8n-nodes-base.bambooHr                   bambooHrApi                                      dist/nodes/BambooHr/BambooHr.node.js
+               bannerbear               n8n-nodes-base.bannerbear                 bannerbearApi                                    dist/nodes/Bannerbear/Bannerbear.node.js
+               baserow                  n8n-nodes-base.baserow                    baserowApi                                       dist/nodes/Baserow/Baserow.node.js
+               beeminder                n8n-nodes-base.beeminder                  beeminderApi, beeminderOAuth2Api                 dist/nodes/Beeminder/Beeminder.node.js
+               bitbucketTrigger         n8n-nodes-base.bitbucketTrigger           bitbucketApi                                     dist/nodes/Bitbucket/BitbucketTrigger.node.js
+               bitly                    n8n-nodes-base.bitly                      bitlyApi, bitlyOAuth2Api                         dist/nodes/Bitly/Bitly.node.js
+               bitwarden                n8n-nodes-base.bitwarden                  bitwardenApi                                     dist/nodes/Bitwarden/Bitwarden.node.js
+               box                      n8n-nodes-base.box                        boxOAuth2Api                                     dist/nodes/Box/Box.node.js
+               boxTrigger               n8n-nodes-base.boxTrigger                 boxOAuth2Api                                     dist/nodes/Box/BoxTrigger.node.js
+               bubble                   n8n-nodes-base.bubble                     bubbleApi                                        dist/nodes/Bubble/Bubble.node.js
+               calTrigger               n8n-nodes-base.calTrigger                 calApi                                           dist/nodes/Cal/CalTrigger.node.js
+               calendlyTrigger          n8n-nodes-base.calendlyTrigger            calendlyApi, calendlyOAuth2Api                   dist/nodes/Calendly/CalendlyTrigger.node.js
+               chargebee                n8n-nodes-base.chargebee                  chargebeeApi                                     dist/nodes/Chargebee/Chargebee.node.js
+               chargebeeTrigger         n8n-nodes-base.chargebeeTrigger                                                            dist/nodes/Chargebee/ChargebeeTrigger.node.js
+               circleCi                 n8n-nodes-base.circleCi                   circleCiApi                                      dist/nodes/CircleCi/CircleCi.node.js
+               ciscoWebex               n8n-nodes-base.ciscoWebex                 ciscoWebexOAuth2Api                              dist/nodes/Cisco/Webex/CiscoWebex.node.js
+               ciscoWebexTrigger        n8n-nodes-base.ciscoWebexTrigger          ciscoWebexOAuth2Api                              dist/nodes/Cisco/Webex/CiscoWebexTrigger.node.js
+               citrixAdc                n8n-nodes-base.citrixAdc                  citrixAdcApi                                     dist/nodes/Netscaler/ADC/NetscalerAdc.node.js
+               clearbit                 n8n-nodes-base.clearbit                   clearbitApi                                      dist/nodes/Clearbit/Clearbit.node.js
+               clickUp                  n8n-nodes-base.clickUp                    clickUpApi, clickUpOAuth2Api                     dist/nodes/ClickUp/ClickUp.node.js
+               clickUpTrigger           n8n-nodes-base.clickUpTrigger             clickUpApi, clickUpOAuth2Api                     dist/nodes/ClickUp/ClickUpTrigger.node.js
+               clockify                 n8n-nodes-base.clockify                   clockifyApi                                      dist/nodes/Clockify/Clockify.node.js
+               clockifyTrigger          n8n-nodes-base.clockifyTrigger            clockifyApi                                      dist/nodes/Clockify/ClockifyTrigger.node.js
+               cloudflare               n8n-nodes-base.cloudflare                 cloudflareApi                                    dist/nodes/Cloudflare/Cloudflare.node.js
+               cockpit                  n8n-nodes-base.cockpit                    cockpitApi                                       dist/nodes/Cockpit/Cockpit.node.js
+                                                                                                                              Стр. 9
+              Приложение: каталог нод и креденшелсов (snapshot)
+               node_key               type                                    credentials                                    sourcePath
+               coda                   n8n-nodes-base.coda                     codaApi                                        dist/nodes/Coda/Coda.node.js
+               code                   n8n-nodes-base.code                                                                    dist/nodes/Code/Code.node.js
+               coinGecko              n8n-nodes-base.coinGecko                                                               dist/nodes/CoinGecko/CoinGecko.node.js
+               compareDatasets        n8n-nodes-base.compareDatasets                                                         dist/nodes/CompareDatasets/CompareDatasets.node.js
+               compression            n8n-nodes-base.compression                                                             dist/nodes/Compression/Compression.node.js
+               contentful             n8n-nodes-base.contentful               contentfulApi                                  dist/nodes/Contentful/Contentful.node.js
+               convertKit             n8n-nodes-base.convertKit               convertKitApi                                  dist/nodes/ConvertKit/ConvertKit.node.js
+               convertKitTrigger      n8n-nodes-base.convertKitTrigger        convertKitApi                                  dist/nodes/ConvertKit/ConvertKitTrigger.node.js
+               convertToFile          n8n-nodes-base.convertToFile                                                           dist/nodes/Files/ConvertToFile/ConvertToFile.node.js
+               copper                 n8n-nodes-base.copper                   copperApi                                      dist/nodes/Copper/Copper.node.js
+               copperTrigger          n8n-nodes-base.copperTrigger            copperApi                                      dist/nodes/Copper/CopperTrigger.node.js
+               cortex                 n8n-nodes-base.cortex                   cortexApi                                      dist/nodes/Cortex/Cortex.node.js
+               crateDb                n8n-nodes-base.crateDb                  crateDb                                        dist/nodes/CrateDb/CrateDb.node.js
+               cron                   n8n-nodes-base.cron                                                                    dist/nodes/Cron/Cron.node.js
+               crowdDev               n8n-nodes-base.crowdDev                 crowdDevApi                                    dist/nodes/CrowdDev/CrowdDev.node.js
+               crowdDevTrigger        n8n-nodes-base.crowdDevTrigger          crowdDevApi                                    dist/nodes/CrowdDev/CrowdDevTrigger.node.js
+               crypto                 n8n-nodes-base.crypto                                                                  dist/nodes/Crypto/Crypto.node.js
+               customerIo             n8n-nodes-base.customerIo               customerIoApi                                  dist/nodes/CustomerIo/CustomerIo.node.js
+               customerIoTrigger      n8n-nodes-base.customerIoTrigger        customerIoApi                                  dist/nodes/CustomerIo/CustomerIoTrigger.node.js
+               dataTable              n8n-nodes-base.dataTable                                                               dist/nodes/DataTable/DataTable.node.js
+               dateTime               n8n-nodes-base.dateTime                                                                dist/nodes/DateTime/DateTime.node.js
+               debugHelper            n8n-nodes-base.debugHelper                                                             dist/nodes/DebugHelper/DebugHelper.node.js
+               deepL                  n8n-nodes-base.deepL                    deepLApi                                       dist/nodes/DeepL/DeepL.node.js
+               demio                  n8n-nodes-base.demio                    demioApi                                       dist/nodes/Demio/Demio.node.js
+               dhl                    n8n-nodes-base.dhl                      dhlApi                                         dist/nodes/Dhl/Dhl.node.js
+               discord                n8n-nodes-base.discord                  discordBotApi, discordOAuth2Api,               dist/nodes/Discord/Discord.node.js
+                                                                              discordWebhookApi
+               discourse              n8n-nodes-base.discourse                discourseApi                                   dist/nodes/Discourse/Discourse.node.js
+               disqus                 n8n-nodes-base.disqus                   disqusApi                                      dist/nodes/Disqus/Disqus.node.js
+               drift                  n8n-nodes-base.drift                    driftApi, driftOAuth2Api                       dist/nodes/Drift/Drift.node.js
+               dropbox                n8n-nodes-base.dropbox                  dropboxApi, dropboxOAuth2Api                   dist/nodes/Dropbox/Dropbox.node.js
+               dropcontact            n8n-nodes-base.dropcontact              dropcontactApi                                 dist/nodes/Dropcontact/Dropcontact.node.js
+               e2eTest                n8n-nodes-base.e2eTest                                                                 dist/nodes/E2eTest/E2eTest.node.js
+               editImage              n8n-nodes-base.editImage                                                               dist/nodes/EditImage/EditImage.node.js
+               egoi                   n8n-nodes-base.egoi                     egoiApi                                        dist/nodes/Egoi/Egoi.node.js
+                                                                                                                        Стр. 10
+                 Приложение: каталог нод и креденшелсов (snapshot)
+                 node_key                     type                                            credentials                                             sourcePath
+                 elasticSecurity              n8n-nodes-base.elasticSecurity                  elasticSecurityApi                                      dist/nodes/Elastic/ElasticSecurity/ElasticSecurity.node.js
+                 elasticsearch                n8n-nodes-base.elasticsearch                    elasticsearchApi                                        dist/nodes/Elastic/Elasticsearch/Elasticsearch.node.js
+                 emailReadImap                n8n-nodes-base.emailReadImap                    imap                                                    dist/nodes/EmailReadImap/EmailReadImap.node.js
+                 emailSend                    n8n-nodes-base.emailSend                        smtp                                                    dist/nodes/EmailSend/EmailSend.node.js
+                 emelia                       n8n-nodes-base.emelia                           emeliaApi                                               dist/nodes/Emelia/Emelia.node.js
+                 emeliaTrigger                n8n-nodes-base.emeliaTrigger                    emeliaApi                                               dist/nodes/Emelia/EmeliaTrigger.node.js
+                 erpNext                      n8n-nodes-base.erpNext                          erpNextApi                                              dist/nodes/ERPNext/ERPNext.node.js
+                 errorTrigger                 n8n-nodes-base.errorTrigger                                                                             dist/nodes/ErrorTrigger/ErrorTrigger.node.js
+                 evaluation                   n8n-nodes-base.evaluation                       googleApi, googleSheetsOAuth2Api                        dist/nodes/Evaluation/Evaluation/Evaluation.node.ee.js
+                 evaluationTrigger            n8n-nodes-base.evaluationTrigger                googleApi, googleSheetsOAuth2Api                        dist/nodes/Evaluation/EvaluationTrigger/EvaluationTrigger.node.ee.js
+                 eventbriteTrigger            n8n-nodes-base.eventbriteTrigger                eventbriteApi, eventbriteOAuth2Api                      dist/nodes/Eventbrite/EventbriteTrigger.node.js
+                 executeCommand               n8n-nodes-base.executeCommand                                                                           dist/nodes/ExecuteCommand/ExecuteCommand.node.js
+                 executeWorkflow              n8n-nodes-base.executeWorkflow                                                                          dist/nodes/ExecuteWorkflow/ExecuteWorkflow/ExecuteWorkflow.node.
+                                                                                                                                                      js
+                 executeWorkflowTrigger       n8n-nodes-base.executeWorkflowTrigger                                                                   dist/nodes/ExecuteWorkflow/ExecuteWorkflowTrigger/ExecuteWorkflo
+                                                                                                                                                      wTrigger.node.js
+                 executionData                n8n-nodes-base.executionData                                                                            dist/nodes/ExecutionData/ExecutionData.node.js
+                 extractFromFile              n8n-nodes-base.extractFromFile                                                                          dist/nodes/Files/ExtractFromFile/ExtractFromFile.node.js
+                 facebookGraphApi             n8n-nodes-base.facebookGraphApi                 facebookGraphApi                                        dist/nodes/Facebook/FacebookGraphApi.node.js
+                 facebookLeadAdsTrigger       n8n-nodes-base.facebookLeadAdsTrigger           facebookLeadAdsOAuth2Api                                dist/nodes/FacebookLeadAds/FacebookLeadAdsTrigger.node.js
+                 facebookTrigger              n8n-nodes-base.facebookTrigger                  facebookGraphAppApi                                     dist/nodes/Facebook/FacebookTrigger.node.js
+                 figmaTrigger                 n8n-nodes-base.figmaTrigger                     figmaApi                                                dist/nodes/Figma/FigmaTrigger.node.js
+                 filemaker                    n8n-nodes-base.filemaker                        fileMaker                                               dist/nodes/FileMaker/FileMaker.node.js
+                 filter                       n8n-nodes-base.filter                                                                                   dist/nodes/Filter/Filter.node.js
+                 flow                         n8n-nodes-base.flow                             flowApi                                                 dist/nodes/Flow/Flow.node.js
+                 flowTrigger                  n8n-nodes-base.flowTrigger                      flowApi                                                 dist/nodes/Flow/FlowTrigger.node.js
+                 form                         n8n-nodes-base.form                                                                                     dist/nodes/Form/Form.node.js
+                 formIoTrigger                n8n-nodes-base.formIoTrigger                    formIoApi                                               dist/nodes/FormIo/FormIoTrigger.node.js
+                 formTrigger                  n8n-nodes-base.formTrigger                      httpBasicAuth                                           dist/nodes/Form/FormTrigger.node.js
+                 formstackTrigger             n8n-nodes-base.formstackTrigger                 formstackApi, formstackOAuth2Api                        dist/nodes/Formstack/FormstackTrigger.node.js
+                 freshdesk                    n8n-nodes-base.freshdesk                        freshdeskApi                                            dist/nodes/Freshdesk/Freshdesk.node.js
+                 freshservice                 n8n-nodes-base.freshservice                     freshserviceApi                                         dist/nodes/Freshservice/Freshservice.node.js
+                 freshworksCrm                n8n-nodes-base.freshworksCrm                    freshworksCrmApi                                        dist/nodes/FreshworksCrm/FreshworksCrm.node.js
+                 ftp                          n8n-nodes-base.ftp                              ftp, sftp                                               dist/nodes/Ftp/Ftp.node.js
+                 function                     n8n-nodes-base.function                                                                                 dist/nodes/Function/Function.node.js
+                                                                                                                                                Стр. 11
+               Приложение: каталог нод и креденшелсов (snapshot)
+                node_key                  type                                        credentials                                         sourcePath
+                functionItem              n8n-nodes-base.functionItem                                                                     dist/nodes/FunctionItem/FunctionItem.node.js
+                gSuiteAdmin               n8n-nodes-base.gSuiteAdmin                  gSuiteAdminOAuth2Api                                dist/nodes/Google/GSuiteAdmin/GSuiteAdmin.node.js
+                getResponse               n8n-nodes-base.getResponse                  getResponseApi, getResponseOAuth2Api                dist/nodes/GetResponse/GetResponse.node.js
+                getResponseTrigger        n8n-nodes-base.getResponseTrigger           getResponseApi, getResponseOAuth2Api                dist/nodes/GetResponse/GetResponseTrigger.node.js
+                ghost                     n8n-nodes-base.ghost                        ghostAdminApi, ghostContentApi                      dist/nodes/Ghost/Ghost.node.js
+                git                       n8n-nodes-base.git                          gitPassword                                         dist/nodes/Git/Git.node.js
+                github                    n8n-nodes-base.github                       githubApi, githubOAuth2Api                          dist/nodes/Github/Github.node.js
+                githubTrigger             n8n-nodes-base.githubTrigger                githubApi, githubOAuth2Api                          dist/nodes/Github/GithubTrigger.node.js
+                gitlab                    n8n-nodes-base.gitlab                       gitlabApi, gitlabOAuth2Api                          dist/nodes/Gitlab/Gitlab.node.js
+                gitlabTrigger             n8n-nodes-base.gitlabTrigger                gitlabApi, gitlabOAuth2Api                          dist/nodes/Gitlab/GitlabTrigger.node.js
+                gmail                     n8n-nodes-base.gmail                        gmailOAuth2, googleApi                              dist/nodes/Google/Gmail/Gmail.node.js
+                gmailTrigger              n8n-nodes-base.gmailTrigger                 gmailOAuth2, googleApi                              dist/nodes/Google/Gmail/GmailTrigger.node.js
+                goToWebinar               n8n-nodes-base.goToWebinar                  goToWebinarOAuth2Api                                dist/nodes/GoToWebinar/GoToWebinar.node.js
+                gong                      n8n-nodes-base.gong                         gongApi, gongOAuth2Api                              dist/nodes/Gong/Gong.node.js
+                googleAds                 n8n-nodes-base.googleAds                    googleAdsOAuth2Api                                  dist/nodes/Google/Ads/GoogleAds.node.js
+                googleAnalytics           n8n-nodes-base.googleAnalytics              googleAnalyticsOAuth2                               dist/nodes/Google/Analytics/GoogleAnalytics.node.js
+                googleBigQuery            n8n-nodes-base.googleBigQuery               googleApi, googleBigQueryOAuth2Api                  dist/nodes/Google/BigQuery/GoogleBigQuery.node.js
+                googleBooks               n8n-nodes-base.googleBooks                  googleApi, googleBooksOAuth2Api                     dist/nodes/Google/Books/GoogleBooks.node.js
+                googleBusinessProfile     n8n-nodes-base.googleBusinessProfile        googleBusinessProfileOAuth2Api                      dist/nodes/Google/BusinessProfile/GoogleBusinessProfile.node.js
+                googleBusinessProfileTrig n8n-nodes-base.googleBusinessProfileTrigge  googleBusinessProfileOAuth2Api                      dist/nodes/Google/BusinessProfile/GoogleBusinessProfileTrigger.node.j
+                ger                       r                                                                                               s
+                googleCalendar            n8n-nodes-base.googleCalendar               googleCalendarOAuth2Api                             dist/nodes/Google/Calendar/GoogleCalendar.node.js
+                googleCalendarTrigger     n8n-nodes-base.googleCalendarTrigger        googleCalendarOAuth2Api                             dist/nodes/Google/Calendar/GoogleCalendarTrigger.node.js
+                googleChat                n8n-nodes-base.googleChat                   googleApi, googleChatOAuth2Api                      dist/nodes/Google/Chat/GoogleChat.node.js
+                googleCloudNaturalLang    n8n-nodes-base.googleCloudNaturalLanguag googleCloudNaturalLanguageOAuth2Api                    dist/nodes/Google/CloudNaturalLanguage/GoogleCloudNaturalLangua
+                uage                      e                                                                                               ge.node.js
+                googleCloudStorage        n8n-nodes-base.googleCloudStorage           googleCloudStorageOAuth2Api                         dist/nodes/Google/CloudStorage/GoogleCloudStorage.node.js
+                googleContacts            n8n-nodes-base.googleContacts               googleContactsOAuth2Api                             dist/nodes/Google/Contacts/GoogleContacts.node.js
+                googleDocs                n8n-nodes-base.googleDocs                   googleApi, googleDocsOAuth2Api                      dist/nodes/Google/Docs/GoogleDocs.node.js
+                googleDrive               n8n-nodes-base.googleDrive                  googleApi, googleDriveOAuth2Api                     dist/nodes/Google/Drive/GoogleDrive.node.js
+                googleDriveTrigger        n8n-nodes-base.googleDriveTrigger           googleApi, googleDriveOAuth2Api                     dist/nodes/Google/Drive/GoogleDriveTrigger.node.js
+                googleFirebaseCloudFires n8n-nodes-base.googleFirebaseCloudFirestor googleApi, googleFirebaseCloudFirestoreOAuth2Api      dist/nodes/Google/Firebase/CloudFirestore/GoogleFirebaseCloudFirest
+                tore                      e                                                                                               ore.node.js
+                googleFirebaseRealtimeD n8n-nodes-base.googleFirebaseRealtimeDat      googleFirebaseRealtimeDatabaseOAuth2Api             dist/nodes/Google/Firebase/RealtimeDatabase/GoogleFirebaseRealtim
+                atabase                   abase                                                                                           eDatabase.node.js
+                                                                                                                                    Стр. 12
+               Приложение: каталог нод и креденшелсов (snapshot)
+                node_key                 type                                        credentials                                        sourcePath
+                googlePerspective        n8n-nodes-base.googlePerspective            googlePerspectiveOAuth2Api                         dist/nodes/Google/Perspective/GooglePerspective.node.js
+                googleSheets             n8n-nodes-base.googleSheets                 googleApi, googleSheetsOAuth2Api                   dist/nodes/Google/Sheet/GoogleSheets.node.js
+                googleSheetsTrigger      n8n-nodes-base.googleSheetsTrigger          googleSheetsTriggerOAuth2Api                       dist/nodes/Google/Sheet/GoogleSheetsTrigger.node.js
+                googleSlides             n8n-nodes-base.googleSlides                 googleApi, googleSlidesOAuth2Api                   dist/nodes/Google/Slides/GoogleSlides.node.js
+                googleTasks              n8n-nodes-base.googleTasks                  googleTasksOAuth2Api                               dist/nodes/Google/Task/GoogleTasks.node.js
+                googleTranslate          n8n-nodes-base.googleTranslate              googleApi, googleTranslateOAuth2Api                dist/nodes/Google/Translate/GoogleTranslate.node.js
+                gotify                   n8n-nodes-base.gotify                       gotifyApi                                          dist/nodes/Gotify/Gotify.node.js
+                grafana                  n8n-nodes-base.grafana                      grafanaApi                                         dist/nodes/Grafana/Grafana.node.js
+                graphql                  n8n-nodes-base.graphql                      httpBasicAuth, httpCustomAuth, httpDigestAuth,     dist/nodes/GraphQL/GraphQL.node.js
+                                                                                     httpHeaderAuth, httpQueryAuth, oAuth1Api,
+                                                                                     oAuth2Api
+                grist                    n8n-nodes-base.grist                        gristApi                                           dist/nodes/Grist/Grist.node.js
+                gumroadTrigger           n8n-nodes-base.gumroadTrigger               gumroadApi                                         dist/nodes/Gumroad/GumroadTrigger.node.js
+                hackerNews               n8n-nodes-base.hackerNews                                                                      dist/nodes/HackerNews/HackerNews.node.js
+                haloPSA                  n8n-nodes-base.haloPSA                      haloPSAApi                                         dist/nodes/HaloPSA/HaloPSA.node.js
+                harvest                  n8n-nodes-base.harvest                      harvestApi, harvestOAuth2Api                       dist/nodes/Harvest/Harvest.node.js
+                helpScout                n8n-nodes-base.helpScout                    helpScoutOAuth2Api                                 dist/nodes/HelpScout/HelpScout.node.js
+                helpScoutTrigger         n8n-nodes-base.helpScoutTrigger             helpScoutOAuth2Api                                 dist/nodes/HelpScout/HelpScoutTrigger.node.js
+                highLevel                n8n-nodes-base.highLevel                    highLevelApi, highLevelOAuth2Api                   dist/nodes/HighLevel/HighLevel.node.js
+                homeAssistant            n8n-nodes-base.homeAssistant                homeAssistantApi                                   dist/nodes/HomeAssistant/HomeAssistant.node.js
+                html                     n8n-nodes-base.html                                                                            dist/nodes/Html/Html.node.js
+                htmlExtract              n8n-nodes-base.htmlExtract                                                                     dist/nodes/HtmlExtract/HtmlExtract.node.js
+                httpRequest              n8n-nodes-base.httpRequest                  httpBasicAuth, httpDigestAuth, httpHeaderAuth,     dist/nodes/HttpRequest/HttpRequest.node.js
+                                                                                     httpQueryAuth, httpSslAuth, oAuth1Api, oAuth2Api
+                hubspot                  n8n-nodes-base.hubspot                      hubspotApi, hubspotAppToken, hubspotOAuth2Api      dist/nodes/Hubspot/Hubspot.node.js
+                hubspotTrigger           n8n-nodes-base.hubspotTrigger               hubspotDeveloperApi                                dist/nodes/Hubspot/HubspotTrigger.node.js
+                humanticAi               n8n-nodes-base.humanticAi                   humanticAiApi                                      dist/nodes/HumanticAI/HumanticAi.node.js
+                hunter                   n8n-nodes-base.hunter                       hunterApi                                          dist/nodes/Hunter/Hunter.node.js
+                iCal                     n8n-nodes-base.iCal                                                                            dist/nodes/ICalendar/ICalendar.node.js
+                if                       n8n-nodes-base.if                                                                              dist/nodes/If/If.node.js
+                intercom                 n8n-nodes-base.intercom                     intercomApi                                        dist/nodes/Intercom/Intercom.node.js
+                interval                 n8n-nodes-base.interval                                                                        dist/nodes/Interval/Interval.node.js
+                invoiceNinja             n8n-nodes-base.invoiceNinja                 invoiceNinjaApi                                    dist/nodes/InvoiceNinja/InvoiceNinja.node.js
+                invoiceNinjaTrigger      n8n-nodes-base.invoiceNinjaTrigger          invoiceNinjaApi                                    dist/nodes/InvoiceNinja/InvoiceNinjaTrigger.node.js
+                itemLists                n8n-nodes-base.itemLists                                                                       dist/nodes/ItemLists/ItemLists.node.js
+                                                                                                                                  Стр. 13
+               Приложение: каталог нод и креденшелсов (snapshot)
+                node_key                  type                                         credentials                                         sourcePath
+                iterable                  n8n-nodes-base.iterable                      iterableApi                                         dist/nodes/Iterable/Iterable.node.js
+                jenkins                   n8n-nodes-base.jenkins                       jenkinsApi                                          dist/nodes/Jenkins/Jenkins.node.js
+                jinaAi                    n8n-nodes-base.jinaAi                        jinaAiApi                                           dist/nodes/JinaAI/JinaAi.node.js
+                jira                      n8n-nodes-base.jira                          jiraSoftwareCloudApi, jiraSoftwareServerApi,        dist/nodes/Jira/Jira.node.js
+                                                                                       jiraSoftwareServerPatApi
+                jiraTrigger               n8n-nodes-base.jiraTrigger                   httpQueryAuth, httpQueryAuth,                       dist/nodes/Jira/JiraTrigger.node.js
+                                                                                       jiraSoftwareCloudApi, jiraSoftwareServerApi,
+                                                                                       jiraSoftwareServerPatApi
+                jotFormTrigger            n8n-nodes-base.jotFormTrigger                jotFormApi                                          dist/nodes/JotForm/JotFormTrigger.node.js
+                jwt                       n8n-nodes-base.jwt                           jwtAuth                                             dist/nodes/Jwt/Jwt.node.js
+                kafka                     n8n-nodes-base.kafka                         kafka                                               dist/nodes/Kafka/Kafka.node.js
+                kafkaTrigger              n8n-nodes-base.kafkaTrigger                  kafka                                               dist/nodes/Kafka/KafkaTrigger.node.js
+                keap                      n8n-nodes-base.keap                          keapOAuth2Api                                       dist/nodes/Keap/Keap.node.js
+                keapTrigger               n8n-nodes-base.keapTrigger                   keapOAuth2Api                                       dist/nodes/Keap/KeapTrigger.node.js
+                kitemaker                 n8n-nodes-base.kitemaker                     kitemakerApi                                        dist/nodes/Kitemaker/Kitemaker.node.js
+                koBoToolbox               n8n-nodes-base.koBoToolbox                   koBoToolboxApi                                      dist/nodes/KoBoToolbox/KoBoToolbox.node.js
+                koBoToolboxTrigger        n8n-nodes-base.koBoToolboxTrigger            koBoToolboxApi                                      dist/nodes/KoBoToolbox/KoBoToolboxTrigger.node.js
+                ldap                      n8n-nodes-base.ldap                          ldap                                                dist/nodes/Ldap/Ldap.node.js
+                lemlist                   n8n-nodes-base.lemlist                       lemlistApi                                          dist/nodes/Lemlist/Lemlist.node.js
+                lemlistTrigger            n8n-nodes-base.lemlistTrigger                lemlistApi                                          dist/nodes/Lemlist/LemlistTrigger.node.js
+                limit                     n8n-nodes-base.limit                                                                             dist/nodes/Transform/Limit/Limit.node.js
+                line                      n8n-nodes-base.line                          lineNotifyOAuth2Api                                 dist/nodes/Line/Line.node.js
+                linear                    n8n-nodes-base.linear                        linearApi, linearOAuth2Api                          dist/nodes/Linear/Linear.node.js
+                linearTrigger             n8n-nodes-base.linearTrigger                 linearApi, linearOAuth2Api                          dist/nodes/Linear/LinearTrigger.node.js
+                lingvaNex                 n8n-nodes-base.lingvaNex                     lingvaNexApi                                        dist/nodes/LingvaNex/LingvaNex.node.js
+                linkedIn                  n8n-nodes-base.linkedIn                      linkedInCommunityManagementOAuth2Api,               dist/nodes/LinkedIn/LinkedIn.node.js
+                                                                                       linkedInOAuth2Api
+                localFileTrigger          n8n-nodes-base.localFileTrigger                                                                  dist/nodes/LocalFileTrigger/LocalFileTrigger.node.js
+                loneScale                 n8n-nodes-base.loneScale                     loneScaleApi                                        dist/nodes/LoneScale/LoneScale.node.js
+                loneScaleTrigger          n8n-nodes-base.loneScaleTrigger              loneScaleApi                                        dist/nodes/LoneScale/LoneScaleTrigger.node.js
+                magento2                  n8n-nodes-base.magento2                      magento2Api                                         dist/nodes/Magento/Magento2.node.js
+                mailcheck                 n8n-nodes-base.mailcheck                     mailcheckApi                                        dist/nodes/Mailcheck/Mailcheck.node.js
+                mailchimp                 n8n-nodes-base.mailchimp                     mailchimpApi, mailchimpOAuth2Api                    dist/nodes/Mailchimp/Mailchimp.node.js
+                mailchimpTrigger          n8n-nodes-base.mailchimpTrigger              mailchimpApi, mailchimpOAuth2Api                    dist/nodes/Mailchimp/MailchimpTrigger.node.js
+                mailerLite                n8n-nodes-base.mailerLite                    mailerLiteApi                                       dist/nodes/MailerLite/MailerLite.node.js
+                                                                                                                                     Стр. 14
+                Приложение: каталог нод и креденшелсов (snapshot)
+                 node_key                   type                                           credentials                                           sourcePath
+                 mailerLiteTrigger          n8n-nodes-base.mailerLiteTrigger               mailerLiteApi                                         dist/nodes/MailerLite/MailerLiteTrigger.node.js
+                 mailgun                    n8n-nodes-base.mailgun                         mailgunApi                                            dist/nodes/Mailgun/Mailgun.node.js
+                 mailjet                    n8n-nodes-base.mailjet                         mailjetEmailApi, mailjetSmsApi                        dist/nodes/Mailjet/Mailjet.node.js
+                 mailjetTrigger             n8n-nodes-base.mailjetTrigger                  mailjetEmailApi                                       dist/nodes/Mailjet/MailjetTrigger.node.js
+                 mandrill                   n8n-nodes-base.mandrill                        mandrillApi                                           dist/nodes/Mandrill/Mandrill.node.js
+                 manualTrigger              n8n-nodes-base.manualTrigger                                                                         dist/nodes/ManualTrigger/ManualTrigger.node.js
+                 markdown                   n8n-nodes-base.markdown                                                                              dist/nodes/Markdown/Markdown.node.js
+                 marketstack                n8n-nodes-base.marketstack                     marketstackApi                                        dist/nodes/Marketstack/Marketstack.node.js
+                 matrix                     n8n-nodes-base.matrix                          matrixApi                                             dist/nodes/Matrix/Matrix.node.js
+                 mattermost                 n8n-nodes-base.mattermost                      mattermostApi                                         dist/nodes/Mattermost/Mattermost.node.js
+                 mautic                     n8n-nodes-base.mautic                          mauticApi, mauticOAuth2Api                            dist/nodes/Mautic/Mautic.node.js
+                 mauticTrigger              n8n-nodes-base.mauticTrigger                   mauticApi, mauticOAuth2Api                            dist/nodes/Mautic/MauticTrigger.node.js
+                 medium                     n8n-nodes-base.medium                          mediumApi, mediumOAuth2Api                            dist/nodes/Medium/Medium.node.js
+                 merge                      n8n-nodes-base.merge                                                                                 dist/nodes/Merge/Merge.node.js
+                 messageBird                n8n-nodes-base.messageBird                     messageBirdApi                                        dist/nodes/MessageBird/MessageBird.node.js
+                 metabase                   n8n-nodes-base.metabase                        metabaseApi                                           dist/nodes/Metabase/Metabase.node.js
+                 microsoftDynamicsCrm       n8n-nodes-base.microsoftDynamicsCrm            microsoftDynamicsOAuth2Api                            dist/nodes/Microsoft/Dynamics/MicrosoftDynamicsCrm.node.js
+                 microsoftEntra             n8n-nodes-base.microsoftEntra                  microsoftEntraOAuth2Api                               dist/nodes/Microsoft/Entra/MicrosoftEntra.node.js
+                 microsoftExcel             n8n-nodes-base.microsoftExcel                  microsoftExcelOAuth2Api                               dist/nodes/Microsoft/Excel/MicrosoftExcel.node.js
+                 microsoftGraphSecurity     n8n-nodes-base.microsoftGraphSecurity          microsoftGraphSecurityOAuth2Api                       dist/nodes/Microsoft/GraphSecurity/MicrosoftGraphSecurity.node.js
+                 microsoftOneDrive          n8n-nodes-base.microsoftOneDrive               microsoftOneDriveOAuth2Api                            dist/nodes/Microsoft/OneDrive/MicrosoftOneDrive.node.js
+                 microsoftOneDriveTrigge    n8n-nodes-base.microsoftOneDriveTrigger        microsoftOneDriveOAuth2Api                            dist/nodes/Microsoft/OneDrive/MicrosoftOneDriveTrigger.node.js
+                 r
+                 microsoftOutlook           n8n-nodes-base.microsoftOutlook                microsoftOutlookOAuth2Api                             dist/nodes/Microsoft/Outlook/MicrosoftOutlook.node.js
+                 microsoftOutlookTrigger    n8n-nodes-base.microsoftOutlookTrigger         microsoftOutlookOAuth2Api                             dist/nodes/Microsoft/Outlook/MicrosoftOutlookTrigger.node.js
+                 microsoftSharePoint        n8n-nodes-base.microsoftSharePoint             microsoftSharePointOAuth2Api                          dist/nodes/Microsoft/SharePoint/MicrosoftSharePoint.node.js
+                 microsoftSql               n8n-nodes-base.microsoftSql                    microsoftSql                                          dist/nodes/Microsoft/Sql/MicrosoftSql.node.js
+                 microsoftTeams             n8n-nodes-base.microsoftTeams                  microsoftTeamsOAuth2Api                               dist/nodes/Microsoft/Teams/MicrosoftTeams.node.js
+                 microsoftTeamsTrigger      n8n-nodes-base.microsoftTeamsTrigger           microsoftTeamsOAuth2Api                               dist/nodes/Microsoft/Teams/MicrosoftTeamsTrigger.node.js
+                 microsoftToDo              n8n-nodes-base.microsoftToDo                   microsoftToDoOAuth2Api                                dist/nodes/Microsoft/ToDo/MicrosoftToDo.node.js
+                 mindee                     n8n-nodes-base.mindee                          mindeeInvoiceApi, mindeeReceiptApi                    dist/nodes/Mindee/Mindee.node.js
+                 misp                       n8n-nodes-base.misp                            mispApi                                               dist/nodes/Misp/Misp.node.js
+                 mistralAi                  n8n-nodes-base.mistralAi                                                                             dist/nodes/MistralAI/MistralAi.node.js
+                 mocean                     n8n-nodes-base.mocean                          moceanApi                                             dist/nodes/Mocean/Mocean.node.js
+                 mondayCom                  n8n-nodes-base.mondayCom                       mondayComApi, mondayComOAuth2Api                      dist/nodes/MondayCom/MondayCom.node.js
+                                                                                                                                           Стр. 15
+              Приложение: каталог нод и креденшелсов (snapshot)
+               node_key               type                                     credentials                                    sourcePath
+               mongoDb                n8n-nodes-base.mongoDb                   mongoDb                                        dist/nodes/MongoDb/MongoDb.node.js
+               monicaCrm              n8n-nodes-base.monicaCrm                 monicaCrmApi                                   dist/nodes/MonicaCrm/MonicaCrm.node.js
+               moveBinaryData         n8n-nodes-base.moveBinaryData                                                           dist/nodes/MoveBinaryData/MoveBinaryData.node.js
+               mqtt                   n8n-nodes-base.mqtt                      mqtt                                           dist/nodes/MQTT/Mqtt.node.js
+               mqttTrigger            n8n-nodes-base.mqttTrigger               mqtt                                           dist/nodes/MQTT/MqttTrigger.node.js
+               msg91                  n8n-nodes-base.msg91                     msg91Api                                       dist/nodes/Msg91/Msg91.node.js
+               mySql                  n8n-nodes-base.mySql                     mySql                                          dist/nodes/MySql/MySql.node.js
+               n8n                    n8n-nodes-base.n8n                       n8nApi                                         dist/nodes/N8n/N8n.node.js
+               n8nTrainingCustomerDat n8n-nodes-base.n8nTrainingCustomerDatast                                                dist/nodes/N8nTrainingCustomerDatastore/N8nTrainingCustomerData
+               astore                 ore                                                                                     store.node.js
+               n8nTrainingCustomerMes n8n-nodes-base.n8nTrainingCustomerMesse                                                 dist/nodes/N8nTrainingCustomerMessenger/N8nTrainingCustomerMes
+               senger                 nger                                                                                    senger.node.js
+               n8nTrigger             n8n-nodes-base.n8nTrigger                                                               dist/nodes/N8nTrigger/N8nTrigger.node.js
+               nasa                   n8n-nodes-base.nasa                      nasaApi                                        dist/nodes/Nasa/Nasa.node.js
+               netlify                n8n-nodes-base.netlify                   netlifyApi                                     dist/nodes/Netlify/Netlify.node.js
+               netlifyTrigger         n8n-nodes-base.netlifyTrigger            netlifyApi                                     dist/nodes/Netlify/NetlifyTrigger.node.js
+               nextCloud              n8n-nodes-base.nextCloud                 nextCloudApi, nextCloudOAuth2Api               dist/nodes/NextCloud/NextCloud.node.js
+               noOp                   n8n-nodes-base.noOp                                                                     dist/nodes/NoOp/NoOp.node.js
+               nocoDb                 n8n-nodes-base.nocoDb                    nocoDb, nocoDbApiToken                         dist/nodes/NocoDB/NocoDB.node.js
+               notion                 n8n-nodes-base.notion                    notionApi                                      dist/nodes/Notion/Notion.node.js
+               notionTrigger          n8n-nodes-base.notionTrigger             notionApi                                      dist/nodes/Notion/NotionTrigger.node.js
+               npm                    n8n-nodes-base.npm                       npmApi                                         dist/nodes/Npm/Npm.node.js
+               odoo                   n8n-nodes-base.odoo                      odooApi                                        dist/nodes/Odoo/Odoo.node.js
+               okta                   n8n-nodes-base.okta                      oktaApi                                        dist/nodes/Okta/Okta.node.js
+               oneSimpleApi           n8n-nodes-base.oneSimpleApi              oneSimpleApi                                   dist/nodes/OneSimpleApi/OneSimpleApi.node.js
+               onfleet                n8n-nodes-base.onfleet                   onfleetApi                                     dist/nodes/Onfleet/Onfleet.node.js
+               onfleetTrigger         n8n-nodes-base.onfleetTrigger            onfleetApi                                     dist/nodes/Onfleet/OnfleetTrigger.node.js
+               openAi                 n8n-nodes-base.openAi                    openAiApi                                      dist/nodes/OpenAi/OpenAi.node.js
+               openThesaurus          n8n-nodes-base.openThesaurus                                                            dist/nodes/OpenThesaurus/OpenThesaurus.node.js
+               openWeatherMap         n8n-nodes-base.openWeatherMap            openWeatherMapApi                              dist/nodes/OpenWeatherMap/OpenWeatherMap.node.js
+               orbit                  n8n-nodes-base.orbit                     orbitApi                                       dist/nodes/Orbit/Orbit.node.js
+               oura                   n8n-nodes-base.oura                      ouraApi                                        dist/nodes/Oura/Oura.node.js
+               paddle                 n8n-nodes-base.paddle                    paddleApi                                      dist/nodes/Paddle/Paddle.node.js
+               pagerDuty              n8n-nodes-base.pagerDuty                 pagerDutyApi, pagerDutyOAuth2Api               dist/nodes/PagerDuty/PagerDuty.node.js
+               payPal                 n8n-nodes-base.payPal                    payPalApi                                      dist/nodes/PayPal/PayPal.node.js
+                                                                                                                        Стр. 16
+               Приложение: каталог нод и креденшелсов (snapshot)
+                node_key                  type                                        credentials                                         sourcePath
+                payPalTrigger             n8n-nodes-base.payPalTrigger                payPalApi                                           dist/nodes/PayPal/PayPalTrigger.node.js
+                peekalink                 n8n-nodes-base.peekalink                    peekalinkApi                                        dist/nodes/Peekalink/Peekalink.node.js
+                perplexity                n8n-nodes-base.perplexity                   perplexityApi                                       dist/nodes/Perplexity/Perplexity.node.js
+                phantombuster             n8n-nodes-base.phantombuster                phantombusterApi                                    dist/nodes/Phantombuster/Phantombuster.node.js
+                philipsHue                n8n-nodes-base.philipsHue                   philipsHueOAuth2Api                                 dist/nodes/PhilipsHue/PhilipsHue.node.js
+                pipedrive                 n8n-nodes-base.pipedrive                    pipedriveApi, pipedriveOAuth2Api                    dist/nodes/Pipedrive/Pipedrive.node.js
+                pipedriveTrigger          n8n-nodes-base.pipedriveTrigger             httpBasicAuth, pipedriveApi, pipedriveOAuth2Api     dist/nodes/Pipedrive/PipedriveTrigger.node.js
+                plivo                     n8n-nodes-base.plivo                        plivoApi                                            dist/nodes/Plivo/Plivo.node.js
+                postBin                   n8n-nodes-base.postBin                                                                          dist/nodes/PostBin/PostBin.node.js
+                postHog                   n8n-nodes-base.postHog                      postHogApi                                          dist/nodes/PostHog/PostHog.node.js
+                postgres                  n8n-nodes-base.postgres                     postgres                                            dist/nodes/Postgres/Postgres.node.js
+                postgresTrigger           n8n-nodes-base.postgresTrigger              postgres                                            dist/nodes/Postgres/PostgresTrigger.node.js
+                postmarkTrigger           n8n-nodes-base.postmarkTrigger              postmarkApi                                         dist/nodes/Postmark/PostmarkTrigger.node.js
+                profitWell                n8n-nodes-base.profitWell                   profitWellApi                                       dist/nodes/ProfitWell/ProfitWell.node.js
+                pushbullet                n8n-nodes-base.pushbullet                   pushbulletOAuth2Api                                 dist/nodes/Pushbullet/Pushbullet.node.js
+                pushcut                   n8n-nodes-base.pushcut                      pushcutApi                                          dist/nodes/Pushcut/Pushcut.node.js
+                pushcutTrigger            n8n-nodes-base.pushcutTrigger               pushcutApi                                          dist/nodes/Pushcut/PushcutTrigger.node.js
+                pushover                  n8n-nodes-base.pushover                     pushoverApi                                         dist/nodes/Pushover/Pushover.node.js
+                questDb                   n8n-nodes-base.questDb                      questDb                                             dist/nodes/QuestDb/QuestDb.node.js
+                quickChart                n8n-nodes-base.quickChart                                                                       dist/nodes/QuickChart/QuickChart.node.js
+                quickbase                 n8n-nodes-base.quickbase                    quickbaseApi                                        dist/nodes/QuickBase/QuickBase.node.js
+                quickbooks                n8n-nodes-base.quickbooks                   quickBooksOAuth2Api                                 dist/nodes/QuickBooks/QuickBooks.node.js
+                rabbitmq                  n8n-nodes-base.rabbitmq                     rabbitmq                                            dist/nodes/RabbitMQ/RabbitMQ.node.js
+                rabbitmqTrigger           n8n-nodes-base.rabbitmqTrigger              rabbitmq                                            dist/nodes/RabbitMQ/RabbitMQTrigger.node.js
+                raindrop                  n8n-nodes-base.raindrop                     raindropOAuth2Api                                   dist/nodes/Raindrop/Raindrop.node.js
+                readBinaryFile            n8n-nodes-base.readBinaryFile                                                                   dist/nodes/ReadBinaryFile/ReadBinaryFile.node.js
+                readBinaryFiles           n8n-nodes-base.readBinaryFiles                                                                  dist/nodes/ReadBinaryFiles/ReadBinaryFiles.node.js
+                readPDF                   n8n-nodes-base.readPDF                                                                          dist/nodes/ReadPdf/ReadPDF.node.js
+                readWriteFile             n8n-nodes-base.readWriteFile                                                                    dist/nodes/Files/ReadWriteFile/ReadWriteFile.node.js
+                reddit                    n8n-nodes-base.reddit                       redditOAuth2Api                                     dist/nodes/Reddit/Reddit.node.js
+                redis                     n8n-nodes-base.redis                        redis                                               dist/nodes/Redis/Redis.node.js
+                redisTrigger              n8n-nodes-base.redisTrigger                 redis                                               dist/nodes/Redis/RedisTrigger.node.js
+                removeDuplicates          n8n-nodes-base.removeDuplicates                                                                 dist/nodes/Transform/RemoveDuplicates/RemoveDuplicates.node.js
+                renameKeys                n8n-nodes-base.renameKeys                                                                       dist/nodes/RenameKeys/RenameKeys.node.js
+                                                                                                                                    Стр. 17
+                Приложение: каталог нод и креденшелсов (snapshot)
+                 node_key                  type                                          credentials                                           sourcePath
+                 respondToWebhook          n8n-nodes-base.respondToWebhook               jwtAuth                                               dist/nodes/RespondToWebhook/RespondToWebhook.node.js
+                 rocketchat                n8n-nodes-base.rocketchat                     rocketchatApi                                         dist/nodes/Rocketchat/Rocketchat.node.js
+                 rssFeedRead               n8n-nodes-base.rssFeedRead                                                                          dist/nodes/RssFeedRead/RssFeedRead.node.js
+                 rssFeedReadTrigger        n8n-nodes-base.rssFeedReadTrigger                                                                   dist/nodes/RssFeedRead/RssFeedReadTrigger.node.js
+                 rundeck                   n8n-nodes-base.rundeck                        rundeckApi                                            dist/nodes/Rundeck/Rundeck.node.js
+                 s3                        n8n-nodes-base.s3                             s3                                                    dist/nodes/S3/S3.node.js
+                 salesforce                n8n-nodes-base.salesforce                     salesforceJwtApi, salesforceOAuth2Api                 dist/nodes/Salesforce/Salesforce.node.js
+                 salesforceTrigger         n8n-nodes-base.salesforceTrigger              salesforceOAuth2Api                                   dist/nodes/Salesforce/SalesforceTrigger.node.js
+                 salesmate                 n8n-nodes-base.salesmate                      salesmateApi                                          dist/nodes/Salesmate/Salesmate.node.js
+                 scheduleTrigger           n8n-nodes-base.scheduleTrigger                                                                      dist/nodes/Schedule/ScheduleTrigger.node.js
+                 seaTable                  n8n-nodes-base.seaTable                       seaTableApi                                           dist/nodes/SeaTable/SeaTable.node.js
+                 seaTableTrigger           n8n-nodes-base.seaTableTrigger                seaTableApi                                           dist/nodes/SeaTable/SeaTableTrigger.node.js
+                 securityScorecard         n8n-nodes-base.securityScorecard              securityScorecardApi                                  dist/nodes/SecurityScorecard/SecurityScorecard.node.js
+                 segment                   n8n-nodes-base.segment                        segmentApi                                            dist/nodes/Segment/Segment.node.js
+                 sendGrid                  n8n-nodes-base.sendGrid                       sendGridApi                                           dist/nodes/SendGrid/SendGrid.node.js
+                 sendInBlue                n8n-nodes-base.sendInBlue                     sendInBlueApi                                         dist/nodes/Brevo/Brevo.node.js
+                 sendInBlueTrigger         n8n-nodes-base.sendInBlueTrigger              sendInBlueApi                                         dist/nodes/Brevo/BrevoTrigger.node.js
+                 sendy                     n8n-nodes-base.sendy                          sendyApi                                              dist/nodes/Sendy/Sendy.node.js
+                 sentryIo                  n8n-nodes-base.sentryIo                       sentryIoApi, sentryIoOAuth2Api, sentryIoServerApi     dist/nodes/SentryIo/SentryIo.node.js
+                 serviceNow                n8n-nodes-base.serviceNow                     serviceNowBasicApi, serviceNowOAuth2Api               dist/nodes/ServiceNow/ServiceNow.node.js
+                 set                       n8n-nodes-base.set                                                                                  dist/nodes/Set/Set.node.js
+                 shopify                   n8n-nodes-base.shopify                        shopifyAccessTokenApi, shopifyApi,                    dist/nodes/Shopify/Shopify.node.js
+                                                                                         shopifyOAuth2Api
+                 shopifyTrigger            n8n-nodes-base.shopifyTrigger                 shopifyAccessTokenApi, shopifyApi,                    dist/nodes/Shopify/ShopifyTrigger.node.js
+                                                                                         shopifyOAuth2Api
+                 signl4                    n8n-nodes-base.signl4                         signl4Api                                             dist/nodes/Signl4/Signl4.node.js
+                 simulate                  n8n-nodes-base.simulate                                                                             dist/nodes/Simulate/Simulate.node.js
+                 simulateTrigger           n8n-nodes-base.simulateTrigger                                                                      dist/nodes/Simulate/SimulateTrigger.node.js
+                 slack                     n8n-nodes-base.slack                          slackApi, slackOAuth2Api                              dist/nodes/Slack/Slack.node.js
+                 slackTrigger              n8n-nodes-base.slackTrigger                   slackApi                                              dist/nodes/Slack/SlackTrigger.node.js
+                 sms77                     n8n-nodes-base.sms77                          sms77Api                                              dist/nodes/Sms77/Sms77.node.js
+                 snowflake                 n8n-nodes-base.snowflake                      snowflake                                             dist/nodes/Snowflake/Snowflake.node.js
+                 sort                      n8n-nodes-base.sort                                                                                 dist/nodes/Transform/Sort/Sort.node.js
+                 splitInBatches            n8n-nodes-base.splitInBatches                                                                       dist/nodes/SplitInBatches/SplitInBatches.node.js
+                 splitOut                  n8n-nodes-base.splitOut                                                                             dist/nodes/Transform/SplitOut/SplitOut.node.js
+                                                                                                                                        Стр. 18
+               Приложение: каталог нод и креденшелсов (snapshot)
+                node_key                  type                                         credentials                                         sourcePath
+                splunk                    n8n-nodes-base.splunk                        splunkApi                                           dist/nodes/Splunk/Splunk.node.js
+                spontit                   n8n-nodes-base.spontit                       spontitApi                                          dist/nodes/Spontit/Spontit.node.js
+                spotify                   n8n-nodes-base.spotify                       spotifyOAuth2Api                                    dist/nodes/Spotify/Spotify.node.js
+                spreadsheetFile           n8n-nodes-base.spreadsheetFile                                                                   dist/nodes/SpreadsheetFile/SpreadsheetFile.node.js
+                sseTrigger                n8n-nodes-base.sseTrigger                                                                        dist/nodes/SseTrigger/SseTrigger.node.js
+                ssh                       n8n-nodes-base.ssh                           sshPassword, sshPrivateKey                          dist/nodes/Ssh/Ssh.node.js
+                stackby                   n8n-nodes-base.stackby                       stackbyApi                                          dist/nodes/Stackby/Stackby.node.js
+                start                     n8n-nodes-base.start                                                                             dist/nodes/Start/Start.node.js
+                stickyNote                n8n-nodes-base.stickyNote                                                                        dist/nodes/StickyNote/StickyNote.node.js
+                stopAndError              n8n-nodes-base.stopAndError                                                                      dist/nodes/StopAndError/StopAndError.node.js
+                storyblok                 n8n-nodes-base.storyblok                     storyblokContentApi, storyblokManagementApi         dist/nodes/Storyblok/Storyblok.node.js
+                strapi                    n8n-nodes-base.strapi                        strapiApi, strapiTokenApi                           dist/nodes/Strapi/Strapi.node.js
+                strava                    n8n-nodes-base.strava                        stravaOAuth2Api                                     dist/nodes/Strava/Strava.node.js
+                stravaTrigger             n8n-nodes-base.stravaTrigger                 stravaOAuth2Api                                     dist/nodes/Strava/StravaTrigger.node.js
+                stripe                    n8n-nodes-base.stripe                        stripeApi                                           dist/nodes/Stripe/Stripe.node.js
+                stripeTrigger             n8n-nodes-base.stripeTrigger                 stripeApi                                           dist/nodes/Stripe/StripeTrigger.node.js
+                summarize                 n8n-nodes-base.summarize                                                                         dist/nodes/Transform/Summarize/Summarize.node.js
+                supabase                  n8n-nodes-base.supabase                      supabaseApi                                         dist/nodes/Supabase/Supabase.node.js
+                surveyMonkeyTrigger       n8n-nodes-base.surveyMonkeyTrigger           surveyMonkeyApi, surveyMonkeyOAuth2Api              dist/nodes/SurveyMonkey/SurveyMonkeyTrigger.node.js
+                switch                    n8n-nodes-base.switch                                                                            dist/nodes/Switch/Switch.node.js
+                syncroMsp                 n8n-nodes-base.syncroMsp                     syncroMspApi                                        dist/nodes/SyncroMSP/SyncroMsp.node.js
+                taiga                     n8n-nodes-base.taiga                         taigaApi                                            dist/nodes/Taiga/Taiga.node.js
+                taigaTrigger              n8n-nodes-base.taigaTrigger                  taigaApi                                            dist/nodes/Taiga/TaigaTrigger.node.js
+                tapfiliate                n8n-nodes-base.tapfiliate                    tapfiliateApi                                       dist/nodes/Tapfiliate/Tapfiliate.node.js
+                telegram                  n8n-nodes-base.telegram                      telegramApi                                         dist/nodes/Telegram/Telegram.node.js
+                telegramTrigger           n8n-nodes-base.telegramTrigger               telegramApi                                         dist/nodes/Telegram/TelegramTrigger.node.js
+                theHive                   n8n-nodes-base.theHive                       theHiveApi                                          dist/nodes/TheHive/TheHive.node.js
+                theHiveProject            n8n-nodes-base.theHiveProject                theHiveProjectApi                                   dist/nodes/TheHiveProject/TheHiveProject.node.js
+                theHiveProjectTrigger     n8n-nodes-base.theHiveProjectTrigger                                                             dist/nodes/TheHiveProject/TheHiveProjectTrigger.node.js
+                theHiveTrigger            n8n-nodes-base.theHiveTrigger                                                                    dist/nodes/TheHive/TheHiveTrigger.node.js
+                timescaleDb               n8n-nodes-base.timescaleDb                   timescaleDb                                         dist/nodes/TimescaleDb/TimescaleDb.node.js
+                todoist                   n8n-nodes-base.todoist                       todoistApi, todoistOAuth2Api                        dist/nodes/Todoist/Todoist.node.js
+                togglTrigger              n8n-nodes-base.togglTrigger                  togglApi                                            dist/nodes/Toggl/TogglTrigger.node.js
+                totp                      n8n-nodes-base.totp                          totpApi                                             dist/nodes/Totp/Totp.node.js
+                                                                                                                                     Стр. 19
+               Приложение: каталог нод и креденшелсов (snapshot)
+                node_key                  type                                         credentials                                          sourcePath
+                travisCi                  n8n-nodes-base.travisCi                      travisCiApi                                          dist/nodes/TravisCi/TravisCi.node.js
+                trello                    n8n-nodes-base.trello                        trelloApi                                            dist/nodes/Trello/Trello.node.js
+                trelloTrigger             n8n-nodes-base.trelloTrigger                 trelloApi                                            dist/nodes/Trello/TrelloTrigger.node.js
+                twake                     n8n-nodes-base.twake                         twakeCloudApi                                        dist/nodes/Twake/Twake.node.js
+                twilio                    n8n-nodes-base.twilio                        twilioApi                                            dist/nodes/Twilio/Twilio.node.js
+                twilioTrigger             n8n-nodes-base.twilioTrigger                 twilioApi                                            dist/nodes/Twilio/TwilioTrigger.node.js
+                twist                     n8n-nodes-base.twist                         twistOAuth2Api                                       dist/nodes/Twist/Twist.node.js
+                twitter                   n8n-nodes-base.twitter                       twitterOAuth1Api, twitterOAuth2Api                   dist/nodes/Twitter/Twitter.node.js
+                typeformTrigger           n8n-nodes-base.typeformTrigger               typeformApi, typeformOAuth2Api                       dist/nodes/Typeform/TypeformTrigger.node.js
+                unleashedSoftware         n8n-nodes-base.unleashedSoftware             unleashedSoftwareApi                                 dist/nodes/UnleashedSoftware/UnleashedSoftware.node.js
+                uplead                    n8n-nodes-base.uplead                        upleadApi                                            dist/nodes/Uplead/Uplead.node.js
+                uproc                     n8n-nodes-base.uproc                         uprocApi                                             dist/nodes/UProc/UProc.node.js
+                uptimeRobot               n8n-nodes-base.uptimeRobot                   uptimeRobotApi                                       dist/nodes/UptimeRobot/UptimeRobot.node.js
+                urlScanIo                 n8n-nodes-base.urlScanIo                     urlScanIoApi                                         dist/nodes/UrlScanIo/UrlScanIo.node.js
+                venafiTlsProtectCloud     n8n-nodes-base.venafiTlsProtectCloud         venafiTlsProtectCloudApi                             dist/nodes/Venafi/ProtectCloud/VenafiTlsProtectCloud.node.js
+                venafiTlsProtectCloudTrig n8n-nodes-base.venafiTlsProtectCloudTrigge   venafiTlsProtectCloudApi                             dist/nodes/Venafi/ProtectCloud/VenafiTlsProtectCloudTrigger.node.js
+                ger                       r
+                venafiTlsProtectDatacent  n8n-nodes-base.venafiTlsProtectDatacenter    venafiTlsProtectDatacenterApi                        dist/nodes/Venafi/Datacenter/VenafiTlsProtectDatacenter.node.js
+                er
+                vero                      n8n-nodes-base.vero                          veroApi                                              dist/nodes/Vero/Vero.node.js
+                vonage                    n8n-nodes-base.vonage                        vonageApi                                            dist/nodes/Vonage/Vonage.node.js
+                wait                      n8n-nodes-base.wait                          httpBasicAuth, httpHeaderAuth, jwtAuth               dist/nodes/Wait/Wait.node.js
+                webflow                   n8n-nodes-base.webflow                       webflowApi, webflowOAuth2Api                         dist/nodes/Webflow/Webflow.node.js
+                webflowTrigger            n8n-nodes-base.webflowTrigger                webflowApi, webflowOAuth2Api                         dist/nodes/Webflow/WebflowTrigger.node.js
+                webhook                   n8n-nodes-base.webhook                       httpBasicAuth, httpHeaderAuth, jwtAuth               dist/nodes/Webhook/Webhook.node.js
+                wekan                     n8n-nodes-base.wekan                         wekanApi                                             dist/nodes/Wekan/Wekan.node.js
+                whatsApp                  n8n-nodes-base.whatsApp                      whatsAppApi                                          dist/nodes/WhatsApp/WhatsApp.node.js
+                whatsAppTrigger           n8n-nodes-base.whatsAppTrigger               whatsAppTriggerApi                                   dist/nodes/WhatsApp/WhatsAppTrigger.node.js
+                wise                      n8n-nodes-base.wise                          wiseApi                                              dist/nodes/Wise/Wise.node.js
+                wiseTrigger               n8n-nodes-base.wiseTrigger                   wiseApi                                              dist/nodes/Wise/WiseTrigger.node.js
+                wooCommerce               n8n-nodes-base.wooCommerce                   wooCommerceApi                                       dist/nodes/WooCommerce/WooCommerce.node.js
+                wooCommerceTrigger        n8n-nodes-base.wooCommerceTrigger            wooCommerceApi                                       dist/nodes/WooCommerce/WooCommerceTrigger.node.js
+                wordpress                 n8n-nodes-base.wordpress                     wordpressApi                                         dist/nodes/Wordpress/Wordpress.node.js
+                workableTrigger           n8n-nodes-base.workableTrigger               workableApi                                          dist/nodes/Workable/WorkableTrigger.node.js
+                workflowTrigger           n8n-nodes-base.workflowTrigger                                                                    dist/nodes/WorkflowTrigger/WorkflowTrigger.node.js
+                                                                                                                                     Стр. 20
+                Приложение: каталог нод и креденшелсов (snapshot)
+                 node_key                    type                                           credentials                                             sourcePath
+                 writeBinaryFile             n8n-nodes-base.writeBinaryFile                                                                         dist/nodes/WriteBinaryFile/WriteBinaryFile.node.js
+                 wufooTrigger                n8n-nodes-base.wufooTrigger                    wufooApi                                                dist/nodes/Wufoo/WufooTrigger.node.js
+                 xero                        n8n-nodes-base.xero                            xeroOAuth2Api                                           dist/nodes/Xero/Xero.node.js
+                 xml                         n8n-nodes-base.xml                                                                                     dist/nodes/Xml/Xml.node.js
+                 youTube                     n8n-nodes-base.youTube                         youTubeOAuth2Api                                        dist/nodes/Google/YouTube/YouTube.node.js
+                 yourls                      n8n-nodes-base.yourls                          yourlsApi                                               dist/nodes/Yourls/Yourls.node.js
+                 zammad                      n8n-nodes-base.zammad                          zammadBasicAuthApi, zammadTokenAuthApi                  dist/nodes/Zammad/Zammad.node.js
+                 zendesk                     n8n-nodes-base.zendesk                         zendeskApi, zendeskOAuth2Api                            dist/nodes/Zendesk/Zendesk.node.js
+                 zendeskTrigger              n8n-nodes-base.zendeskTrigger                  zendeskApi, zendeskOAuth2Api                            dist/nodes/Zendesk/ZendeskTrigger.node.js
+                 zohoCrm                     n8n-nodes-base.zohoCrm                         zohoOAuth2Api                                           dist/nodes/Zoho/ZohoCrm.node.js
+                 zoom                        n8n-nodes-base.zoom                            zoomApi, zoomOAuth2Api                                  dist/nodes/Zoom/Zoom.node.js
+                 zulip                       n8n-nodes-base.zulip                           zulipApi                                                dist/nodes/Zulip/Zulip.node.js
+                                                                                                                                             Стр. 21
+              Приложение: каталог нод и креденшелсов (snapshot)
+                Приложение B. Каталог креденшелсов (n8n-nodes-base v1.113.2)
+                Колонки: credential_key, supportedNodes_count, supportedNodes, sourcePath.
+               credential_key                 supportedNode supportedNodes                                                        sourcePath
+                                              s_count
+               actionNetworkApi               1              actionNetwork                                                        dist/credentials/ActionNetworkApi.credentials.js
+               activeCampaignApi              2              activeCampaign, activeCampaignTrigger                                dist/credentials/ActiveCampaignApi.credentials.js
+               acuitySchedulingApi            1              acuitySchedulingTrigger                                              dist/credentials/AcuitySchedulingApi.credentials.js
+               acuitySchedulingOAuth2Api      1              acuitySchedulingTrigger                                              dist/credentials/AcuitySchedulingOAuth2Api.credentials.js
+               adaloApi                       1              adalo                                                                dist/credentials/AdaloApi.credentials.js
+               affinityApi                    2              affinity, affinityTrigger                                            dist/credentials/AffinityApi.credentials.js
+               agileCrmApi                    1              agileCrm                                                             dist/credentials/AgileCrmApi.credentials.js
+               airtableApi                    2              airtable, airtableTrigger                                            dist/credentials/AirtableApi.credentials.js
+               airtableOAuth2Api              2              airtable, airtableTrigger                                            dist/credentials/AirtableOAuth2Api.credentials.js
+               airtableTokenApi               2              airtable, airtableTrigger                                            dist/credentials/AirtableTokenApi.credentials.js
+               airtopApi                      1              airtop                                                               dist/credentials/AirtopApi.credentials.js
+               alienVaultApi                  0                                                                                   dist/credentials/AlienVaultApi.credentials.js
+               amqp                           2              amqp, amqpTrigger                                                    dist/credentials/Amqp.credentials.js
+               apiTemplateIoApi               1              apiTemplateIo                                                        dist/credentials/ApiTemplateIoApi.credentials.js
+               asanaApi                       2              asana, asanaTrigger                                                  dist/credentials/AsanaApi.credentials.js
+               asanaOAuth2Api                 2              asana, asanaTrigger                                                  dist/credentials/AsanaOAuth2Api.credentials.js
+               auth0ManagementApi             0                                                                                   dist/credentials/Auth0ManagementApi.credentials.js
+               automizyApi                    1              automizy                                                             dist/credentials/AutomizyApi.credentials.js
+               autopilotApi                   2              autopilot, autopilotTrigger                                          dist/credentials/AutopilotApi.credentials.js
+               aws                            15             awsCertificateManager, awsCognito, awsComprehend, awsDynamoDb,       dist/credentials/Aws.credentials.js
+                                                             awsElb, awsIam, awsLambda, awsRekognition, awsS3, awsSes, awsSns,
+                                                             awsSnsTrigger, awsSqs, awsTextract, awsTranscribe
+               azureStorageOAuth2Api          1              azureStorage                                                         dist/credentials/AzureStorageOAuth2Api.credentials.js
+               azureStorageSharedKeyApi       1              azureStorage                                                         dist/credentials/AzureStorageSharedKeyApi.credentials.js
+               bambooHrApi                    1              bambooHr                                                             dist/credentials/BambooHrApi.credentials.js
+               bannerbearApi                  1              bannerbear                                                           dist/credentials/BannerbearApi.credentials.js
+               baserowApi                     1              baserow                                                              dist/credentials/BaserowApi.credentials.js
+               beeminderApi                   1              beeminder                                                            dist/credentials/BeeminderApi.credentials.js
+               beeminderOAuth2Api             1              beeminder                                                            dist/credentials/BeeminderOAuth2Api.credentials.js
+               bitbucketApi                   1              bitbucketTrigger                                                     dist/credentials/BitbucketApi.credentials.js
+                                                                                                                           Стр. 22
+               Приложение: каталог нод и креденшелсов (snapshot)
+               credential_key                  supportedNode supportedNodes                                                          sourcePath
+                                               s_count
+               bitlyApi                        1              bitly                                                                  dist/credentials/BitlyApi.credentials.js
+               bitlyOAuth2Api                  1              bitly                                                                  dist/credentials/BitlyOAuth2Api.credentials.js
+               bitwardenApi                    1              bitwarden                                                              dist/credentials/BitwardenApi.credentials.js
+               boxOAuth2Api                    2              box, boxTrigger                                                        dist/credentials/BoxOAuth2Api.credentials.js
+               brandfetchApi                   1              Brandfetch                                                             dist/credentials/BrandfetchApi.credentials.js
+               bubbleApi                       1              bubble                                                                 dist/credentials/BubbleApi.credentials.js
+               calApi                          1              calTrigger                                                             dist/credentials/CalApi.credentials.js
+               calendlyApi                     1              calendlyTrigger                                                        dist/credentials/CalendlyApi.credentials.js
+               calendlyOAuth2Api               1              calendlyTrigger                                                        dist/credentials/CalendlyOAuth2Api.credentials.js
+               carbonBlackApi                  0                                                                                     dist/credentials/CarbonBlackApi.credentials.js
+               chargebeeApi                    1              chargebee                                                              dist/credentials/ChargebeeApi.credentials.js
+               circleCiApi                     1              circleCi                                                               dist/credentials/CircleCiApi.credentials.js
+               ciscoMerakiApi                  0                                                                                     dist/credentials/CiscoMerakiApi.credentials.js
+               ciscoSecureEndpointApi          0                                                                                     dist/credentials/CiscoSecureEndpointApi.credentials.js
+               ciscoUmbrellaApi                0                                                                                     dist/credentials/CiscoUmbrellaApi.credentials.js
+               ciscoWebexOAuth2Api             2              ciscoWebex, ciscoWebexTrigger                                          dist/credentials/CiscoWebexOAuth2Api.credentials.js
+               citrixAdcApi                    1              citrixAdc                                                              dist/credentials/NetscalerAdcApi.credentials.js
+               clearbitApi                     1              clearbit                                                               dist/credentials/ClearbitApi.credentials.js
+               clickUpApi                      2              clickUp, clickUpTrigger                                                dist/credentials/ClickUpApi.credentials.js
+               clickUpOAuth2Api                2              clickUp, clickUpTrigger                                                dist/credentials/ClickUpOAuth2Api.credentials.js
+               clockifyApi                     2              clockify, clockifyTrigger                                              dist/credentials/ClockifyApi.credentials.js
+               cloudflareApi                   1              cloudflare                                                             dist/credentials/CloudflareApi.credentials.js
+               cockpitApi                      1              cockpit                                                                dist/credentials/CockpitApi.credentials.js
+               codaApi                         1              coda                                                                   dist/credentials/CodaApi.credentials.js
+               contentfulApi                   1              contentful                                                             dist/credentials/ContentfulApi.credentials.js
+               convertApi                      0                                                                                     dist/credentials/ConvertApi.credentials.js
+               convertKitApi                   2              convertKit, convertKitTrigger                                          dist/credentials/ConvertKitApi.credentials.js
+               copperApi                       2              copper, copperTrigger                                                  dist/credentials/CopperApi.credentials.js
+               cortexApi                       1              cortex                                                                 dist/credentials/CortexApi.credentials.js
+               crateDb                         1              crateDb                                                                dist/credentials/CrateDb.credentials.js
+               crowdDevApi                     2              crowdDev, crowdDevTrigger                                              dist/credentials/CrowdDevApi.credentials.js
+               crowdStrikeOAuth2Api            0                                                                                     dist/credentials/CrowdStrikeOAuth2Api.credentials.js
+               customerIoApi                   2              customerIo, customerIoTrigger                                          dist/credentials/CustomerIoApi.credentials.js
+               datadogApi                      0                                                                                     dist/credentials/DatadogApi.credentials.js
+                                                                                                                              Стр. 23
+              Приложение: каталог нод и креденшелсов (snapshot)
+               credential_key                supportedNode supportedNodes                                                       sourcePath
+                                             s_count
+               deepLApi                      1              deepL                                                               dist/credentials/DeepLApi.credentials.js
+               demioApi                      1              demio                                                               dist/credentials/DemioApi.credentials.js
+               dfirIrisApi                   0                                                                                  dist/credentials/DfirIrisApi.credentials.js
+               dhlApi                        1              dhl                                                                 dist/credentials/DhlApi.credentials.js
+               discordBotApi                 1              discord                                                             dist/credentials/DiscordBotApi.credentials.js
+               discordOAuth2Api              1              discord                                                             dist/credentials/DiscordOAuth2Api.credentials.js
+               discordWebhookApi             1              discord                                                             dist/credentials/DiscordWebhookApi.credentials.js
+               discourseApi                  1              discourse                                                           dist/credentials/DiscourseApi.credentials.js
+               disqusApi                     1              disqus                                                              dist/credentials/DisqusApi.credentials.js
+               driftApi                      1              drift                                                               dist/credentials/DriftApi.credentials.js
+               driftOAuth2Api                1              drift                                                               dist/credentials/DriftOAuth2Api.credentials.js
+               dropboxApi                    1              dropbox                                                             dist/credentials/DropboxApi.credentials.js
+               dropboxOAuth2Api              1              dropbox                                                             dist/credentials/DropboxOAuth2Api.credentials.js
+               dropcontactApi                1              dropcontact                                                         dist/credentials/DropcontactApi.credentials.js
+               dynatraceApi                  0                                                                                  dist/credentials/DynatraceApi.credentials.js
+               egoiApi                       1              egoi                                                                dist/credentials/EgoiApi.credentials.js
+               elasticSecurityApi            1              elasticSecurity                                                     dist/credentials/ElasticSecurityApi.credentials.js
+               elasticsearchApi              1              elasticsearch                                                       dist/credentials/ElasticsearchApi.credentials.js
+               emeliaApi                     2              emelia, emeliaTrigger                                               dist/credentials/EmeliaApi.credentials.js
+               erpNextApi                    1              erpNext                                                             dist/credentials/ERPNextApi.credentials.js
+               eventbriteApi                 1              eventbriteTrigger                                                   dist/credentials/EventbriteApi.credentials.js
+               eventbriteOAuth2Api           1              eventbriteTrigger                                                   dist/credentials/EventbriteOAuth2Api.credentials.js
+               f5BigIpApi                    0                                                                                  dist/credentials/F5BigIpApi.credentials.js
+               facebookGraphApi              1              facebookGraphApi                                                    dist/credentials/FacebookGraphApi.credentials.js
+               facebookGraphAppApi           1              facebookTrigger                                                     dist/credentials/FacebookGraphAppApi.credentials.js
+               facebookLeadAdsOAuth2Api      1              facebookLeadAdsTrigger                                              dist/credentials/FacebookLeadAdsOAuth2Api.credentials.js
+               figmaApi                      1              figmaTrigger                                                        dist/credentials/FigmaApi.credentials.js
+               fileMaker                     1              filemaker                                                           dist/credentials/FileMaker.credentials.js
+               filescanApi                   0                                                                                  dist/credentials/FilescanApi.credentials.js
+               flowApi                       2              flow, flowTrigger                                                   dist/credentials/FlowApi.credentials.js
+               formIoApi                     1              formIoTrigger                                                       dist/credentials/FormIoApi.credentials.js
+               formstackApi                  1              formstackTrigger                                                    dist/credentials/FormstackApi.credentials.js
+               formstackOAuth2Api            1              formstackTrigger                                                    dist/credentials/FormstackOAuth2Api.credentials.js
+               fortiGateApi                  0                                                                                  dist/credentials/FortiGateApi.credentials.js
+                                                                                                                         Стр. 24
+                Приложение: каталог нод и креденшелсов (snapshot)
+                 credential_key                     supportedNode supportedNodes                                                                  sourcePath
+                                                    s_count
+                 freshdeskApi                       1                freshdesk                                                                    dist/credentials/FreshdeskApi.credentials.js
+                 freshserviceApi                    1                freshservice                                                                 dist/credentials/FreshserviceApi.credentials.js
+                 freshworksCrmApi                   1                freshworksCrm                                                                dist/credentials/FreshworksCrmApi.credentials.js
+                 ftp                                1                ftp                                                                          dist/credentials/Ftp.credentials.js
+                 gSuiteAdminOAuth2Api               1                gSuiteAdmin                                                                  dist/credentials/GSuiteAdminOAuth2Api.credentials.js
+                 getResponseApi                     2                getResponse, getResponseTrigger                                              dist/credentials/GetResponseApi.credentials.js
+                 getResponseOAuth2Api               2                getResponse, getResponseTrigger                                              dist/credentials/GetResponseOAuth2Api.credentials.js
+                 ghostAdminApi                      1                ghost                                                                        dist/credentials/GhostAdminApi.credentials.js
+                 ghostContentApi                    1                ghost                                                                        dist/credentials/GhostContentApi.credentials.js
+                 gitPassword                        1                git                                                                          dist/credentials/GitPassword.credentials.js
+                 githubApi                          2                github, githubTrigger                                                        dist/credentials/GithubApi.credentials.js
+                 githubOAuth2Api                    2                github, githubTrigger                                                        dist/credentials/GithubOAuth2Api.credentials.js
+                 gitlabApi                          2                gitlab, gitlabTrigger                                                        dist/credentials/GitlabApi.credentials.js
+                 gitlabOAuth2Api                    2                gitlab, gitlabTrigger                                                        dist/credentials/GitlabOAuth2Api.credentials.js
+                 gmailOAuth2                        2                gmail, gmailTrigger                                                          dist/credentials/GmailOAuth2Api.credentials.js
+                 goToWebinarOAuth2Api               1                goToWebinar                                                                  dist/credentials/GoToWebinarOAuth2Api.credentials.js
+                 gongApi                            1                gong                                                                         dist/credentials/GongApi.credentials.js
+                 gongOAuth2Api                      1                gong                                                                         dist/credentials/GongOAuth2Api.credentials.js
+                 googleAdsOAuth2Api                 1                googleAds                                                                    dist/credentials/GoogleAdsOAuth2Api.credentials.js
+                 googleAnalyticsOAuth2              1                googleAnalytics                                                              dist/credentials/GoogleAnalyticsOAuth2Api.credentials.js
+                 googleApi                          14               evaluation, evaluationTrigger, gmail, gmailTrigger, googleBigQuery,          dist/credentials/GoogleApi.credentials.js
+                                                                     googleBooks, googleChat, googleDocs, googleDrive, googleDriveTrigger,
+                                                                     googleFirebaseCloudFirestore, googleSheets, googleSlides, googleTranslate
+                 googleBigQueryOAuth2Api            1                googleBigQuery                                                               dist/credentials/GoogleBigQueryOAuth2Api.credentials.js
+                 googleBooksOAuth2Api               1                googleBooks                                                                  dist/credentials/GoogleBooksOAuth2Api.credentials.js
+                 googleBusinessProfileOAuth2Api     2                googleBusinessProfile, googleBusinessProfileTrigger                          dist/credentials/GoogleBusinessProfileOAuth2Api.credentials.js
+                 googleCalendarOAuth2Api            2                googleCalendar, googleCalendarTrigger                                        dist/credentials/GoogleCalendarOAuth2Api.credentials.js
+                 googleChatOAuth2Api                1                googleChat                                                                   dist/credentials/GoogleChatOAuth2Api.credentials.js
+                 googleCloudNaturalLanguageOA       1                googleCloudNaturalLanguage                                                   dist/credentials/GoogleCloudNaturalLanguageOAuth2Api.credentials.
+                 uth2Api                                                                                                                          js
+                 googleCloudStorageOAuth2Api        1                googleCloudStorage                                                           dist/credentials/GoogleCloudStorageOAuth2Api.credentials.js
+                 googleContactsOAuth2Api            1                googleContacts                                                               dist/credentials/GoogleContactsOAuth2Api.credentials.js
+                 googleDocsOAuth2Api                1                googleDocs                                                                   dist/credentials/GoogleDocsOAuth2Api.credentials.js
+                 googleDriveOAuth2Api               2                googleDrive, googleDriveTrigger                                              dist/credentials/GoogleDriveOAuth2Api.credentials.js
+                                                                                                                                          Стр. 25
+               Приложение: каталог нод и креденшелсов (snapshot)
+                credential_key                  supportedNode supportedNodes                                                            sourcePath
+                                                s_count
+                googleFirebaseCloudFirestoreOA  1               googleFirebaseCloudFirestore                                            dist/credentials/GoogleFirebaseCloudFirestoreOAuth2Api.credentials
+                uth2Api                                                                                                                 .js
+                googleFirebaseRealtimeDatabase 1                googleFirebaseRealtimeDatabase                                          dist/credentials/GoogleFirebaseRealtimeDatabaseOAuth2Api.credent
+                OAuth2Api                                                                                                               ials.js
+                googleOAuth2Api                 0                                                                                       dist/credentials/GoogleOAuth2Api.credentials.js
+                googlePerspectiveOAuth2Api      1               googlePerspective                                                       dist/credentials/GooglePerspectiveOAuth2Api.credentials.js
+                googleSheetsOAuth2Api           3               evaluation, evaluationTrigger, googleSheets                             dist/credentials/GoogleSheetsOAuth2Api.credentials.js
+                googleSheetsTriggerOAuth2Api    1               googleSheetsTrigger                                                     dist/credentials/GoogleSheetsTriggerOAuth2Api.credentials.js
+                googleSlidesOAuth2Api           1               googleSlides                                                            dist/credentials/GoogleSlidesOAuth2Api.credentials.js
+                googleTasksOAuth2Api            1               googleTasks                                                             dist/credentials/GoogleTasksOAuth2Api.credentials.js
+                googleTranslateOAuth2Api        1               googleTranslate                                                         dist/credentials/GoogleTranslateOAuth2Api.credentials.js
+                gotifyApi                       1               gotify                                                                  dist/credentials/GotifyApi.credentials.js
+                grafanaApi                      1               grafana                                                                 dist/credentials/GrafanaApi.credentials.js
+                gristApi                        1               grist                                                                   dist/credentials/GristApi.credentials.js
+                gumroadApi                      1               gumroadTrigger                                                          dist/credentials/GumroadApi.credentials.js
+                haloPSAApi                      1               haloPSA                                                                 dist/credentials/HaloPSAApi.credentials.js
+                harvestApi                      1               harvest                                                                 dist/credentials/HarvestApi.credentials.js
+                harvestOAuth2Api                1               harvest                                                                 dist/credentials/HarvestOAuth2Api.credentials.js
+                helpScoutOAuth2Api              2               helpScout, helpScoutTrigger                                             dist/credentials/HelpScoutOAuth2Api.credentials.js
+                highLevelApi                    1               highLevel                                                               dist/credentials/HighLevelApi.credentials.js
+                highLevelOAuth2Api              1               highLevel                                                               dist/credentials/HighLevelOAuth2Api.credentials.js
+                homeAssistantApi                1               homeAssistant                                                           dist/credentials/HomeAssistantApi.credentials.js
+                httpBasicAuth                   6               formTrigger, graphql, httpRequest, pipedriveTrigger, wait, webhook      dist/credentials/HttpBasicAuth.credentials.js
+                httpBearerAuth                  0                                                                                       dist/credentials/HttpBearerAuth.credentials.js
+                httpCustomAuth                  1               graphql                                                                 dist/credentials/HttpCustomAuth.credentials.js
+                httpDigestAuth                  2               graphql, httpRequest                                                    dist/credentials/HttpDigestAuth.credentials.js
+                httpHeaderAuth                  4               graphql, httpRequest, wait, webhook                                     dist/credentials/HttpHeaderAuth.credentials.js
+                httpQueryAuth                   4               graphql, httpRequest, jiraTrigger, jiraTrigger                          dist/credentials/HttpQueryAuth.credentials.js
+                httpSslAuth                     1               httpRequest                                                             dist/credentials/HttpSslAuth.credentials.js
+                hubspotApi                      1               hubspot                                                                 dist/credentials/HubspotApi.credentials.js
+                hubspotAppToken                 1               hubspot                                                                 dist/credentials/HubspotAppToken.credentials.js
+                hubspotDeveloperApi             1               hubspotTrigger                                                          dist/credentials/HubspotDeveloperApi.credentials.js
+                hubspotOAuth2Api                1               hubspot                                                                 dist/credentials/HubspotOAuth2Api.credentials.js
+                humanticAiApi                   1               humanticAi                                                              dist/credentials/HumanticAiApi.credentials.js
+                                                                                                                                 Стр. 26
+                Приложение: каталог нод и креденшелсов (snapshot)
+                credential_key                    supportedNode supportedNodes                                                                sourcePath
+                                                  s_count
+                hunterApi                         1                hunter                                                                     dist/credentials/HunterApi.credentials.js
+                hybridAnalysisApi                 0                                                                                           dist/credentials/HybridAnalysisApi.credentials.js
+                imap                              1                emailReadImap                                                              dist/credentials/Imap.credentials.js
+                impervaWafApi                     0                                                                                           dist/credentials/ImpervaWafApi.credentials.js
+                intercomApi                       1                intercom                                                                   dist/credentials/IntercomApi.credentials.js
+                invoiceNinjaApi                   2                invoiceNinja, invoiceNinjaTrigger                                          dist/credentials/InvoiceNinjaApi.credentials.js
+                iterableApi                       1                iterable                                                                   dist/credentials/IterableApi.credentials.js
+                jenkinsApi                        1                jenkins                                                                    dist/credentials/JenkinsApi.credentials.js
+                jinaAiApi                         1                jinaAi                                                                     dist/credentials/JinaAiApi.credentials.js
+                jiraSoftwareCloudApi              2                jira, jiraTrigger                                                          dist/credentials/JiraSoftwareCloudApi.credentials.js
+                jiraSoftwareServerApi             2                jira, jiraTrigger                                                          dist/credentials/JiraSoftwareServerApi.credentials.js
+                jiraSoftwareServerPatApi          2                jira, jiraTrigger                                                          dist/credentials/JiraSoftwareServerPatApi.credentials.js
+                jotFormApi                        1                jotFormTrigger                                                             dist/credentials/JotFormApi.credentials.js
+                jwtAuth                           4                jwt, respondToWebhook, wait, webhook                                       dist/credentials/JwtAuth.credentials.js
+                kafka                             2                kafka, kafkaTrigger                                                        dist/credentials/Kafka.credentials.js
+                keapOAuth2Api                     2                keap, keapTrigger                                                          dist/credentials/KeapOAuth2Api.credentials.js
+                kibanaApi                         0                                                                                           dist/credentials/KibanaApi.credentials.js
+                kitemakerApi                      1                kitemaker                                                                  dist/credentials/KitemakerApi.credentials.js
+                koBoToolboxApi                    2                koBoToolbox, koBoToolboxTrigger                                            dist/credentials/KoBoToolboxApi.credentials.js
+                ldap                              1                ldap                                                                       dist/credentials/Ldap.credentials.js
+                lemlistApi                        2                lemlist, lemlistTrigger                                                    dist/credentials/LemlistApi.credentials.js
+                lineNotifyOAuth2Api               1                line                                                                       dist/credentials/LineNotifyOAuth2Api.credentials.js
+                linearApi                         2                linear, linearTrigger                                                      dist/credentials/LinearApi.credentials.js
+                linearOAuth2Api                   2                linear, linearTrigger                                                      dist/credentials/LinearOAuth2Api.credentials.js
+                lingvaNexApi                      1                lingvaNex                                                                  dist/credentials/LingvaNexApi.credentials.js
+                linkedInCommunityManagement       1                linkedIn                                                                   dist/credentials/LinkedInCommunityManagementOAuth2Api.credenti
+                OAuth2Api                                                                                                                     als.js
+                linkedInOAuth2Api                 1                linkedIn                                                                   dist/credentials/LinkedInOAuth2Api.credentials.js
+                loneScaleApi                      2                loneScale, loneScaleTrigger                                                dist/credentials/LoneScaleApi.credentials.js
+                magento2Api                       1                magento2                                                                   dist/credentials/Magento2Api.credentials.js
+                mailcheckApi                      1                mailcheck                                                                  dist/credentials/MailcheckApi.credentials.js
+                mailchimpApi                      2                mailchimp, mailchimpTrigger                                                dist/credentials/MailchimpApi.credentials.js
+                mailchimpOAuth2Api                2                mailchimp, mailchimpTrigger                                                dist/credentials/MailchimpOAuth2Api.credentials.js
+                mailerLiteApi                     2                mailerLite, mailerLiteTrigger                                              dist/credentials/MailerLiteApi.credentials.js
+                                                                                                                                       Стр. 27
+              Приложение: каталог нод и креденшелсов (snapshot)
+               credential_key                supportedNode supportedNodes                                                     sourcePath
+                                             s_count
+               mailgunApi                    1             mailgun                                                            dist/credentials/MailgunApi.credentials.js
+               mailjetEmailApi               2             mailjet, mailjetTrigger                                            dist/credentials/MailjetEmailApi.credentials.js
+               mailjetSmsApi                 1             mailjet                                                            dist/credentials/MailjetSmsApi.credentials.js
+               malcoreApi                    0                                                                                dist/credentials/MalcoreApi.credentials.js
+               mandrillApi                   1             mandrill                                                           dist/credentials/MandrillApi.credentials.js
+               marketstackApi                1             marketstack                                                        dist/credentials/MarketstackApi.credentials.js
+               matrixApi                     1             matrix                                                             dist/credentials/MatrixApi.credentials.js
+               mattermostApi                 1             mattermost                                                         dist/credentials/MattermostApi.credentials.js
+               mauticApi                     2             mautic, mauticTrigger                                              dist/credentials/MauticApi.credentials.js
+               mauticOAuth2Api               2             mautic, mauticTrigger                                              dist/credentials/MauticOAuth2Api.credentials.js
+               mediumApi                     1             medium                                                             dist/credentials/MediumApi.credentials.js
+               mediumOAuth2Api               1             medium                                                             dist/credentials/MediumOAuth2Api.credentials.js
+               messageBirdApi                1             messageBird                                                        dist/credentials/MessageBirdApi.credentials.js
+               metabaseApi                   1             metabase                                                           dist/credentials/MetabaseApi.credentials.js
+               microsoftAzureCosmosDbShared  1             azureCosmosDb                                                      dist/credentials/MicrosoftAzureCosmosDbSharedKeyApi.credentials.j
+               KeyApi                                                                                                         s
+               microsoftAzureMonitorOAuth2Api 0                                                                               dist/credentials/MicrosoftAzureMonitorOAuth2Api.credentials.js
+               microsoftDynamicsOAuth2Api    1             microsoftDynamicsCrm                                               dist/credentials/MicrosoftDynamicsOAuth2Api.credentials.js
+               microsoftEntraOAuth2Api       1             microsoftEntra                                                     dist/credentials/MicrosoftEntraOAuth2Api.credentials.js
+               microsoftExcelOAuth2Api       1             microsoftExcel                                                     dist/credentials/MicrosoftExcelOAuth2Api.credentials.js
+               microsoftGraphSecurityOAuth2A 1             microsoftGraphSecurity                                             dist/credentials/MicrosoftGraphSecurityOAuth2Api.credentials.js
+               pi
+               microsoftOAuth2Api            0                                                                                dist/credentials/MicrosoftOAuth2Api.credentials.js
+               microsoftOneDriveOAuth2Api    2             microsoftOneDrive, microsoftOneDriveTrigger                        dist/credentials/MicrosoftOneDriveOAuth2Api.credentials.js
+               microsoftOutlookOAuth2Api     2             microsoftOutlook, microsoftOutlookTrigger                          dist/credentials/MicrosoftOutlookOAuth2Api.credentials.js
+               microsoftSharePointOAuth2Api  1             microsoftSharePoint                                                dist/credentials/MicrosoftSharePointOAuth2Api.credentials.js
+               microsoftSql                  1             microsoftSql                                                       dist/credentials/MicrosoftSql.credentials.js
+               microsoftTeamsOAuth2Api       2             microsoftTeams, microsoftTeamsTrigger                              dist/credentials/MicrosoftTeamsOAuth2Api.credentials.js
+               microsoftToDoOAuth2Api        1             microsoftToDo                                                      dist/credentials/MicrosoftToDoOAuth2Api.credentials.js
+               mindeeInvoiceApi              1             mindee                                                             dist/credentials/MindeeInvoiceApi.credentials.js
+               mindeeReceiptApi              1             mindee                                                             dist/credentials/MindeeReceiptApi.credentials.js
+               miroOAuth2Api                 0                                                                                dist/credentials/MiroOAuth2Api.credentials.js
+               mispApi                       1             misp                                                               dist/credentials/MispApi.credentials.js
+               mistApi                       0                                                                                dist/credentials/MistApi.credentials.js
+                                                                                                                        Стр. 28
+             Приложение: каталог нод и креденшелсов (snapshot)
+             credential_key              supportedNode supportedNodes                                             sourcePath
+                                         s_count
+             moceanApi                   1            mocean                                                      dist/credentials/MoceanApi.credentials.js
+             mondayComApi                1            mondayCom                                                   dist/credentials/MondayComApi.credentials.js
+             mondayComOAuth2Api          1            mondayCom                                                   dist/credentials/MondayComOAuth2Api.credentials.js
+             mongoDb                     1            mongoDb                                                     dist/credentials/MongoDb.credentials.js
+             monicaCrmApi                1            monicaCrm                                                   dist/credentials/MonicaCrmApi.credentials.js
+             mqtt                        2            mqtt, mqttTrigger                                           dist/credentials/Mqtt.credentials.js
+             msg91Api                    1            msg91                                                       dist/credentials/Msg91Api.credentials.js
+             mySql                       1            mySql                                                       dist/credentials/MySql.credentials.js
+             n8nApi                      1            n8n                                                         dist/credentials/N8nApi.credentials.js
+             nasaApi                     1            nasa                                                        dist/credentials/NasaApi.credentials.js
+             netlifyApi                  2            netlify, netlifyTrigger                                     dist/credentials/NetlifyApi.credentials.js
+             nextCloudApi                1            nextCloud                                                   dist/credentials/NextCloudApi.credentials.js
+             nextCloudOAuth2Api          1            nextCloud                                                   dist/credentials/NextCloudOAuth2Api.credentials.js
+             nocoDb                      1            nocoDb                                                      dist/credentials/NocoDb.credentials.js
+             nocoDbApiToken              1            nocoDb                                                      dist/credentials/NocoDbApiToken.credentials.js
+             notionApi                   2            notion, notionTrigger                                       dist/credentials/NotionApi.credentials.js
+             notionOAuth2Api             0                                                                        dist/credentials/NotionOAuth2Api.credentials.js
+             npmApi                      1            npm                                                         dist/credentials/NpmApi.credentials.js
+             oAuth1Api                   2            graphql, httpRequest                                        dist/credentials/OAuth1Api.credentials.js
+             oAuth2Api                   2            graphql, httpRequest                                        dist/credentials/OAuth2Api.credentials.js
+             odooApi                     1            odoo                                                        dist/credentials/OdooApi.credentials.js
+             oktaApi                     1            okta                                                        dist/credentials/OktaApi.credentials.js
+             oneSimpleApi                1            oneSimpleApi                                                dist/credentials/OneSimpleApi.credentials.js
+             onfleetApi                  2            onfleet, onfleetTrigger                                     dist/credentials/OnfleetApi.credentials.js
+             openAiApi                   1            openAi                                                      dist/credentials/OpenAiApi.credentials.js
+             openCtiApi                  0                                                                        dist/credentials/OpenCTIApi.credentials.js
+             openWeatherMapApi           1            openWeatherMap                                              dist/credentials/OpenWeatherMapApi.credentials.js
+             orbitApi                    1            orbit                                                       dist/credentials/OrbitApi.credentials.js
+             ouraApi                     1            oura                                                        dist/credentials/OuraApi.credentials.js
+             paddleApi                   1            paddle                                                      dist/credentials/PaddleApi.credentials.js
+             pagerDutyApi                1            pagerDuty                                                   dist/credentials/PagerDutyApi.credentials.js
+             pagerDutyOAuth2Api          1            pagerDuty                                                   dist/credentials/PagerDutyOAuth2Api.credentials.js
+             payPalApi                   2            payPal, payPalTrigger                                       dist/credentials/PayPalApi.credentials.js
+             peekalinkApi                1            peekalink                                                   dist/credentials/PeekalinkApi.credentials.js
+                                                                                                            Стр. 29
+               Приложение: каталог нод и креденшелсов (snapshot)
+               credential_key                  supportedNode supportedNodes                                                          sourcePath
+                                               s_count
+               perplexityApi                   1               perplexity                                                            dist/credentials/PerplexityApi.credentials.js
+               phantombusterApi                1               phantombuster                                                         dist/credentials/PhantombusterApi.credentials.js
+               philipsHueOAuth2Api             1               philipsHue                                                            dist/credentials/PhilipsHueOAuth2Api.credentials.js
+               pipedriveApi                    2               pipedrive, pipedriveTrigger                                           dist/credentials/PipedriveApi.credentials.js
+               pipedriveOAuth2Api              2               pipedrive, pipedriveTrigger                                           dist/credentials/PipedriveOAuth2Api.credentials.js
+               plivoApi                        1               plivo                                                                 dist/credentials/PlivoApi.credentials.js
+               postHogApi                      1               postHog                                                               dist/credentials/PostHogApi.credentials.js
+               postgres                        2               postgres, postgresTrigger                                             dist/credentials/Postgres.credentials.js
+               postmarkApi                     1               postmarkTrigger                                                       dist/credentials/PostmarkApi.credentials.js
+               profitWellApi                   1               profitWell                                                            dist/credentials/ProfitWellApi.credentials.js
+               pushbulletOAuth2Api             1               pushbullet                                                            dist/credentials/PushbulletOAuth2Api.credentials.js
+               pushcutApi                      2               pushcut, pushcutTrigger                                               dist/credentials/PushcutApi.credentials.js
+               pushoverApi                     1               pushover                                                              dist/credentials/PushoverApi.credentials.js
+               qRadarApi                       0                                                                                     dist/credentials/QRadarApi.credentials.js
+               qualysApi                       0                                                                                     dist/credentials/QualysApi.credentials.js
+               questDb                         1               questDb                                                               dist/credentials/QuestDb.credentials.js
+               quickBooksOAuth2Api             1               quickbooks                                                            dist/credentials/QuickBooksOAuth2Api.credentials.js
+               quickbaseApi                    1               quickbase                                                             dist/credentials/QuickBaseApi.credentials.js
+               rabbitmq                        2               rabbitmq, rabbitmqTrigger                                             dist/credentials/RabbitMQ.credentials.js
+               raindropOAuth2Api               1               raindrop                                                              dist/credentials/RaindropOAuth2Api.credentials.js
+               rapid7InsightVmApi              0                                                                                     dist/credentials/Rapid7InsightVmApi.credentials.js
+               recordedFutureApi               0                                                                                     dist/credentials/RecordedFutureApi.credentials.js
+               redditOAuth2Api                 1               reddit                                                                dist/credentials/RedditOAuth2Api.credentials.js
+               redis                           2               redis, redisTrigger                                                   dist/credentials/Redis.credentials.js
+               rocketchatApi                   1               rocketchat                                                            dist/credentials/RocketchatApi.credentials.js
+               rundeckApi                      1               rundeck                                                               dist/credentials/RundeckApi.credentials.js
+               s3                              1               s3                                                                    dist/credentials/S3.credentials.js
+               salesforceJwtApi                1               salesforce                                                            dist/credentials/SalesforceJwtApi.credentials.js
+               salesforceOAuth2Api             2               salesforce, salesforceTrigger                                         dist/credentials/SalesforceOAuth2Api.credentials.js
+               salesmateApi                    1               salesmate                                                             dist/credentials/SalesmateApi.credentials.js
+               seaTableApi                     2               seaTable, seaTableTrigger                                             dist/credentials/SeaTableApi.credentials.js
+               securityScorecardApi            1               securityScorecard                                                     dist/credentials/SecurityScorecardApi.credentials.js
+               segmentApi                      1               segment                                                               dist/credentials/SegmentApi.credentials.js
+               sekoiaApi                       0                                                                                     dist/credentials/SekoiaApi.credentials.js
+                                                                                                                              Стр. 30
+               Приложение: каталог нод и креденшелсов (snapshot)
+               credential_key                  supportedNode supportedNodes                                                           sourcePath
+                                               s_count
+               sendGridApi                     1               sendGrid                                                               dist/credentials/SendGridApi.credentials.js
+               sendInBlueApi                   2               sendInBlue, sendInBlueTrigger                                          dist/credentials/BrevoApi.credentials.js
+               sendyApi                        1               sendy                                                                  dist/credentials/SendyApi.credentials.js
+               sentryIoApi                     1               sentryIo                                                               dist/credentials/SentryIoApi.credentials.js
+               sentryIoOAuth2Api               1               sentryIo                                                               dist/credentials/SentryIoOAuth2Api.credentials.js
+               sentryIoServerApi               1               sentryIo                                                               dist/credentials/SentryIoServerApi.credentials.js
+               serviceNowBasicApi              1               serviceNow                                                             dist/credentials/ServiceNowBasicApi.credentials.js
+               serviceNowOAuth2Api             1               serviceNow                                                             dist/credentials/ServiceNowOAuth2Api.credentials.js
+               sftp                            1               ftp                                                                    dist/credentials/Sftp.credentials.js
+               shopifyAccessTokenApi           2               shopify, shopifyTrigger                                                dist/credentials/ShopifyAccessTokenApi.credentials.js
+               shopifyApi                      2               shopify, shopifyTrigger                                                dist/credentials/ShopifyApi.credentials.js
+               shopifyOAuth2Api                2               shopify, shopifyTrigger                                                dist/credentials/ShopifyOAuth2Api.credentials.js
+               shufflerApi                     0                                                                                      dist/credentials/ShufflerApi.credentials.js
+               signl4Api                       1               signl4                                                                 dist/credentials/Signl4Api.credentials.js
+               slackApi                        2               slack, slackTrigger                                                    dist/credentials/SlackApi.credentials.js
+               slackOAuth2Api                  1               slack                                                                  dist/credentials/SlackOAuth2Api.credentials.js
+               sms77Api                        1               sms77                                                                  dist/credentials/Sms77Api.credentials.js
+               smtp                            1               emailSend                                                              dist/credentials/Smtp.credentials.js
+               snowflake                       1               snowflake                                                              dist/credentials/Snowflake.credentials.js
+               solarWindsIpamApi               0                                                                                      dist/credentials/SolarWindsIpamApi.credentials.js
+               solarWindsObservabilityApi      0                                                                                      dist/credentials/SolarWindsObservabilityApi.credentials.js
+               splunkApi                       1               splunk                                                                 dist/credentials/SplunkApi.credentials.js
+               spontitApi                      1               spontit                                                                dist/credentials/SpontitApi.credentials.js
+               spotifyOAuth2Api                1               spotify                                                                dist/credentials/SpotifyOAuth2Api.credentials.js
+               sshPassword                     1               ssh                                                                    dist/credentials/SshPassword.credentials.js
+               sshPrivateKey                   1               ssh                                                                    dist/credentials/SshPrivateKey.credentials.js
+               stackbyApi                      1               stackby                                                                dist/credentials/StackbyApi.credentials.js
+               storyblokContentApi             1               storyblok                                                              dist/credentials/StoryblokContentApi.credentials.js
+               storyblokManagementApi          1               storyblok                                                              dist/credentials/StoryblokManagementApi.credentials.js
+               strapiApi                       1               strapi                                                                 dist/credentials/StrapiApi.credentials.js
+               strapiTokenApi                  1               strapi                                                                 dist/credentials/StrapiTokenApi.credentials.js
+               stravaOAuth2Api                 2               strava, stravaTrigger                                                  dist/credentials/StravaOAuth2Api.credentials.js
+               stripeApi                       2               stripe, stripeTrigger                                                  dist/credentials/StripeApi.credentials.js
+               supabaseApi                     1               supabase                                                               dist/credentials/SupabaseApi.credentials.js
+                                                                                                                               Стр. 31
+                Приложение: каталог нод и креденшелсов (snapshot)
+                credential_key                    supportedNode supportedNodes                                                                sourcePath
+                                                  s_count
+                surveyMonkeyApi                   1                surveyMonkeyTrigger                                                        dist/credentials/SurveyMonkeyApi.credentials.js
+                surveyMonkeyOAuth2Api             1                surveyMonkeyTrigger                                                        dist/credentials/SurveyMonkeyOAuth2Api.credentials.js
+                syncroMspApi                      1                syncroMsp                                                                  dist/credentials/SyncroMspApi.credentials.js
+                sysdigApi                         0                                                                                           dist/credentials/SysdigApi.credentials.js
+                taigaApi                          2                taiga, taigaTrigger                                                        dist/credentials/TaigaApi.credentials.js
+                tapfiliateApi                     1                tapfiliate                                                                 dist/credentials/TapfiliateApi.credentials.js
+                telegramApi                       2                telegram, telegramTrigger                                                  dist/credentials/TelegramApi.credentials.js
+                theHiveApi                        1                theHive                                                                    dist/credentials/TheHiveApi.credentials.js
+                theHiveProjectApi                 1                theHiveProject                                                             dist/credentials/TheHiveProjectApi.credentials.js
+                timescaleDb                       1                timescaleDb                                                                dist/credentials/TimescaleDb.credentials.js
+                todoistApi                        1                todoist                                                                    dist/credentials/TodoistApi.credentials.js
+                todoistOAuth2Api                  1                todoist                                                                    dist/credentials/TodoistOAuth2Api.credentials.js
+                togglApi                          1                togglTrigger                                                               dist/credentials/TogglApi.credentials.js
+                totpApi                           1                totp                                                                       dist/credentials/TotpApi.credentials.js
+                travisCiApi                       1                travisCi                                                                   dist/credentials/TravisCiApi.credentials.js
+                trellixEpoApi                     0                                                                                           dist/credentials/TrellixEpoApi.credentials.js
+                trelloApi                         2                trello, trelloTrigger                                                      dist/credentials/TrelloApi.credentials.js
+                twakeCloudApi                     1                twake                                                                      dist/credentials/TwakeCloudApi.credentials.js
+                twakeServerApi                    0                                                                                           dist/credentials/TwakeServerApi.credentials.js
+                twilioApi                         2                twilio, twilioTrigger                                                      dist/credentials/TwilioApi.credentials.js
+                twistOAuth2Api                    1                twist                                                                      dist/credentials/TwistOAuth2Api.credentials.js
+                twitterOAuth1Api                  1                twitter                                                                    dist/credentials/TwitterOAuth1Api.credentials.js
+                twitterOAuth2Api                  1                twitter                                                                    dist/credentials/TwitterOAuth2Api.credentials.js
+                typeformApi                       1                typeformTrigger                                                            dist/credentials/TypeformApi.credentials.js
+                typeformOAuth2Api                 1                typeformTrigger                                                            dist/credentials/TypeformOAuth2Api.credentials.js
+                unleashedSoftwareApi              1                unleashedSoftware                                                          dist/credentials/UnleashedSoftwareApi.credentials.js
+                upleadApi                         1                uplead                                                                     dist/credentials/UpleadApi.credentials.js
+                uprocApi                          1                uproc                                                                      dist/credentials/UProcApi.credentials.js
+                uptimeRobotApi                    1                uptimeRobot                                                                dist/credentials/UptimeRobotApi.credentials.js
+                urlScanIoApi                      1                urlScanIo                                                                  dist/credentials/UrlScanIoApi.credentials.js
+                venafiTlsProtectCloudApi          2                venafiTlsProtectCloud, venafiTlsProtectCloudTrigger                        dist/credentials/VenafiTlsProtectCloudApi.credentials.js
+                venafiTlsProtectDatacenterApi     1                venafiTlsProtectDatacenter                                                 dist/credentials/VenafiTlsProtectDatacenterApi.credentials.js
+                veroApi                           1                vero                                                                       dist/credentials/VeroApi.credentials.js
+                verticaApi                        0                                                                                           dist/credentials/VerticaApi.credentials.js
+                                                                                                                                      Стр. 32
+               Приложение: каталог нод и креденшелсов (snapshot)
+               credential_key                  supportedNode supportedNodes                                                         sourcePath
+                                               s_count
+               virusTotalApi                   0                                                                                    dist/credentials/VirusTotalApi.credentials.js
+               vonageApi                       1              vonage                                                                dist/credentials/VonageApi.credentials.js
+               webflowApi                      2              webflow, webflowTrigger                                               dist/credentials/WebflowApi.credentials.js
+               webflowOAuth2Api                2              webflow, webflowTrigger                                               dist/credentials/WebflowOAuth2Api.credentials.js
+               wekanApi                        1              wekan                                                                 dist/credentials/WekanApi.credentials.js
+               whatsAppApi                     1              whatsApp                                                              dist/credentials/WhatsAppApi.credentials.js
+               whatsAppTriggerApi              1              whatsAppTrigger                                                       dist/credentials/WhatsAppTriggerApi.credentials.js
+               wiseApi                         2              wise, wiseTrigger                                                     dist/credentials/WiseApi.credentials.js
+               wooCommerceApi                  2              wooCommerce, wooCommerceTrigger                                       dist/credentials/WooCommerceApi.credentials.js
+               wordpressApi                    1              wordpress                                                             dist/credentials/WordpressApi.credentials.js
+               workableApi                     1              workableTrigger                                                       dist/credentials/WorkableApi.credentials.js
+               wufooApi                        1              wufooTrigger                                                          dist/credentials/WufooApi.credentials.js
+               xeroOAuth2Api                   1              xero                                                                  dist/credentials/XeroOAuth2Api.credentials.js
+               youTubeOAuth2Api                1              youTube                                                               dist/credentials/YouTubeOAuth2Api.credentials.js
+               yourlsApi                       1              yourls                                                                dist/credentials/YourlsApi.credentials.js
+               zabbixApi                       0                                                                                    dist/credentials/ZabbixApi.credentials.js
+               zammadBasicAuthApi              1              zammad                                                                dist/credentials/ZammadBasicAuthApi.credentials.js
+               zammadTokenAuthApi              1              zammad                                                                dist/credentials/ZammadTokenAuthApi.credentials.js
+               zendeskApi                      2              zendesk, zendeskTrigger                                               dist/credentials/ZendeskApi.credentials.js
+               zendeskOAuth2Api                2              zendesk, zendeskTrigger                                               dist/credentials/ZendeskOAuth2Api.credentials.js
+               zohoOAuth2Api                   1              zohoCrm                                                               dist/credentials/ZohoOAuth2Api.credentials.js
+               zoomApi                         1              zoom                                                                  dist/credentials/ZoomApi.credentials.js
+               zoomOAuth2Api                   1              zoom                                                                  dist/credentials/ZoomOAuth2Api.credentials.js
+               zscalerZiaApi                   0                                                                                    dist/credentials/ZscalerZiaApi.credentials.js
+               zulipApi                        1              zulip                                                                 dist/credentials/ZulipApi.credentials.js
+                                                                                                                             Стр. 33
