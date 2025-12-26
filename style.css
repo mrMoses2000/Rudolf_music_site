@@ -222,33 +222,62 @@ body::after {
 .mobile-menu-close {
     width: 48px;
     height: 48px;
-    background: #f3f4f6;
-    border: none;
-    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 12px;
+    box-shadow: 3px 3px 0px #000;
     font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-close:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #000;
 }
 
 .mobile-nav-links {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 32px;
+    /* Increased gap */
 }
 
 .mobile-link {
-    font-size: 28px;
-    color: #ccc;
+    font-size: 32px;
+    /* Larger */
+    color: #000;
+    /* Black by default */
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
+    font-weight: 700;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Add custom bullet/icon on hover */
+.mobile-link::before {
+    content: '';
+    width: 0;
+    height: 4px;
+    background: var(--accent-green);
+    transition: width 0.2s;
+    border-radius: 2px;
+}
+
+.mobile-link:hover::before,
+.mobile-link:active::before {
+    width: 24px;
 }
 
 .mobile-link:hover,
 .mobile-link:active {
     color: #000;
+    transform: translateX(8px);
 }
 
 .mobile-menu-footer {
@@ -262,12 +291,22 @@ body::after {
     gap: 12px;
     width: 100%;
     padding: 20px;
-    background: #000;
-    color: #fff;
+    background: var(--accent-green);
+    /* Green Button */
+    color: #000;
+    border: 2px solid #000;
+    box-shadow: 4px 5px 0px #000;
+    /* Hard Shadow */
     border-radius: 16px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.mobile-contact-btn:active {
+    transform: translate(2px, 3px);
+    box-shadow: 2px 2px 0px #000;
 }
 
 
