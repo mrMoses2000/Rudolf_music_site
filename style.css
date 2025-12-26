@@ -956,11 +956,23 @@ body::after {
     position: relative;
 }
 
+/* Centered Header - reuses About styles */
+.jekits-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.jekits-header .about-text {
+    margin-bottom: 0;
+}
+
+/* Grid for cards and visual */
 .jekits-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: center;
+    margin-bottom: 60px;
 }
 
 /* Badge - Black Solid (Logo Style) */
@@ -1002,37 +1014,40 @@ body::after {
     max-width: 500px;
 }
 
-/* Cards - Hard Shadow Style */
+/* Cards - Transparent Default, Hover Effects */
 .jekits-cards {
     display: flex;
+    flex-direction: column;
     gap: 24px;
-    margin-bottom: 40px;
 }
 
 .jekits-card {
     flex: 1;
-    background: #fff;
-    border: 2px solid #000;
+    background: transparent;
+    border: 2px solid transparent;
     padding: 28px;
     border-radius: 20px;
     transition: all 0.3s ease;
-    box-shadow: 4px 4px 0px #000;
 }
 
 .jekits-card:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px #000;
+    background: #fff;
+    border-color: #000;
+    box-shadow: 4px 4px 0px #000;
+    transform: translate(-2px, -2px);
 }
 
 /* Highlight Card (Paid Option) */
 .jekits-card.highlight {
-    background: rgba(0, 209, 80, 0.05);
-    border-color: var(--accent-green);
-    box-shadow: 4px 4px 0px var(--accent-green);
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .jekits-card.highlight:hover {
-    box-shadow: 2px 2px 0px var(--accent-green);
+    background: #fff;
+    border-color: #000;
+    box-shadow: 4px 4px 0px #000;
 }
 
 .jekits-year {
@@ -1060,14 +1075,16 @@ body::after {
     line-height: 1.5;
 }
 
+/* Free price - green */
 .jekits-price {
     font-size: 18px;
     font-weight: 700;
-    color: #000;
+    color: var(--accent-green);
 }
 
+/* Paid price - black */
 .jekits-card.highlight .jekits-price {
-    color: var(--accent-green);
+    color: #000;
 }
 
 /* Link as Mini-Button */
@@ -1172,6 +1189,12 @@ body::after {
     left: 50%;
     transform: translate(-50%, -50%);
     filter: blur(35px);
+}
+
+/* CTA centered */
+.jekits-cta {
+    text-align: center;
+    margin-top: 40px;
 }
 
 .shape-1,
