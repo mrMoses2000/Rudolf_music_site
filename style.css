@@ -65,6 +65,28 @@ body {
     cursor: pointer;
 }
 
+.logo-icon-box {
+    width: 56px;
+    height: 56px;
+    background-color: #fff;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-size: 32px;
+    box-shadow: 3px 3px 0px #000;
+    border: 2px solid #000;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.logo-icon-box:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #000;
+}
+
+
 .nav-center {
     background-color: var(--nav-bg);
     padding: 6px 8px;
