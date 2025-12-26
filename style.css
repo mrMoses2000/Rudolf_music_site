@@ -1,0 +1,315 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #0d0d0d;
+    --nav-bg: #f3f4f6;
+    --accent-green: #00D150;
+    --font-primary: 'Inter', sans-serif;
+    --container-width: 1440px;
+    /* Global Max Width */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #fafafa 100%);
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 40px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    padding-bottom: 32px;
+    /* Horizontal padding handled by .container */
+    position: relative;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeInDown 0.8s ease-out forwards 0.2s;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.04em;
+    cursor: pointer;
+}
+
+.nav-center {
+    background-color: var(--nav-bg);
+    padding: 6px 8px;
+    /* Compact pill */
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: inherit;
+    padding: 8px 20px;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #000;
+    background-color: #e5e7eb;
+}
+
+.nav-link.active {
+    color: #000;
+    font-weight: 600;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.divider {
+    color: #d1d5db;
+    font-size: 10px;
+    margin: 0 4px;
+    opacity: 0.5;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn-black {
+    background-color: #0f0f0f;
+    color: #fff;
+}
+
+.btn-black:hover {
+    background-color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero */
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 80px;
+    position: relative;
+}
+
+.hero-sub {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 0.4s;
+    letter-spacing: -0.01em;
+}
+
+.hero-title {
+    font-family: var(--font-primary);
+    font-size: 140px;
+    /* Massive */
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    /* Tight tracking for modern look */
+    line-height: 0.9;
+    margin-bottom: 56px;
+    /* Spacing before button */
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    color: #000;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 0.6s;
+}
+
+.hero-icon-box {
+    width: 110px;
+    height: 110px;
+    background-color: #0A1F16;
+    /* Deep dark green/black */
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 56px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transform: rotate(-3deg);
+    transition: transform 0.4s ease;
+}
+
+.hero-icon-box:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+/* Button Green */
+.btn-green {
+    background-color: var(--accent-green);
+    color: #000;
+    padding: 18px 42px;
+    /* Large pill */
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 4px 5px 0px #000;
+    /* Neo-brutal hard shadow */
+    border: 2px solid #000;
+    transition: all 0.2s ease;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 0.8s;
+}
+
+.btn-green:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #000;
+}
+
+.btn-green:active {
+    transform: translate(4px, 5px);
+    box-shadow: 0px 0px 0px #000;
+}
+
+.browser-icons {
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
+}
+
+.icon-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.icon-circle:nth-child(1) {
+    background-color: #FCD34D;
+    z-index: 3;
+}
+
+.icon-circle:nth-child(2) {
+    background-color: #60A5FA;
+    margin-left: -10px;
+    z-index: 2;
+}
+
+.icon-circle:nth-child(3) {
+    background-color: #F87171;
+    margin-left: -10px;
+    z-index: 1;
+}
+
+/* Added Red one for Chrome colors vibe */
+
+/* Keyframes */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 100px;
+        gap: 16px;
+    }
+
+    .hero-icon-box {
+        width: 80px;
+        height: 80px;
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 20px;
+    }
+
+    .nav-center {
+        display: none;
+    }
+
+    /* Hide centric nav on mobile or change to hamburger */
+    .hero-title {
+        font-size: 64px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero-icon-box {
+        transform: rotate(0);
+        width: 64px;
+        height: 64px;
+        font-size: 32px;
+    }
+}
