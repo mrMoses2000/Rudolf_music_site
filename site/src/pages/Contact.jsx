@@ -42,10 +42,10 @@ const Contact = () => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                    access_key: "YOUR_ACCESS_KEY_HERE", // Placeholder
+                    access_key: "e6f51cb3-ae9e-4deb-9989-5cf892fbc8a4", // Actual Key
                     from_name: "Musikschule Website",
                     ...formData,
-                    to_email: "moisey.vasilenko@gmail.com"
+                    to_email: "mosesvasilenko0002@gmail.com"
                 })
             });
 
