@@ -1627,10 +1627,7 @@ body::after {
 }
 
 /* Main location highlight */
-.location-item.location-main:hover {
-    border-color: var(--accent-green);
-    box-shadow: 4px 4px 0px var(--accent-green);
-}
+
 
 .location-left {
     display: flex;
