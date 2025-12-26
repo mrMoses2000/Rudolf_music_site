@@ -10,7 +10,7 @@
 - **Логотип / Название:** Christliche Musikschule Bielefeld e.V.
 - **Девиз (библейская цитата):** „Lobe den Herrn meine Seele und vergiss nicht, was er dir Gutes getan hat..." — Psalm 103
 - **Главный заголовок:** Willkommen bei der Musikschule CMS Bielefeld
-- **Подзаголовок:** Музыкальное образование для детей и взрослых с 1999 года
+- **Подзаголовок:** Muzykalne wieducje dla dzieci i dorosłych od 1999 roku
 - **CTA-кнопка:** „Jetzt anmelden" → ведёт к форме контакта
 - **Телефон:** +49 (0) 521 3367416
 
