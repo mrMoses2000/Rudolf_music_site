@@ -802,9 +802,8 @@ body::after {
 /* Hover State */
 .offer-card:hover {
     border-color: #000;
-    transform: translateY(-8px);
     background: #fff;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 4px 4px 0px #000;
 }
 
 /* Icon as "App Badge" - White Default with Logo Style */
@@ -1087,7 +1086,7 @@ body::after {
     color: #000;
 }
 
-/* Link as Mini-Button */
+/* Link as Mini-Button - Zero Block Style */
 .text-link {
     display: inline-flex;
     align-items: center;
@@ -1096,17 +1095,22 @@ body::after {
     font-weight: 600;
     font-size: 15px;
     text-decoration: none;
-    padding: 12px 24px;
+    padding: 16px 25px;
     border: 2px solid #000;
     border-radius: 99px;
     transition: all 0.2s ease;
-    box-shadow: 3px 3px 0px #000;
+    box-shadow: 4px 4px 0px #000;
+    width: fit-content;
 }
 
 .text-link:hover {
     background: var(--accent-green);
-    transform: translate(1px, 1px);
+    transform: translate(2px, 2px);
     box-shadow: 2px 2px 0px #000;
+}
+
+.text-link:hover .arrow-icon {
+    transform: translateX(4px);
 }
 
 /* Visual Side - Rich Composition */
