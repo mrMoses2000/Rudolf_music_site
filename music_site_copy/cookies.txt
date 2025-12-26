@@ -1,0 +1,4 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+musikschule-cms-bielefeld.de	TRUE	/	FALSE	1999999999	PHPSESSID	002a1e08103e8aeb8d23cdada1e3e112
+
