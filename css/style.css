@@ -306,3 +306,100 @@ body {
         display: none;
     }
 }
+
+/* =============================================
+   ANIMATIONS
+   ============================================= */
+
+/* Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes iconPop {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(-180deg);
+    }
+
+    60% {
+        transform: scale(1.1) rotate(10deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes softGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 0 var(--color-text), 0 0 20px rgba(0, 214, 79, 0);
+    }
+
+    50% {
+        box-shadow: 0 4px 0 var(--color-text), 0 0 30px rgba(0, 214, 79, 0.3);
+    }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-delay-1 {
+    animation-delay: 0.2s;
+}
+
+.animate-delay-2 {
+    animation-delay: 0.4s;
+}
+
+.animate-delay-3 {
+    animation-delay: 0.6s;
+}
+
+.animate-delay-4 {
+    animation-delay: 0.8s;
+}
+
+.animate-delay-5 {
+    animation-delay: 1.0s;
+}
+
+/* Icon special animation - Pop only, float removed for JS interaction */
+.animate-icon-pop {
+    opacity: 0;
+    animation: iconPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+}
+
+/* Button with fade-in + glow */
+.btn-download-main.animate-fade-in {
+    opacity: 0;
+    animation:
+        fadeInUp 0.8s ease-out forwards,
+        softGlow 3s ease-in-out 1.5s infinite;
+}
