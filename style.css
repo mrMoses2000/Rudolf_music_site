@@ -539,25 +539,26 @@ body::after {
 .feature-card {
     background: transparent;
     /* No background by default = AIR */
-    border: 1px solid transparent;
-    /* No border by default */
+    border: 2px solid transparent;
+    /* Reserve space for hover border to prevent jump */
     padding: 20px;
     text-align: left;
-    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
     /* Clean composition */
     display: flex;
     flex-direction: column;
 }
 
-/* Hover: The "Card" materializes */
+/* Hover: The "Card" pops with Hard Shadow (Button Style) */
 .feature-card:hover {
     background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 2px solid #000;
     border-radius: 20px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
-    /* Deep soft shadow */
-    transform: translateY(-10px) scale(1.02);
+    box-shadow: 8px 8px 0px #000;
+    /* Hard shadow match */
+    transform: translate(-4px, -4px);
+    /* Lift up to "cast" the shadow */
     padding: 40px 30px;
     /* Expands on hover */
     margin: -20px -10px;
