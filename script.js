@@ -70,3 +70,27 @@ function initCarousel() {
         showSlide(currentIndex + 1);
     }, 7000);
 }
+
+// Accordion functionality
+function initAccordion() {
+    const accordionItems = document.querySelectorAll('.accordion-item');
+
+    accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+
+        header.addEventListener('click', () => {
+            // Close other items (optional - for single open mode)
+            accordionItems.forEach(other => {
+                if (other !== item) {
+                    other.classList.remove('active');
+                }
+            });
+
+            // Toggle current item
+            item.classList.toggle('active');
+        });
+    });
+}
+
+// Initialize accordion on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', initAccordion);
