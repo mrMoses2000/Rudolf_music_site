@@ -54,7 +54,7 @@ const Home = () => {
                                 {content.hero.psalm.split(' ').slice(-2).join(' ')}
                             </span>
                         </div>
-                        <h1 className="text-7xl md:text-[12rem] font-outfit font-black mb-6 leading-[0.8] tracking-tighter uppercase max-w-6xl text-white">
+                        <h1 className="text-5xl md:text-[12rem] font-outfit font-black mb-6 leading-[0.8] tracking-tighter uppercase max-w-6xl text-white">
                             {content.hero.title.split(' ').slice(0, 3).map((word, i) => (
                                 <motion.span
                                     key={i}
@@ -146,7 +146,7 @@ const Home = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-90"></div>
 
                                 <div className="p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">
-                                    <h3 className="text-4xl font-black text-white group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter">{cat.title}</h3>
+                                    <h3 className="text-4xl font-black text-white group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
                                     <p className="text-[#B3B3B3] text-xs font-black uppercase tracking-[0.3em]">{cat.items.length} Fächer</p>
                                 </div>
 

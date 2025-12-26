@@ -45,7 +45,7 @@ const InstrumentPage = () => {
                         <Link to="/offer" className="group flex items-center gap-3 text-gold font-black uppercase tracking-[0.4em] text-[10px] hover:text-white transition-colors">
                             <span className="group-hover:-translate-x-2 transition-transform">←</span> {category?.title || "Angebot"}
                         </Link>
-                        <h1 className="text-7xl md:text-[13rem] font-outfit font-black text-white leading-[0.75] tracking-tighter uppercase">
+                        <h1 className="text-4xl sm:text-5xl md:text-[13rem] font-outfit font-black text-white leading-[0.75] tracking-tighter uppercase break-words hyphens-auto">
                             {instrumentData.title}
                         </h1>
                     </motion.div>
