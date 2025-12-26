@@ -72,6 +72,12 @@ body {
     letter-spacing: -0.02em;
 }
 
+/* Prevent layout shift for logo icon */
+.logo .iconify {
+    width: 24px;
+    height: 24px;
+}
+
 .main-nav {
     display: flex;
     align-items: center;
@@ -200,6 +206,9 @@ body {
     justify-content: center;
     font-size: 100px;
     transform: translateY(4px);
+    /* Prevent layout shift during icon loading */
+    min-width: 100px;
+    min-height: 100px;
 }
 
 .hero-icon-container .iconify {
@@ -207,6 +216,9 @@ body {
     background-color: #05180B;
     color: white;
     padding: 2px;
+    /* Fixed size to prevent reflow */
+    width: 100px;
+    height: 100px;
 }
 
 .btn-download-main {
