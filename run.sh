@@ -91,25 +91,32 @@ services:
         max-file: "3"
 EOF
 
-# 5. Умный запуск (Idem-potent deployment)
-echo "🏗️ Обновляем контейнеры..."
+# 5. Умный запуск (Robust direct Docker deployment)
+echo "🏗️ Сборка образа и запуск контейнера..."
 
-# Удаляем старые зависшие контейнеры, если они есть (из прошлых версий скрипта)
+# Константы
+IMG_NAME="music_school_site"
+CON_NAME="music_school_app"
+
+# Сборка образа
+sudo docker build -t $IMG_NAME .
+
+# Остановка и удаление старого контейнера (независимо от того, чем он был запущен)
+echo "🧹 Удаление старых версий..."
+sudo docker stop $CON_NAME 2>/dev/null || true
+sudo docker rm -f $CON_NAME 2>/dev/null || true
+# Также удаляем старые названия, которые могли остаться от docker-compose
 sudo docker rm -f site_site_1 2>/dev/null || true
 
-# Используем Docker Compose V2 (современный стандарт)
-if sudo docker compose version &> /dev/null; then
-    # --build заставит пересобрать образ, если код изменился
-    # --remove-orphans удалит старые контейнеры этого проекта, если мы переименовали сервисы
-    sudo docker compose up -d --build --remove-orphans
-elif command -v docker-compose &> /dev/null; then
-    sudo docker-compose up -d --build --remove-orphans
-else
-    echo "❌ Ошибка: Docker Compose не найден."
-    exit 1
-fi
+# Запуск нового контейнера
+echo "🚀 Запуск нового контейнера..."
+sudo docker run -d \
+    --name $CON_NAME \
+    --restart always \
+    -p 80:80 \
+    $IMG_NAME
 
-echo "✨ Готово! Сайт обновлен и запущен."
+echo "✨ Готово! Сайт запущен напрямую через Docker."
 echo "🔗 Проверь статус: sudo docker ps"
-echo "📝 Логи: sudo docker compose logs -f site"
+echo "📝 Логи: sudo docker logs -f $CON_NAME"
 
