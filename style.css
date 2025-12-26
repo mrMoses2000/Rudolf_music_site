@@ -585,28 +585,56 @@ body::after {
 
 .about-quote {
     text-align: center;
-    padding: 60px 40px;
-    background: #fff;
-    border-radius: 24px;
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    padding: 80px 20px;
+    /* Removed background/border/shadow */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    max-width: 900px;
+    margin: 40px auto 0;
+    position: relative;
+}
+
+/* Giant Quote Mark Watermark */
+.about-quote::before {
+    content: "“";
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Serif Text', serif;
+    font-size: 200px;
+    line-height: 1;
+    color: var(--accent-green);
+    opacity: 0.15;
+    pointer-events: none;
 }
 
 .quote-text {
-    font-size: 28px;
+    font-size: 42px;
+    /* Much larger */
+    font-weight: 400;
     font-style: italic;
-    color: #222;
-    line-height: 1.6;
-    margin: 0 0 16px 0;
+    color: #111;
+    line-height: 1.4;
+    margin: 0 0 24px 0;
+    position: relative;
+    /* Above watermark */
+    z-index: 2;
 }
 
 .quote-source {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
-    color: var(--accent-green);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
     font-style: normal;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    padding-top: 20px;
+    border-top: 2px solid var(--accent-green);
 }
 
 /* Fade-in animation for scroll */
