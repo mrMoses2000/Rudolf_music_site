@@ -89,9 +89,9 @@ body {
 
 .nav-center {
     background-color: var(--nav-bg);
-    padding: 6px 8px;
-    /* Compact pill */
-    border-radius: 999px;
+    padding: 0 12px;
+    height: 56px;
+    border-radius: 28px;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -166,8 +166,9 @@ body {
     color: #000;
     font-weight: 600;
     font-size: 14px;
-    padding: 10px 16px;
-    border-radius: 999px;
+    height: 56px;
+    padding: 0 20px;
+    border-radius: 28px;
     transition: background-color 0.2s;
 }
 
