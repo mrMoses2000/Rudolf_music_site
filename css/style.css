@@ -436,7 +436,8 @@ body {
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
-    opacity: 0.4;
+    opacity: 0.3;
+    /* Reduced from 0.4 */
     animation: moveOrb 20s ease-in-out infinite alternate;
 }
 
@@ -458,8 +459,8 @@ body {
     /* Darker Light Blue */
     animation-delay: -5s;
     animation-duration: 28s;
-    opacity: 0.6;
-    /* Increased opacity */
+    opacity: 0.5;
+    /* Reduced from 0.6 */
 }
 
 .orb-3 {
@@ -471,7 +472,8 @@ body {
     /* More visible green */
     animation-delay: -10s;
     animation-duration: 22s;
-    opacity: 0.5;
+    opacity: 0.4;
+    /* Reduced from 0.5 */
 }
 
 @keyframes moveOrb {
