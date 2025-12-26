@@ -755,8 +755,8 @@ body::after {
    ============================================ */
 
 .offer-section {
-    padding: 60px 0 120px 0;
-    /* Reduced top padding */
+    padding: 20px 0 20px 0;
+    /* Minimal top padding */
     position: relative;
 }
 
@@ -924,6 +924,11 @@ body::after {
     border-color: #000;
     z-index: 2;
     transition-delay: 0s;
+}
+
+.offer-card:hover .offer-list li:hover .iconify {
+    color: #000;
+    /* Black icon on green background */
 }
 
 /* Responsive for Offer */
