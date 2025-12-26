@@ -475,7 +475,7 @@ body::after {
 }
 
 .about-section {
-    padding: 120px 0;
+    padding: 60px 0 200px 0;
     position: relative;
     /* Transparent background to let body effects show through */
     background: transparent;
@@ -524,7 +524,7 @@ body::after {
     line-height: 1.8;
     color: #444;
     max-width: 700px;
-    margin: 0 auto 60px;
+    margin: 0 auto 120px;
 }
 
 /* Feature Cards (Zero Block "Air" Edition) */
