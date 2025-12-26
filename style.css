@@ -1179,20 +1179,10 @@ body::after {
     animation: float 4s ease-in-out infinite 0.2s;
 }
 
-/* Subtle noise blob - organic shape */
-.visual-blob {
-    position: absolute;
-    width: 280px;
-    height: 220px;
-    background: rgba(0, 209, 80, 0.2);
-    /* Organic irregular shape */
-    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
-    z-index: 0;
-    /* Center behind the icon */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    filter: blur(35px);
+.visual-satellite.sat-4 {
+    bottom: 100px;
+    right: 100px;
+    animation: float 6s ease-in-out infinite 1.5s;
 }
 
 /* CTA centered */
