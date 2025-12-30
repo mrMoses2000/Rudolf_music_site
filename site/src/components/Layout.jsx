@@ -36,10 +36,13 @@ const Layout = () => {
                     <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
                 </nav>
 
-                <div className="flex items-center gap-6">
-                    <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="text-ink-muted font-bold text-sm hover:text-ink transition-colors hidden lg:block">
-                        {content.header.phone}
-                    </a>
+                <div className="flex items-center gap-4 md:gap-8">
+                    <div className="hidden lg:flex flex-col items-end">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-gold opacity-80">Rufen Sie uns an</span>
+                        <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="text-ink font-bold text-sm hover:text-gold transition-colors">
+                            {content.header.phone}
+                        </a>
+                    </div>
 
                     {/* Anmelden Button - Fixed */}
                     <Link to="/contact" className="hidden sm:block bg-ink text-paper px-8 py-3 rounded-full font-black text-sm uppercase tracking-widest hover:bg-gold hover:text-ink hover:scale-105 transition-all active:scale-95 shadow-[0_18px_40px_rgba(43,36,29,0.2)]">
@@ -79,17 +82,14 @@ const Layout = () => {
                         <nav className="flex flex-col gap-8 text-3xl font-black uppercase tracking-tighter text-ink">
                             <Link to="/" className="hover:text-gold">Start</Link>
                             <Link to="/about" className="hover:text-gold">Über uns</Link>
-                            <Link to="/standorte" className="hover:text-gold">unsere Standorte</Link>
+                            <Link to="/standorte" className="hover:text-gold">Standorte</Link>
                             <Link to="/offer" className="hover:text-gold">Angebot</Link>
                             <Link to="/jekits" className="hover:text-gold">JeKits</Link>
-                            <Link to="/musikkurse" className="hover:text-gold">Musikkurse 5,6</Link>
-                            <Link to="/kunst" className="hover:text-gold">Kunstunterricht</Link>
-                            <Link to="/jobs" className="hover:text-gold">Stellenangebote</Link>
                             <Link to="/aktuelles" className="hover:text-gold">Aktuelles</Link>
-                            <Link to="/fees" className="hover:text-gold">Gebühren/Anmeldung</Link>
+                            <Link to="/fees" className="hover:text-gold">Anmeldung</Link>
                             <Link to="/contact" className="hover:text-gold">Kontakt</Link>
-                            <Link to="/agb" className="hover:text-gold">AGB</Link>
-                            <Link to="/impressum" className="hover:text-gold">Impressum</Link>
+                            <Link to="/impressum" className="hover:text-gold text-sm opacity-50">Impressum</Link>
+                            <Link to="/agb" className="hover:text-gold text-sm opacity-50">AGB</Link>
                         </nav>
 
                         <div className="mt-auto pb-12 space-y-8">
@@ -118,14 +118,9 @@ const Layout = () => {
                     </div>
                     <div>
                         <div className="flex flex-col gap-4 text-sm font-bold text-ink-muted">
-                            {content.footer.links.map((link) => {
-                                const target = link === "AGB" ? "/agb" : "/impressum";
-                                return (
-                                    <Link key={link} to={target} className="hover:text-ink transition-colors">
-                                        {link}
-                                    </Link>
-                                );
-                            })}
+                            <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
+                            <Link to="/agb" className="hover:text-ink transition-colors">AGB</Link>
+                            <Link to="/contact" className="hover:text-ink transition-colors">Datenschutz</Link>
                         </div>
                     </div>
                 </div>

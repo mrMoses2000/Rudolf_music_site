@@ -73,6 +73,34 @@ const Contact = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    if (status === "success") {
+        return (
+            <div className="min-h-[60vh] flex items-center justify-center px-6">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center space-y-8"
+                >
+                    <div className="w-24 h-24 bg-gold rounded-full flex items-center justify-center mx-auto shadow-[0_20px_50px_rgba(199,154,85,0.4)]">
+                        <svg className="w-12 h-12 text-paper" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div className="space-y-4">
+                        <h2 className="text-4xl font-outfit font-black text-ink uppercase tracking-tighter">Vielen Dank!</h2>
+                        <p className="text-ink-muted font-bold text-lg">Ihre Nachricht wurde erfolgreich versendet. <br /> Wir melden uns in Kürze bei Ihnen.</p>
+                    </div>
+                    <button
+                        onClick={() => setStatus("")}
+                        className="text-gold font-black uppercase tracking-widest text-sm hover:underline"
+                    >
+                        Zurück zum Formular
+                    </button>
+                </motion.div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen">
             {/* Contact Hero */}

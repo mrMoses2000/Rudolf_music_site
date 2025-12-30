@@ -70,7 +70,7 @@ const Home = () => {
                         >
                             {content.hero.subtitle}
                         </motion.p>
-                        <h1 className="text-5xl md:text-[10rem] font-outfit font-black mb-6 leading-[0.85] tracking-tighter uppercase max-w-6xl text-ink">
+                        <h1 className="text-4xl sm:text-5xl md:text-[10rem] font-outfit font-black mb-6 leading-[0.85] tracking-tighter uppercase max-w-6xl text-ink break-words hyphens-auto">
                             {primaryWords.map((word, i) => (
                                 <motion.span
                                     key={i}
@@ -157,32 +157,37 @@ const Home = () => {
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                                 onMouseMove={handleMouseMove}
-                                className="spotify-card group relative p-0 overflow-hidden aspect-[4/5] flex flex-col justify-end rounded-[2rem]"
+                                className="flex"
                             >
-                                {/* Spotlight Background Effect */}
-                                <div
-                                    className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                                    style={{
-                                        background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(199, 154, 85, 0.18), transparent 45%)`
-                                    }}
-                                />
+                                <Link
+                                    to="/offer"
+                                    className="spotify-card group relative p-0 overflow-hidden aspect-[4/5] flex flex-col justify-end rounded-[2rem] w-full"
+                                >
+                                    {/* Spotlight Background Effect */}
+                                    <div
+                                        className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                        style={{
+                                            background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(199, 154, 85, 0.18), transparent 45%)`
+                                        }}
+                                    />
 
-                                <img
-                                    src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
-                                    className="absolute inset-0 w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
-                                    alt={cat.title}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
+                                    <img
+                                        src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
+                                        className="absolute inset-0 w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
+                                        alt={cat.title}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
-                                <div className="p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">
-                                    <h3 className="text-4xl font-black text-ink group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
-                                </div>
+                                    <div className="p-8 md:p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">
+                                        <h3 className="text-2xl md:text-4xl font-black text-ink group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
+                                    </div>
 
-                                <div className="absolute top-8 right-8 w-16 h-16 bg-gold rounded-full flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 shadow-2xl shadow-gold/40 z-30">
-                                    <svg className="w-8 h-8 text-ink translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z" />
-                                    </svg>
-                                </div>
+                                    <div className="absolute top-8 right-8 w-12 h-12 md:w-16 md:h-16 bg-gold rounded-full flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 shadow-2xl shadow-gold/40 z-30">
+                                        <svg className="w-6 h-6 md:w-8 md:h-8 text-ink translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                    </div>
+                                </Link>
                             </motion.div>
                         ))}
                     </div>

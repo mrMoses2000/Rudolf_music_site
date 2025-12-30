@@ -35,22 +35,31 @@ const Fees = () => {
                         <div className="space-y-6">
                             <h2 className="text-2xl md:text-3xl font-outfit font-bold text-ink">{content.fees.tableTitle}</h2>
                             <div className="overflow-x-auto rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)] bg-paper-strong">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="bg-[#F0E6D8] text-ink uppercase tracking-widest text-xs">
-                                        <th className="p-8 border-b border-black/10 font-black">{content.fees.tableHeader[0]}</th>
-                                        <th className="p-8 border-b border-black/10 font-black text-right whitespace-pre-line">{content.fees.tableHeader[1]}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {content.fees.table.map((row, i) => (
-                                        <tr key={i} className="hover:bg-black/5 transition-colors border-b border-black/5 last:border-0 group">
-                                            <td className="p-8 text-ink-muted group-hover:text-ink transition-colors">{row.label}</td>
-                                            <td className="p-8 text-right font-black text-ink text-2xl group-hover:text-gold transition-colors">{row.price}</td>
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-[#F0E6D8] text-ink uppercase tracking-widest text-xs">
+                                            <th className="p-8 border-b border-black/10 font-black">{content.fees.tableHeader[0]}</th>
+                                            <th className="p-8 border-b border-black/10 font-black text-right whitespace-pre-line">{content.fees.tableHeader[1]}</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {content.fees.table.map((row, i) => (
+                                            <tr
+                                                key={i}
+                                                onClick={() => i > 0 && (window.location.href = '/contact')}
+                                                className={`${row.price ? 'cursor-pointer' : ''} hover:bg-gold/5 transition-colors border-b border-black/5 last:border-0 group`}
+                                            >
+                                                <td className="p-8 text-ink-muted group-hover:text-ink transition-colors">
+                                                    {row.label}
+                                                    {row.price && <span className="block md:hidden text-gold text-sm font-black mt-2">{row.price.replace('-', '€')}</span>}
+                                                </td>
+                                                <td className="p-8 text-right font-black text-ink text-2xl group-hover:text-gold transition-colors hidden md:table-cell">
+                                                    {row.price.replace('-', '€')}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 

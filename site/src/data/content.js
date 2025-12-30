@@ -113,7 +113,7 @@ export const content = {
             },
             {
                 "label": "3er Vertrag*",
-                "price": "57-"
+                "price": "57,-"
             },
             {
                 "label": "4er und jeder weitere Vertrag*",
@@ -480,11 +480,11 @@ export const content = {
             ],
             "images": [
                 {
-                    "src": "/images/f46f616520f38e9455117294cd1cc70a_400x82_fit6eb1.jpg",
+                    "src": "/images/Jekitz-ts16957280966eb1.jpg",
                     "alt": "JeKits"
                 },
                 {
-                    "src": "/images/404fa268285de53f268209f2e6bf2806_400x198_fit6eb1.jpg",
+                    "src": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg",
                     "alt": "JeKits"
                 },
                 {
@@ -1513,7 +1513,7 @@ export const content = {
                     "slug": "cello"
                 }
             ],
-            "image": "/images/f46f616520f38e9455117294cd1cc70a_400x82_fit6eb1.jpg"
+            "image": "/images/attachments-Image-IMG_11926eb1.jpg"
         },
         {
             "id": "zupfinstrumente",
@@ -1536,7 +1536,7 @@ export const content = {
                     "slug": null
                 }
             ],
-            "image": "/images/404fa268285de53f268209f2e6bf2806_400x198_fit6eb1.jpg"
+            "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
         },
         {
             "id": "holzblasinstrumente",
