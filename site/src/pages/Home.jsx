@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import { content } from "../data/content";
+import Blocks from "../components/Blocks";
 
 const Home = () => {
     const heroRef = useRef(null);
@@ -22,17 +23,24 @@ const Home = () => {
         setMousePos({ x: clientX - left, y: clientY - top });
     };
 
+    const startBlocks = content.pages?.start?.blocks || [];
+    const startMainBlocks = startBlocks.length > 2 ? startBlocks.slice(2) : startBlocks;
+    const offerIntro = content.offer?.blocks?.[0]?.text || content.offer?.title;
+    const titleWords = content.hero.title.split(" ");
+    const primaryWords = titleWords.slice(0, 3);
+    const secondaryWords = titleWords.slice(3).join(" ");
+
     return (
-        <div className="bg-[#050505]">
+        <div className="text-ink">
             {/* Hero Section - Premium Parallax */}
             <section ref={heroRef} className="relative min-h-[100vh] flex items-end pb-32 px-6 md:px-12 overflow-hidden">
                 <motion.div style={{ y, scale: scaleHero }} className="absolute inset-0 z-0">
                     <img
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
                         alt="Musikschule Background"
-                        className="w-full h-full object-cover opacity-60"
+                        className="w-full h-full object-cover opacity-75"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-transparent"></div>
                 </motion.div>
 
                 <div className="relative z-10 w-full max-w-7xl mx-auto">
@@ -54,8 +62,16 @@ const Home = () => {
                                 {content.hero.psalm.split(' ').slice(-2).join(' ')}
                             </span>
                         </div>
-                        <h1 className="text-5xl md:text-[12rem] font-outfit font-black mb-6 leading-[0.8] tracking-tighter uppercase max-w-6xl text-white">
-                            {content.hero.title.split(' ').slice(0, 3).map((word, i) => (
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6, duration: 0.8 }}
+                            className="text-sm md:text-base text-ink-muted uppercase tracking-[0.4em] font-black"
+                        >
+                            {content.hero.subtitle}
+                        </motion.p>
+                        <h1 className="text-5xl md:text-[10rem] font-outfit font-black mb-6 leading-[0.85] tracking-tighter uppercase max-w-6xl text-ink">
+                            {primaryWords.map((word, i) => (
                                 <motion.span
                                     key={i}
                                     initial={{ opacity: 0, y: 20 }}
@@ -65,35 +81,32 @@ const Home = () => {
                                 >
                                     {word}
                                 </motion.span>
-                            ))} <br />
-                            <motion.span
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.6, duration: 1 }}
-                                className="text-gold inline-block"
-                            >
-                                {content.hero.title.split(' ').slice(3).join(' ')}
-                            </motion.span>
+                            ))}
+                            {secondaryWords && (
+                                <>
+                                    <br />
+                                    <motion.span
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.6, duration: 1 }}
+                                        className="text-gold inline-block"
+                                    >
+                                        {secondaryWords}
+                                    </motion.span>
+                                </>
+                            )}
                         </h1>
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.8, duration: 1 }}
-                            className="text-xl md:text-2xl text-[#B3B3B3] mb-12 max-w-2xl font-bold leading-relaxed"
-                        >
-                            {content.hero.subtitle}
-                        </motion.p>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1, duration: 0.8 }}
                             className="flex flex-col sm:flex-row gap-6"
                         >
-                            <Link to="/offer" className="group bg-white text-black px-14 py-5 rounded-full font-black text-lg uppercase tracking-widest hover:bg-gold transition-all active:scale-95 shadow-2xl relative overflow-hidden">
+                            <Link to="/offer" className="group bg-ink text-paper px-14 py-5 rounded-full font-black text-lg uppercase tracking-widest hover:text-ink transition-all active:scale-95 shadow-[0_20px_50px_rgba(43,36,29,0.25)] relative overflow-hidden">
                                 <span className="relative z-10">{content.hero.offerBtn}</span>
                                 <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                             </Link>
-                            <Link to="/about" className="bg-transparent text-white border-2 border-white/20 px-14 py-5 rounded-full font-black text-lg uppercase tracking-widest hover:bg-white hover:text-black transition-all text-center">
+                            <Link to="/about" className="bg-transparent text-ink border-2 border-ink/20 px-14 py-5 rounded-full font-black text-lg uppercase tracking-widest hover:bg-ink hover:text-paper transition-all text-center">
                                 {content.hero.aboutBtn}
                             </Link>
                         </motion.div>
@@ -101,8 +114,25 @@ const Home = () => {
                 </div>
             </section>
 
+            <section className="py-24 px-6 md:px-12 bg-paper/60">
+                <div className="max-w-5xl mx-auto space-y-12">
+                    <Blocks blocks={startMainBlocks} />
+                    {content.pages?.start?.videoEmbedId && (
+                        <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)]">
+                            <iframe
+                                className="w-full h-full"
+                                src={`https://www.youtube.com/embed/${content.pages.start.videoEmbedId}?controls=1`}
+                                title="YouTube video player"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                    )}
+                </div>
+            </section>
+
             {/* Categories Preview - Spotlight Grid */}
-            <section className="py-40 px-6 md:px-12 bg-[#050505] relative z-20">
+            <section className="py-40 px-6 md:px-12 relative z-20">
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
@@ -111,11 +141,10 @@ const Home = () => {
                         className="flex justify-between items-end mb-24"
                     >
                         <div className="space-y-4">
-                            <h2 className="text-5xl md:text-8xl font-outfit font-black tracking-tighter uppercase text-white leading-none">Unsere Fächer</h2>
-                            <p className="text-[#B3B3B3] font-bold text-xl uppercase tracking-[0.3em]">Wähle dein Instrument</p>
+                            <h2 className="text-4xl md:text-6xl font-outfit font-black tracking-tighter text-ink leading-tight">{offerIntro}</h2>
                         </div>
-                        <Link to="/offer" className="group text-sm font-black uppercase tracking-widest text-[#B3B3B3] hover:text-white transition-colors pb-2 border-b-2 border-transparent hover:border-gold">
-                            Alles ansehen <span className="inline-block group-hover:translate-x-2 transition-transform">→</span>
+                        <Link to="/offer" className="group text-sm font-black uppercase tracking-widest text-ink-muted hover:text-ink transition-colors pb-2 border-b-2 border-transparent hover:border-gold">
+                            {content.offer?.title} <span className="inline-block group-hover:translate-x-2 transition-transform">→</span>
                         </Link>
                     </motion.div>
 
@@ -128,30 +157,29 @@ const Home = () => {
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                                 onMouseMove={handleMouseMove}
-                                className="spotify-card group relative p-0 overflow-hidden aspect-[4/5] flex flex-col justify-end rounded-[2rem] bg-[#121212]"
+                                className="spotify-card group relative p-0 overflow-hidden aspect-[4/5] flex flex-col justify-end rounded-[2rem]"
                             >
                                 {/* Spotlight Background Effect */}
                                 <div
                                     className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                                     style={{
-                                        background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 158, 11, 0.15), transparent 40%)`
+                                        background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(199, 154, 85, 0.18), transparent 45%)`
                                     }}
                                 />
 
                                 <img
                                     src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
-                                    className="absolute inset-0 w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
+                                    className="absolute inset-0 w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
                                     alt={cat.title}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-90"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
                                 <div className="p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">
-                                    <h3 className="text-4xl font-black text-white group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
-                                    <p className="text-[#B3B3B3] text-xs font-black uppercase tracking-[0.3em]">{cat.items.length} Fächer</p>
+                                    <h3 className="text-4xl font-black text-ink group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
                                 </div>
 
                                 <div className="absolute top-8 right-8 w-16 h-16 bg-gold rounded-full flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 shadow-2xl shadow-gold/40 z-30">
-                                    <svg className="w-8 h-8 text-black translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-8 h-8 text-ink translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M8 5v14l11-7z" />
                                     </svg>
                                 </div>
@@ -162,15 +190,15 @@ const Home = () => {
             </section>
 
             {/* Quote Section */}
-            <section className="py-60 bg-[#121212]/20 relative overflow-hidden">
+            <section className="py-60 bg-[#F0E6D8] relative overflow-hidden">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1.5 }}
                     className="max-w-5xl mx-auto px-6 text-center"
                 >
-                    <h2 className="text-4xl md:text-7xl font-outfit font-black text-white leading-[1.1] md:px-12 italic opacity-90 tracking-tighter uppercase">
-                        "{content.hero.psalm}"
+                    <h2 className="text-4xl md:text-7xl font-outfit font-black text-ink leading-[1.1] md:px-12 italic opacity-90 tracking-tighter uppercase">
+                        {content.hero.psalm}
                     </h2>
                     <div className="mt-16 flex items-center justify-center gap-6">
                         <div className="w-20 h-[1px] bg-gold/50"></div>

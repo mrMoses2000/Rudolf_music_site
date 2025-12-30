@@ -7,13 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        midnight: '#050505', // Deeper black
+        midnight: '#050505',
         'spotify-black': '#121212',
         'spotify-dark': '#181818',
         'spotify-grey': '#282828',
         'spotify-light': '#B3B3B3',
-        gold: '#F59E0B',
-        cloud: '#F8FAFC',
+        gold: '#C79A55',
+        cloud: '#FDF8F2',
+        paper: '#F7F1E8',
+        'paper-strong': '#FFF8F1',
+        ink: '#2B241D',
+        'ink-muted': '#6B5F54',
+        sage: '#7C856E',
       },
       fontFamily: {
         outfit: ['Outfit', 'sans-serif'],
