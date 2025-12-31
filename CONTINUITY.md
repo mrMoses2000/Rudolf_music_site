@@ -47,6 +47,8 @@
     - Reformatted Gebühren price values to “число €”.
     - Updated cookie disclosure to “no own cookies; possible third‑party (YouTube) cookies; Google Fonts connection data”.
     - Mobile responsiveness pass across Home/Offer/Fees/About/Contact/JeKits/Musikkurse/Kunst/Jobs/Aktuelles/InstrumentPage (hero sizing, spacing, buttons, table padding).
+    - Fees mobile table header now visible (mobile-only header) with price column header hidden on small screens.
+    - Mobile hamburger menu now matches desktop nav items/order.
   - Now:
     - Verify Über uns and Impressum rendering on the server after recent fixes.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.

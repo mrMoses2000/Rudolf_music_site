@@ -41,11 +41,14 @@ const Fees = () => {
                         <div className="space-y-6">
                             <h2 className="text-2xl md:text-3xl font-outfit font-bold text-ink">{content.fees.tableTitle}</h2>
                             <div className="overflow-x-auto rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)] bg-paper-strong">
+                                <div className="md:hidden bg-[#F0E6D8] text-ink uppercase tracking-widest text-[10px] font-black px-4 sm:px-6 py-3 border-b border-black/10 text-center whitespace-pre-line">
+                                    {content.fees.tableHeader[1]}
+                                </div>
                                 <table className="w-full text-left border-collapse">
                                     <thead>
                                         <tr className="bg-[#F0E6D8] text-ink uppercase tracking-widest text-xs">
                                             <th className="p-4 sm:p-6 md:p-8 border-b border-black/10 font-black">{content.fees.tableHeader[0]}</th>
-                                            <th className="p-4 sm:p-6 md:p-8 border-b border-black/10 font-black text-right whitespace-pre-line">{content.fees.tableHeader[1]}</th>
+                                            <th className="hidden md:table-cell p-4 sm:p-6 md:p-8 border-b border-black/10 font-black text-right whitespace-pre-line">{content.fees.tableHeader[1]}</th>
                                         </tr>
                                     </thead>
                                     <tbody>

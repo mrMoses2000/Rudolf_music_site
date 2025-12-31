@@ -81,27 +81,15 @@ const Layout = () => {
                         exit={{ opacity: 0, y: -20 }}
                         className="fixed inset-0 z-40 bg-paper pt-32 px-6 flex flex-col"
                     >
-                        <nav className="flex flex-col gap-8 text-3xl font-black uppercase tracking-tighter text-ink">
+                        <nav className="flex flex-col gap-6 sm:gap-8 text-2xl sm:text-3xl font-black uppercase tracking-tighter text-ink">
                             <Link to="/" className="hover:text-gold">Start</Link>
                             <Link to="/about" className="hover:text-gold">Über uns</Link>
-                            <Link to="/standorte" className="hover:text-gold">Standorte</Link>
                             <Link to="/offer" className="hover:text-gold">Angebot</Link>
-                            <Link to="/jekits" className="hover:text-gold">JeKits</Link>
                             <Link to="/aktuelles" className="hover:text-gold">Aktuelles</Link>
-                            <Link to="/fees" className="hover:text-gold">Anmeldung</Link>
-                            <Link to="/contact" className="hover:text-gold">Kontakt</Link>
-                            <Link to="/impressum" className="hover:text-gold text-sm opacity-50">Impressum</Link>
-                            <Link to="/agb" className="hover:text-gold text-sm opacity-50">AGB</Link>
+                            <Link to="/fees" className="hover:text-gold">Gebühren/Anmeldung</Link>
+                            <Link to="/agb" className="hover:text-gold">AGB</Link>
+                            <Link to="/impressum" className="hover:text-gold">Impressum</Link>
                         </nav>
-
-                        <div className="mt-auto pb-12 space-y-8">
-                            <div className="space-y-2">
-                                <p className="text-ink-muted text-xs font-black uppercase tracking-widest">Kontakt</p>
-                                <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="block text-xl font-bold text-ink">
-                                    {content.header.phone}
-                                </a>
-                            </div>
-                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
