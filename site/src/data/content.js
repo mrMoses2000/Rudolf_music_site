@@ -223,13 +223,23 @@ export const content = {
                 { "type": "p", "text": "Die Christliche Musikschule Bielefeld e.V. bietet qualifizierten Musikunterricht auf der Grundlage eines christlichen Menschenbildes. Wir möchten Menschen aller Altersgruppen helfen, ihre musikalischen Begabungen zu entdecken und zu entfalten." },
                 { "type": "p", "text": "Unser Unterrichtsangebot umfasst eine Vielzahl von Instrumenten sowie Gesang, Musikalische Früherziehung und Ensemblespiel. Wir legen Wert auf eine persönliche Atmosphäre und individuelle Förderung." }
             ],
-            "videoEmbedId": "dQw4w9WgXcQ" // Placeholder, should be replaced if user has one
+            "videoEmbedId": "fmzshAW74VY"
         },
         "about": {
             "title": "Über uns",
             "blocks": [
                 { "type": "h1", "text": "Über uns" },
-                { "type": "p", "text": "Die Christliche Musikschule Bielefeld e.V. wurde 2014 gegründet." }
+                { "type": "h3", "text": "„Lobe den Herrn meine Seele und vergiss nicht, was er dir Gutes getan hat... “" },
+                { "type": "p", "text": "Dieser Psalm wurde von König David aufgeschrieben und drückt aus, wozu er sich selbst aufrief und ermutigte: „Lobe den Herrn, meine Seele!“ Er ermahnte sich dazu, Gott zu loben!" },
+                { "type": "p", "text": "Wenn es uns gelingt, Menschen durch Musik ins Nachdenken über ihr Leben und ihre Beziehung zu Gott zu bringen; sich selber und Andere zum Lobpreis, zur Anbetung oder einfach vor Gott zu führen, dann kommt Musik zu ihrer eigentlichen ursprünglichen Bestimmung." },
+                { "type": "p", "text": "Musik ist die Sprache der Seele. Sie hat einen besonderen Stellenwert. Sie ermöglicht Begegnungen mit Menschen und mit Gott. Sie ist ein wunderbares Medium, auch dem Glauben fern stehende Menschen mit Gottes Wort zu erreichen. In der Musik - im Lied und in der instrumentalen Musik - stecken missionarische Chancen und Perspektiven." },
+                { "type": "h2", "text": "Die „Christliche Musikschule Bielefeld e. V. “ wurde 1999 gegründet." },
+                { "type": "p", "text": "Sie steht allen Interessenten offen, unabhängig von der nationalen und konfessionellen Zugehörigkeit. Im Musikunterricht erhalten Kinder, Jugendliche und Erwachsene eine qualifizierte Ausbildung in verschiedenen Fachbereichen." },
+                { "type": "h2", "text": "Zusammenarbeit" },
+                { "type": "p", "text": "„Christliche Musikschule Bielefeld e. V.“ arbeitet mit Schulen, Kirchen, freien Trägern und anderen Institutionen zusammen." },
+                { "type": "p", "text": "Mit qualifiziertem Fachunterricht wollen wir die Grundlage für eine lebenslange Beschäftigung mit Musik legen und unseren Schülern Möglichkeiten zum Musizieren in der Musikschule, in der Kirchengemeinde, in der Familie eröffnen." },
+                { "type": "p", "text": "Unser größtes Anliegen ist es, die Freude an der Musik zu vermitteln. Neben einem gewissen Gefühl für Musik sind auch Motivation und Disziplin sowie ein konkretes Ziel mindestens ebenso wichtig für Erfolgserlebnisse am Instrument." },
+                { "type": "p", "text": "Unsere erfahrenen qualifizierten Lehrkräfte begleiten die Schüler individuell vom Anfängerunterricht bis zur Vorbereitung für die Aufnahmeprüfung an Musikhochschulen." }
             ]
         },
         "standorte": {
@@ -259,9 +269,25 @@ export const content = {
         "aktuelles": {
             "title": "Aktuelles",
             "blocks": [
-                { "type": "h1", "text": "Aktuelles" },
-                { "type": "p", "text": "Hier finden Sie aktuelle Informationen und Termine." }
+                { "type": "h1", "text": "Abschlussprüfungen 2024-2025 in Leopoldshöhe" },
+                { "type": "p", "text": "Liebe Schüler, liebe Eltern," },
+                { "type": "p", "text": "es ist wieder so weit, das Schuljahr neigt seinem Ende zu. Wir wollen auch in diesem Jahr die Jahresprüfungen durchführen." },
+                { "type": "p", "text": "Die Prüfungen finden in der Zeit vom 02.07.2025 bis zum 11.07.2025 statt. Wie auch früher, gehören Zeugnisse und Bewertungsnoten dazu!" },
+                { "type": "p", "text": "Nachfolgend – die Prüfungstermine. Diese werden mit den unterrichtenden Lehrkräften ausgesucht und festgelegt." },
+                { "type": "h2", "text": "Termine" },
+                { "type": "p", "text": "Unterrichtsort: Leopoldshöhe" },
+                { "type": "h3", "text": "Mittwoch, 02.07.2025" },
+                { "type": "p", "text": "15.00 Uhr\n16.00 Uhr\n17.00 Uhr" },
+                { "type": "h3", "text": "Montag, 07.07.2025" },
+                { "type": "p", "text": "15.00 Uhr\n16.30 Uhr" },
+                { "type": "h3", "text": "Dienstag, 08.07.2025" },
+                { "type": "p", "text": "15.00 Uhr\n16.00 Uhr" },
+                { "type": "h3", "text": "Donnerstag, 10.07.2025" },
+                { "type": "p", "text": "16.00 Uhr\n17.00 Uhr" },
+                { "type": "h3", "text": "Freitag, 11.07.2025" },
+                { "type": "p", "text": "15.00 Uhr\n16.30 Uhr" }
             ]
+
         },
         "musikkurse": {
             "title": "Musikkurse",
