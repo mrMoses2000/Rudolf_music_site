@@ -11,6 +11,36 @@ export const content = {
         "offerBtn": "Angebot",
         "aboutBtn": "Über uns"
     },
+    "fees": {
+        "title": "Gebühren & Anmeldung",
+        "tableTitle": "Unterrichtsgebühren",
+        "tableHeader": ["Unterrichtsform", "Monatliche Rate"],
+        "table": [
+            { "label": "Einzelunterricht 30 Min.", "price": "44 €" },
+            { "label": "Einzelunterricht 45 Min.", "price": "57 €" },
+            { "label": "Einzelunterricht 60 Min.", "price": "71 €" },
+            { "label": "Einzelunterricht 90 Min.", "price": "88 €" },
+            { "label": "2er Gruppe 45 Min.", "price": "39 €" },
+            { "label": "3er Gruppe 45 Min.", "price": "34 €" },
+            { "label": "10er Karte 30 Min.", "price": "220 €" },
+            { "label": "10er Karte 45 Min.", "price": "310 €" }
+        ],
+        "notes": [
+            "Einmalige Anmeldegebühr: 10 €",
+            "Die Gebühren sind Jahresgebühren, die in 12 gleichen Monatsraten gezahlt werden.",
+            "In den Schulferien und an gesetzlichen Feiertagen von NRW findet kein Unterricht statt."
+        ],
+        "infoTitle": "Anmeldung",
+        "info": [
+            "Der Unterrichtsvertrag kann jederzeit mit einer Frist von 6 Wochen zum 31.03., 31.07. oder 31.10. gekündigt werden.",
+            "Vereinbaren Sie gerne eine kostenlose Probestunde."
+        ],
+        "documentsTitle": "Downloads",
+        "documents": [
+            { "name": "Anmeldeformular & Vertrag", "url": "/documents/data-documents-Unterrichtsvertrag-A.pdf" },
+            { "name": "Gebührenordnung", "url": "/documents/data-documents-Unterrichtsvertrag-B.pdf" }
+        ]
+    },
     "offer": {
         "title": "Angebot",
         "intro": "Wir bieten Einzel- und Gruppenunterricht für Kinder und Erwachsene, Anfänger und Fortgeschrittene in folgenden Fächern:",
@@ -215,6 +245,17 @@ export const content = {
                 { "type": "p", "text": "Unsere Musikschule ist Partner im JeKits-Programm." }
             ]
         },
+        "jobs": {
+            "title": "Stellenangebote",
+            "headerImage": "/images/header_jobs_1767161822812.png",
+            "blocks": [
+                { "type": "h1", "text": "Stellenangebote für Musiklehrer" },
+                { "type": "p", "text": "Der Musik- oder Kunstunterricht ist nicht nur Entwicklung von entsprechenden Fähigkeiten, sondern auch Erziehung. Wir haben qualifizierte Lehrkräfte in allen Fächern. Die Lehrerinnen und Lehrer der Musikschule vertreten selber und vermitteln bewusst den Schülern christliche Werte." },
+                { "type": "p", "text": "Es gibt bei uns immer sehr viel zu tun, sowohl bei den jetzt funktionierenden, als auch bei den neu zu entstehenden Filialen. Wenn Sie entsprechende Fähigkeiten und Qualifikationen besitzen und Interesse haben, an unserer Schule zu unterrichten, bewerben Sie sich bei uns." },
+                { "type": "h2", "text": "Kontakt" },
+                { "type": "p", "text": "info@cms-bielefeld.de\nKontakttelefon: 0521/3367416" }
+            ]
+        },
         "aktuelles": {
             "title": "Aktuelles",
             "blocks": [
@@ -226,8 +267,17 @@ export const content = {
             "title": "Musikkurse",
             "headerImage": "/images/Musikkurse.png",
             "blocks": [
-                { "type": "h1", "text": "Musikkurse" },
-                { "type": "p", "text": "Informationen zu unseren Musikkursen für Klassen 5 und 6." }
+                { "type": "h1", "text": "Musikkurse MK 5,6" },
+                { "type": "p", "text": "Die Musikkurse „MK 5,6“ sind ein musikalisches Angebot der Christlichen Musikschule Bielefeld für die Fünft- und Sechstklässler in der Gesamtschule und dem Gymnasium der Georg-Müller-Schule." },
+                { "type": "p", "text": "Jeder Mensch kann im Prinzip allein Musik machen. Allerdings macht es sehr viel Spaß, zusammen zu musizieren mit vielen Menschen, die auf vielen verschiedenen Instrumenten spielen." },
+                { "type": "p", "text": "Es werden Lieder und Musikstücke gespielt, es wird improvisiert, die Grundlagen für die Ausbildung musikalischer Fähigkeiten werden gelegt und vertieft." },
+                { "type": "p", "text": "Gemeinsames Musizieren fördert Teamfähigkeit und Rücksichtnahme, die Kinder lernen sich und andere wahrzunehmen." },
+                { "type": "h2", "text": "Unterrichtsform" },
+                { "type": "p", "text": "Der Instrumentalunterricht findet in Gruppen statt. Angeboten werden: Flöte, Klarinette, Saxophon, Trompete, Posaune, Geige, Cello." },
+                { "type": "p", "text": "Nach dem Gruppenunterricht kommt noch eine weitere Unterrichtseinheit, in der die Instrumentalgruppen in einem MK-Orchester zusammen musizieren." },
+                { "type": "p", "text": "Musikinstrumente können für die Dauer des Kurses ausgeliehen werden." },
+                { "type": "p", "text": "Die Kursdauer – ein Jahr. Sowohl die Fünftklässler als auch die Sechstklässler können sich zum Kurs anmelden." },
+                { "type": "p", "text": "Das Gelernte wird bei den Vorspielen vor vielen Schülern und Eltern präsentiert." }
             ]
         },
         "kunst": {
@@ -235,9 +285,25 @@ export const content = {
             "headerImage": "/images/Kunstunterricht.png",
             "blocks": [
                 { "type": "h1", "text": "Kunstunterricht" },
-                { "type": "p", "text": "Entdecken Sie unsere Angebote im Bereich Kunst." }
+                { "type": "p", "text": "Im Kunstunterricht wird Freude und Interesse an ästhetischen Ausdrucksformen geweckt und gefördert. Das Vorstellungsvermögen der Schüler, ihre Kreativität und Fantasie werden entfaltet und entwickelt." },
+                { "type": "p", "text": "Ziel des Kunstunterrichts ist Bildung praktischer Fähigkeiten in verschiedenen Arten der künstlerischen Tätigkeit: Zeichnen; Öl-, Aquarellmalerei; Komposition, plastisches Gestalten." },
+                { "type": "h2", "text": "Angebot & Standorte" },
+                { "type": "p", "text": "Wir bieten Kunstunterricht in Kleingruppen in Unterrichtseinheiten von 90 Min. 1-mal in der Woche an." },
+                {
+                    "type": "ul", "items": [
+                        "Kleebrink 3, 33719 Bielefeld",
+                        "Krentruper Str. 20, 33818 Leopoldshöhe",
+                        "Osnabrücker Str. 176, 32257 Bünde"
+                    ]
+                },
+                { "type": "p", "text": "Monatliche Gebühr: 35,- EUR" },
+                { "type": "p", "text": "Anmeldung unter: 0521/3367416 oder info@cms-bielefeld.de" }
             ],
-            "gallery": []
+            "gallery": [
+                { "src": "/images/uploaded_image_0_1767163675550.png", "title": "Galerie Bild 1" },
+                { "src": "/images/uploaded_image_1_1767163675550.png", "title": "Galerie Bild 2" },
+                { "src": "/images/uploaded_image_2_1767163675550.png", "title": "Galerie Bild 3" }
+            ]
         },
         "jobs": {
             "title": "Stellenangebote",
@@ -251,88 +317,88 @@ export const content = {
     "instruments": {
         "violine": {
             "title": "Violine",
-            "description": "Die Violine (Geige) ist ein Streichinstrument...",
-            "image": "/images/header_violine_1767157486934.png"
+            "description": "Geige (anders Violine genannt) ist das kleinste Musikinstrument in der Gruppe der Streichinstrumente. Neben ihr gehören dazu: Bratsche (Viola), Cello und Kontrabass.\n\nEin Geiger kann als Solospieler auftreten, kann aber auch ein Teil eines Ensembles oder Orchesters werden. Es gibt unterschiedliche Größen, so dass für jedes Kind eine passende Größe gefunden werden kann.\n\nDie Geigen jeder Größe können bei uns gemietet werden. In der Regel kauft man eine Geige dann, wenn man schon eine „ganze“ Geige (also 4/4 Geige) braucht.\n\nViolinenunterricht erteilen wir in:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe, Krentruper Str. 20\n32108 Bad-Salzuflen, Lagesche Str. 109",
+            "image": "/images/header_violine_1767157516215.png"
         },
         "bratsche": {
             "title": "Bratsche",
-            "description": "Die Bratsche (Viola) ist etwas größer als die Violine...",
-            "image": "/images/Bratsche.png"
+            "description": "Bratsche oder Viola ist ein Streichinstrument. Andere Instrumente dieser Gruppe sind Violine (Geige), Cello und Kontrabass.\n\nBratsche hat eine warme dunkle Klangfarbe. Als Bestandteil eines Symphonie- oder eines Kammerorchesters ist sie nicht wegzudenken. Sie ist auch in der Popmusik und der Folklore zuhause.\n\nBratschenunterricht erteilen wir in:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33818 Leopoldshöhe, Krentruper Str. 20",
+            "image": "/images/header_bratsche_1767158739775.png"
         },
         "cello": {
             "title": "Cello",
-            "description": "Das Cello (Violoncello) ist ein tiefes Streichinstrument...",
-            "image": "/images/header_cello_1767158494629.png"
+            "description": "Das Violoncello oder einfach Cello ist ein Streichinstrument. Im Wesentlichen ist ein Cello wie eine Violine aufgebaut. Das ist eine größere Geige, die man beim Spielen senkrecht hält. Die anderen Instrumente der Streichergruppe sind außer der schon genannten Violine – Bratsche (oder Viola) und Kontrabass. Cello hat einen festen Platz im Orchester, kann aber auch als ein Soloinstrument eingesetzt werden.\n\nEs ist sehr wichtig, die Größe des Instruments an die Körpergröße des Schülers anzupassen. Celli unterschiedlicher Größen können bei unserer Musikschule gemietet werden.\n\nUnterrichtsorte:\n\n33719 Bielefeld, Kleebrink 3\n33818 Leopoldshöhe",
+            "image": "/images/header_cello_1767157516215.png"
         },
         "gitarre": {
             "title": "Gitarre",
-            "description": "Die Gitarre ist ein vielseitiges Zupfinstrument...",
-            "image": "/images/header_gitarre_1767157500546.png"
+            "description": "Die Gitarre gehört sowohl zu Saiteninstrumenten als auch zu Zupfinstrumenten. Man spielt auf der Gitarre auf unterschiedliche Spielarten. In der Vergangenheit wurde Gitarre in der Kirchenmusik und in der klassischen Musik eingesetzt. Heutzutage ist sie ein unverzichtbarer Bestandteil jeder Band und vieler Ensembles.\n\nBesonders sehr ist der Gitarrenunterricht bei den Kindern und bei den Jugendlichen beliebt. Aber auch viele Erwachsene teilen den Wunsch, dieses Musikinstrument spielen zu wollen.\n\nIn unserer Musikschule werden Konzertgitarre, Westerngitarre, E-Gitarre und Bass-Gitarre unterrichtet.\n\nUnterrichtsorte:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe",
+            "image": "/images/header_gitarre_1767157516215.png"
         },
         "blockfloete": {
             "title": "Blockflöte",
-            "description": "Die Blockflöte ist ein beliebtes Einstiegsinstrument...",
-            "image": "/images/header_blockfloete_1767158508450.png"
+            "description": "Oft beginnt man das Erlernen eines Blasinstruments zuerst mit der Blockflöte. Sie ist leicht zu spielen und ist deswegen gut als ein Einsteigerinstrument für eine gewisse Vorstufe geeignet. Die erlangten Kenntnisse kann man dann im weiteren Musikunterricht in Fächern: Querflöte, Oboe, Klarinette, Saxophon und Trompete, einsetzen.\n\nNatürlich wird die Blockflöte auch als eigenständiges Musikinstrument erlernt. Man kann den Blockflötenunterricht ziemlich früh (schon ab 5-6 Jahren) beginnen.\n\nWir erteilen Flötenunterricht an unseren Stellen in:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33818 Leopoldshöhe, Krentruper Str. 20\n32108 Bad Salzuflen, Lagesche Str. 109",
+            "image": "/images/header_blockfloete_1767160754854.png"
         },
         "querfloete": {
             "title": "Querflöte",
-            "description": "Die Querflöte ist ein Holzblasinstrument...",
-            "image": "/images/header_querfloete_1767158524080.png"
+            "description": "Die Querflöte ist eins der beliebtesten Blasinstrumente. Sie ist kein Blechblasinstrument, wie es manche denken. Zusammen mit dem Saxophon, der Klarinette, der Oboe und dem Fagott gehört sie zu der Gruppe Holzblasinstrumente.\n\nIn der tiefen Lage hat die Querflöte einen weichen und warmen Klang. In der hohen Lage klingt sie hell und glänzend. Die Querflöte kommt als Solo- und Orchesterinstrument in der klassischen Musik aber auch im Jazz und der Rock- und Popmusik zum Einsatz.\n\nIn welchem Alter sollte man mit dem Querflötenunterricht beginnen? Besser ist es, das Erlernen der Flöte nicht früher als im Alter von 7 Jahren anzufangen.\n\nUnterrichtsorte:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33818 Leopoldshöhe, Krentruper Str. 20\n32108 Bad Salzuflen, Lagesche Str. 109",
+            "image": "/images/header_querfloete_1767160754854.png"
         },
         "oboe": {
             "title": "Oboe",
-            "description": "Die Oboe ist ein Holzblasinstrument mit Doppelrohrblatt...",
-            "image": "/images/header_oboe_1767158542257.png"
+            "description": "Wer gibt im Orchester den Ton an? Zu Beginn einer Probe oder eines Konzerts wird der Ton zum Stimmen von einer Oboe angegeben, weil sie einen besonders klaren und durchdringenden Klang hat.\n\nDas Doppelrohrblatt am Mundstück macht die Oboe zu einem nicht leicht zu erlernenden Instrument. Aber wenn die Tonerzeugung beherrscht wird, klingt die Oboe märchenhaft und bezaubernd.\n\nOboe gehört zu der Gruppe Holzblasinstrumente. Zu dieser Gruppe gehören auch Querflöte, Klarinette, Fagott, Saxophon. Alle diese Musikinstrumente werden in unserer Musikschule erlernt.\n\nUnterrichtsorte:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33818 Leopoldshöhe, Krentruper Str. 20\n32108 Bad Salzuflen, Lagesche Str. 109",
+            "image": "/images/header_oboe_1767160754854.png"
         },
         "klarinette": {
             "title": "Klarinette",
-            "description": "Die Klarinette ist ein vielseitiges Holzblasinstrument...",
-            "image": "/images/Clarinet.png"
+            "description": "Möchtest Du anfangen, Klarinette zu lernen oder Dein Spiel verbessern? Oder Du möchtest nach Jahren wieder einsteigen?\n\nWir geben professionellen Klarinettenunterricht für jede Altersklasse und auf jedem Level. Egal ob Du nur allein oder in einer Band, oder in einem Orchester spielen möchtest – Du wirst viel Spaß mit diesem Musikinstrument haben.\n\nZusammen mit der Flöte, der Oboe, dem Fagott und dem Saxophon gehört die Klarinette zu der Gruppe Holzblasinstrumente. Sie ist in der Volksmusik, in der Klassik und im Jazz zu Hause.\n\nUnterrichtsorte:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe, Krentruper Str. 20\n32108 Bad-Salzuflen, Lagesche Str. 109",
+            "image": "/images/header_klarinette_1767158739775.png"
         },
         "saxophon": {
             "title": "Saxophon",
-            "description": "Das Saxophon verbindet Holz- und Blechblasinstrumente...",
-            "image": "/images/Saxophon.png"
+            "description": "Ursprünglich war das Saxophon von seinem Erfinder Adolfe Sax für klassische „ernsthafte“ Konzertmusik vorgesehen. Seit dem 20. Jahrhundert werden Saxophone in unterschiedlichen Musikgernes verwendet, einschließlich klassischer Musik, Popmusik, Rock ’n’ Roll, elektronischer Musik. Das Saxophon kommt zum Einsatz als Solo-Instrument, in Orchestern, Big Bands und anderen Ensembles.\n\nKinder, Jugendliche und Erwachsene mögen dieses Musikinstrument für seinen vielfältigen Klang.\n\nUnterrichtsorte:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe, Krentruper Str. 20\n32108 Bad-Salzuflen, Lagesche Str. 109",
+            "image": "/images/header_saxophon_1767158739775.png"
         },
         "trompete": {
             "title": "Trompete",
-            "description": "Die Trompete ist ein hohes Blechblasinstrument...",
-            "image": "/images/Trompete.png"
+            "description": "Die Trompete ist ein Blasinstrument aus Blech, deswegen gehört sie zu der Gruppe Blechblasinstrumente. Andere bekannte Instrumente dieser Gruppe sind Kornett, Flügelhorn, Posaune, Waldhorn, Althorn, Tenorhorn, Baritonhorn, Tuba.\n\nDie Trompete wird als Soloinstrument mit Begleitung eingesetzt oder als Bestandteil eines Ensembles oder Orchesters.\n\nUnterrichtsorte:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n32108 Bad Salzuflen, Lagesche Str. 109\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe, Krentruper Str. 20",
+            "image": "/images/header_trompete_1767158863641.png"
         },
         "horn": {
             "title": "Horn",
-            "description": "Das Horn hat einen weichen, vollen Klang...",
-            "image": "/images/Horn.png"
+            "description": "Das Waldhorn sowohl als Gruppeninstrument als auch als Soloinstrument kann in allen Stilrichtungen und Besetzungen eingesetzt werden. Sein Klang in der tiefen Lage ist weich und warm, in der mittlerer Lage majestätisch, im oberen Bereich kann das Instrument sehr stark und scharf klingen!\n\nTenorhorn, Baritonhorn, Althorn und Waldhorn kann man an unseren Unterrichtsorten erlernen:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n32108 Bad Salzuflen, Lagesche Str. 109\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe, Krentruper Str. 20",
+            "image": "/images/header_horn_1767158863641.png"
         },
         "klavier": {
             "title": "Klavier",
-            "description": "Das Klavier ist eines der beliebtesten Instrumente...",
+            "description": "Das Klavier gehört zu der Gruppe der Tasteninstrumente. Das Musikinstrument wird auch als Piano bezeichnet. Die Klaviatur besteht aus weißen und schwarzen Tasten.\n\nDas Digitalpiano (elektrisches Piano) ist heutzutage auch sehr beliebt. Es hat im Vergleich mit dem akustischen Klavier einige wichtige Vorteile: verstellbare Lautstärke, Spielen mit dem Kopfhörer, freie Transponierung der Töne, Klangeffekte, leichtes Gewicht, man muss das Instrument nicht regelmäßig stimmen.\n\nDas Klavier wird als Soloinstrument und als Bestandteil eines Ensembles eingesetzt. Es ist ein ideales Instrument, um die Begleitung für den Gesang und die anderen Musikinstrumente zu spielen.\n\nDen Klavierunterricht kann man an unseren Unterrichtsorten erhalten:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe",
             "image": "/images/header_klavier_1767157516215.png"
         },
         "akkordeon": {
             "title": "Akkordeon",
-            "description": "Das Akkordeon ist ein Handzuginstrument...",
-            "image": "/images/Akkordeon.png"
+            "description": "Das Akkordeon ist ein besonderes Musikinstrument. Die rechte Seite hat eine Tastatur, ähnlich wie bei einem Klavier. Auf der linken Seite kann man Bass-Töne und ganze Akkorde spielen.\n\nDas Akkordeon ist eng mit der Volksmusik verknüpft und doch ist die Literaturauswahl sehr breit gefächert. Durch Transkriptionen ist es möglich, auf dem Akkordeon die Werke aus unterschiedlichsten Stillrichtungen, darunter auch Orchesterwerke, zu spielen.\n\nDas Akkordeon wird meistens als Soloinstrument eingesetzt. Ein einziger Akkordeonspieler kann eine großartige Stimmung erzeugen und für beste Unterhaltung sorgen.\n\nUnterrichtsorte:\n\n33719 Bielefeld, Kleebrink 3\n33818 Leopoldshöhe",
+            "image": "/images/header_akkordeon_1767158863641.png"
         },
         "keyboard": {
             "title": "Keyboard",
-            "description": "Das Keyboard bietet viele elektronische Möglichkeiten...",
-            "image": "/images/Keyboard.png"
+            "description": "Das Keyboard ist ein sehr beliebtes elektronisches Tasteninstrument. Ein Keyboardspieler ist in der Lage, durch die eingebauten Arrangements für die Akkordbegleitung und durch die vom Keyboard abspielbaren Instrumente eine komplette Musikgruppe zu ersetzen.\n\nDisketten-, CD- oder Speicherkartenlaufwerke ermöglichen es dem Spieler, die festgelegten Einstellungen zu speichern. Auch Kopfhörer können angeschlossen werden.\n\nUnterrichtsorte:\n\n33719 Bielefeld, Kleebrink 3\n33818 Leopoldshöhe",
+            "image": "/images/header_keyboard_1767158863641.png"
         },
         "schlagzeug": {
             "title": "Schlagzeug",
-            "description": "Das Schlagzeug ist das rhythmische Fundament...",
-            "image": "/images/header_schlagzeug_1767157529915.png"
+            "description": "Schlagzeuger sind oftmals wichtige Mitglieder von Bands und sorgen als Taktgeber für den grundlegenden Rhythmus.\n\nDas Instrument setzt gewissermaßen die Tradition des Trommelns um, die die Menschheit bereits seit jeher begleitet und eine der essentiellen Grundformen des Musizierens darstellt. Obgleich sich die Musik im Laufe der Zeit gewandelt hat, sind Schlaginstrumente nach wie vor von großer Bedeutung.\n\nUnterrichtsorte:\n\nKleebrink 3, 33719 Bielefeld-Heepen\nLagesche Str. 109, 32108 Bad Salzuflen\nGlockenweg 9, 33647 Bielefeld-Brackwede\nKrentruper Str. 20, 33818 Leopoldshöhe",
+            "image": "/images/header_schlagzeug_1767158863641.png"
         },
         "cajon": {
             "title": "Cajon",
-            "description": "Das Cajon ist eine Kistentrommel...",
-            "image": "/images/Cajon.png"
+            "description": "Die Cajon (wird Kahon ausgesprochen) bedeutet auf Spanisch „Schublade“. Die Cajon ist ein kistenartiges Schlaginstrument und wird mit Händen oder Besen und auch mit einer Fußmaschine gespielt.\n\nBeim Spielen sitzt der Spieler auf dem Instrument. Die Cajon wird gern in vielen Bands uns unterschiedlichen Ensembles eingesetzt. Der Cajonunterricht ist gleichermassen für Kinder und Erwachsene geeignet.\n\nDie Cajon kann man bei uns erlernen in:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33818 Leopoldshöhe, Krentruper Str. 20",
+            "image": "/images/header_cajon_1767160754854.png"
         },
-        "gesangunterricht": {
+        "gesang": {
             "title": "Gesang",
-            "description": "Im Gesangunterricht wird die Stimme ausgebildet...",
-            "image": "/images/header_gesang_1767157543115.png"
+            "description": "Jeder Mensch kann singen. Doch viele spüren, dass sie nicht so singen, wie sie eigentlich könnten.\n\nUnsere erfahren und qualifizierte Gesangpädagogen bringen es Ihnen bei, so zu singen, dass Ihre Stimme leicht fließt, kraftvoll klingt und Sie sich als Person in Ihrer Stimme wieder finden.\n\nZusätzlich zum Gesangunterricht ist es empfehlenswert, Theorie- und Solfeggio-Unterricht zu nehmen und sich am Klavier zumindest mit Melodiespiel vertraut zu machen.\n\nUnsere Musikschule erteilt Gesangunterricht in:\n\n33719 Bielefeld-Heepen, Kleebrink 3\n33647 Bielefeld-Brackwede, Glockenweg 9\n33818 Leopoldshöhe, Krentruper Str. 20",
+            "image": "/images/header_gesang_1767158863641.png"
         }
     },
     "legal": {
