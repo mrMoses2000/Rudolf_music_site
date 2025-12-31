@@ -9,7 +9,7 @@ const Fees = () => {
             <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="/images/Jekitz-ts16957280966eb1.jpg"
+                        src="/images/fees_hero_upscale_1767157346173.png"
                         alt="Fees Background"
                         className="w-full h-full object-cover opacity-50 saturate-110"
                     />

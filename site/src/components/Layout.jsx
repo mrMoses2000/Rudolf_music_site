@@ -31,17 +31,18 @@ const Layout = () => {
                     <Link to="/offer" className="hover:text-ink transition-colors">Angebot</Link>
                     <Link to="/aktuelles" className="hover:text-ink transition-colors">Aktuelles</Link>
                     <Link to="/fees" className="hover:text-ink transition-colors">Gebühren/Anmeldung</Link>
-                    <Link to="/contact" className="hover:text-ink transition-colors">Kontakt</Link>
                     <Link to="/agb" className="hover:text-ink transition-colors">AGB</Link>
                     <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
                 </nav>
 
                 <div className="flex items-center gap-4 md:gap-8">
                     <div className="hidden lg:flex flex-col items-end">
+                        {/* Phone number removed as per user request
                         <span className="text-[10px] font-black uppercase tracking-widest text-gold opacity-80">Rufen Sie uns an</span>
                         <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="text-ink font-bold text-sm hover:text-gold transition-colors">
                             {content.header.phone}
                         </a>
+                        */}
                     </div>
 
                     {/* Anmelden Button - Fixed */}
@@ -120,7 +121,7 @@ const Layout = () => {
                         <div className="flex flex-col gap-4 text-sm font-bold text-ink-muted">
                             <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
                             <Link to="/agb" className="hover:text-ink transition-colors">AGB</Link>
-                            <Link to="/contact" className="hover:text-ink transition-colors">Datenschutz</Link>
+                            <Link to="/datenschutz" className="hover:text-ink transition-colors">Datenschutz</Link>
                         </div>
                     </div>
                 </div>

@@ -15,6 +15,7 @@ import Kunst from "./pages/Kunst";
 import Standorte from "./pages/Standorte";
 import AGB from "./pages/AGB";
 import Impressum from "./pages/Impressum";
+import Datenschutz from "./pages/Datenschutz";
 import Musikunterricht from "./pages/Musikunterricht";
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="jobs" element={<Jobs />} />
           <Route path="agb" element={<AGB />} />
           <Route path="impressum" element={<Impressum />} />
+          <Route path="datenschutz" element={<Datenschutz />} />
         </Route>
       </Routes>
     </AnimatePresence>

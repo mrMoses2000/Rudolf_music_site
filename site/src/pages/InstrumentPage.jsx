@@ -5,6 +5,7 @@ import { content } from "../data/content";
 
 const InstrumentPage = () => {
     const { name } = useParams();
+    // Fallback to piano if not found, but name usually matches slug
     const instrumentData = content.instruments[name.toLowerCase()] || content.instruments["klavier"];
     const containerRef = useRef(null);
 
@@ -17,11 +18,18 @@ const InstrumentPage = () => {
     const scale = useTransform(scrollYProgress, [0, 1], [1.1, 1.3]);
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
+    // Find category for breadcrumb ("Back to Strings")
     const category = content.categories.find((cat) =>
-        cat.items.some((item) => item.slug === name.toLowerCase())
+        cat.items.some((item) => {
+            if (typeof item === 'string') return item.toLowerCase() === name.toLowerCase();
+            return item.slug === name.toLowerCase();
+        })
     );
 
     const lines = instrumentData.lines || instrumentData.description || [];
+
+    // Ensure we handle array or string description
+    const descriptionContent = Array.isArray(lines) ? lines : [lines];
 
     return (
         <div ref={containerRef} className="min-h-screen">
@@ -29,7 +37,7 @@ const InstrumentPage = () => {
             <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
                 <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
                     <img
-                        src="/images/attachments-Image-IMG_11926eb1.jpg"
+                        src={instrumentData.image || "/images/attachments-Image-IMG_11926eb1.jpg"}
                         className="w-full h-full object-cover opacity-55 saturate-110"
                         alt={instrumentData.title}
                     />
@@ -42,14 +50,22 @@ const InstrumentPage = () => {
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="space-y-6"
+                        className="space-y-8"
                     >
                         <Link to="/offer" className="group flex items-center gap-3 text-ink-muted font-black uppercase tracking-[0.4em] text-[10px] hover:text-gold transition-colors">
                             <span className="group-hover:-translate-x-2 transition-transform">←</span> {category?.title || "Angebot"}
                         </Link>
-                        <h1 className="text-4xl sm:text-5xl md:text-[13rem] font-outfit font-black text-ink leading-[0.75] tracking-tighter uppercase break-words hyphens-auto">
+
+                        <h1 className="text-4xl sm:text-5xl md:text-[8rem] lg:text-[10rem] font-outfit font-black text-ink leading-[0.8] tracking-tighter uppercase break-words hyphens-auto">
                             {instrumentData.title}
                         </h1>
+
+                        <Link
+                            to={`/contact?subject=Anmeldung für ${instrumentData.title}`}
+                            className="inline-flex items-center gap-4 bg-gold text-paper px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-sm hover:bg-ink hover:text-white hover:scale-105 transition-all shadow-[0_20px_40px_rgba(199,154,85,0.4)]"
+                        >
+                            Jetzt Anmelden <span className="text-xl">→</span>
+                        </Link>
                     </motion.div>
                 </div>
             </section>
@@ -61,9 +77,9 @@ const InstrumentPage = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="space-y-10 text-ink-muted text-lg md:text-xl leading-relaxed"
+                    className="space-y-10 text-ink-muted text-lg md:text-xl leading-relaxed font-medium"
                 >
-                    {lines.map((line, i) => (
+                    {descriptionContent.map((line, i) => (
                         <motion.p
                             key={i}
                             initial={{ opacity: 0, y: 20 }}

@@ -14,14 +14,25 @@ const Contact = () => {
     });
 
     useEffect(() => {
-        // If coming from an instrument page, pre-fill the subject
+        // Check for subject in location state (nav state) OR query params
+        const params = new URLSearchParams(location.search);
+        const querySubject = params.get("subject");
+
+        let initialSubject = "";
+
         if (location.state?.instrument) {
+            initialSubject = `Anmeldung für: ${location.state.instrument}`;
+        } else if (querySubject) {
+            initialSubject = querySubject;
+        }
+
+        if (initialSubject) {
             setFormData(prev => ({
                 ...prev,
-                subject: `Probestunde: ${location.state.instrument}`
+                subject: initialSubject
             }));
         }
-    }, [location.state]);
+    }, [location.state, location.search]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
