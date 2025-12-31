@@ -9,7 +9,7 @@ const About = () => {
     return (
         <div className="min-h-screen">
             {/* About Hero */}
-            <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 overflow-hidden pt-32">
+            <section className="relative h-[50vh] sm:h-[65vh] md:h-[70vh] flex items-end pb-12 sm:pb-20 px-6 md:px-12 overflow-hidden pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
                         src="/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"
@@ -30,7 +30,7 @@ const About = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="space-y-6"
                     >
-                        <h1 className="text-7xl md:text-[8rem] font-outfit font-black text-ink leading-none tracking-tighter uppercase">
+                        <h1 className="text-4xl sm:text-6xl md:text-[8rem] font-outfit font-black text-ink leading-none tracking-tighter uppercase">
                             {data.title}
                         </h1>
 
@@ -39,7 +39,7 @@ const About = () => {
             </section>
 
             {/* About Content */}
-            <section className="px-6 md:px-12 max-w-7xl mx-auto py-32 grid grid-cols-1 font-bold text-ink-muted text-xl leading-relaxed">
+            <section className="px-6 md:px-12 max-w-7xl mx-auto py-16 sm:py-24 md:py-32 grid grid-cols-1 font-bold text-ink-muted text-base sm:text-lg md:text-xl leading-relaxed">
                 <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}

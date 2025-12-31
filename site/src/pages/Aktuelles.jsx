@@ -7,7 +7,7 @@ const Aktuelles = () => {
 
     return (
         <div className="min-h-screen">
-            <section className="relative h-[60vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32 mb-20">
+            <section className="relative h-[45vh] sm:h-[55vh] md:h-[60vh] flex items-end pb-12 sm:pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32 mb-12 sm:mb-20">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
                         src={data.headerImage || "/images/Aktuelles.png"}
@@ -23,7 +23,7 @@ const Aktuelles = () => {
                 </div>
 
                 <div className="relative z-10 w-full max-w-7xl mx-auto">
-                    <h1 className="text-5xl md:text-8xl font-outfit font-black text-ink leading-none tracking-tighter uppercase drop-shadow-sm">
+                    <h1 className="text-4xl sm:text-6xl md:text-8xl font-outfit font-black text-ink leading-none tracking-tighter uppercase drop-shadow-sm">
                         {data.title}
                     </h1>
                 </div>

@@ -41,7 +41,7 @@ const InstrumentPage = () => {
     return (
         <div ref={containerRef} className="min-h-screen">
             {/* Header Hero Area - Premium Reveal */}
-            <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
+            <section className="relative h-[50vh] sm:h-[65vh] md:h-[70vh] flex items-end pb-12 sm:pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
                 <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
                     <SmartImage
                         src={instrumentData.image || "/images/attachments-Image-IMG_11926eb1.jpg"}
@@ -68,13 +68,13 @@ const InstrumentPage = () => {
                             <span className="group-hover:-translate-x-2 transition-transform">←</span> {category?.title || "Angebot"}
                         </Link>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-[8rem] lg:text-[10rem] font-outfit font-black text-ink leading-[0.8] tracking-tighter uppercase break-words hyphens-auto">
+                        <h1 className="text-3xl sm:text-5xl md:text-[8rem] lg:text-[10rem] font-outfit font-black text-ink leading-[0.8] tracking-tighter uppercase break-words hyphens-auto">
                             {instrumentData.title}
                         </h1>
 
                         <Link
                             to={`/contact?subject=${encodeURIComponent(`Anmeldung für ${instrumentData.title}`)}`}
-                            className="inline-flex items-center gap-4 bg-gold text-paper px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-sm hover:bg-ink hover:text-white hover:scale-105 transition-all shadow-[0_20px_40px_rgba(199,154,85,0.4)]"
+                            className="inline-flex items-center gap-4 bg-gold text-paper px-6 py-4 sm:px-10 sm:py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs sm:text-sm hover:bg-ink hover:text-white hover:scale-105 transition-all shadow-[0_20px_40px_rgba(199,154,85,0.4)]"
                         >
                             Jetzt Anmelden <span className="text-xl">→</span>
                         </Link>
@@ -83,13 +83,13 @@ const InstrumentPage = () => {
             </section>
 
             {/* Content Area */}
-            <div className="px-6 md:px-12 max-w-4xl mx-auto py-32">
+            <div className="px-6 md:px-12 max-w-4xl mx-auto py-20 sm:py-28 md:py-32">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="space-y-10 text-ink-muted text-lg md:text-xl leading-relaxed font-medium"
+                    className="space-y-10 text-ink-muted text-base sm:text-lg md:text-xl leading-relaxed font-medium"
                 >
                     {descriptionContent.map((line, i) => (
                         <motion.p

@@ -45,9 +45,10 @@
     - Added consistent page-level fade-in in Layout (respects reduced motion).
     - Fixed Über uns crash by restoring SmartImage import.
     - Reformatted Gebühren price values to “число €”.
+    - Updated cookie disclosure to “no own cookies; possible third‑party (YouTube) cookies; Google Fonts connection data”.
+    - Mobile responsiveness pass across Home/Offer/Fees/About/Contact/JeKits/Musikkurse/Kunst/Jobs/Aktuelles/InstrumentPage (hero sizing, spacing, buttons, table padding).
   - Now:
-    - Fix Über uns page rendering regression.
-    - Adjust Gebühren/Anmeldung price formatting to “число + €” while keeping legacy values.
+    - Verify Über uns and Impressum rendering on the server after recent fixes.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
   - Next:
     - Propose/iterate additional lightweight animations only if desired after reviewing performance.

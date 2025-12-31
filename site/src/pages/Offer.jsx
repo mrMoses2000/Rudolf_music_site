@@ -60,7 +60,7 @@ const Offer = () => {
     return (
         <div className="min-h-screen bg-paper pb-32">
             {/* Offer Hero */}
-            <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
+            <section className="relative h-[40vh] sm:h-[50vh] flex items-end pb-12 sm:pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0 text-center">
                     <SmartImage
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
@@ -81,11 +81,11 @@ const Offer = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1 }}
                     >
-                        <h1 className="text-6xl md:text-9xl font-outfit font-black text-ink leading-none tracking-tighter uppercase mb-6">
+                        <h1 className="text-4xl sm:text-6xl md:text-9xl font-outfit font-black text-ink leading-none tracking-tighter uppercase mb-6">
                             {content.offer.title}
                         </h1>
                         {offerIntro && (
-                            <div className="max-w-2xl text-ink-muted text-lg md:text-xl font-medium leading-relaxed">
+                            <div className="max-w-2xl text-ink-muted text-base sm:text-lg md:text-xl font-medium leading-relaxed">
                                 {offerIntro}
                             </div>
                         )}
@@ -93,7 +93,7 @@ const Offer = () => {
                 </div>
             </section>
 
-            <div className="px-6 md:px-12 max-w-7xl mx-auto py-24">
+            <div className="px-6 md:px-12 max-w-7xl mx-auto py-20 sm:py-24">
                 {filteredOfferBlocks.length > 0 && (
                     <div className="max-w-4xl mx-auto mb-16">
                         <Blocks blocks={filteredOfferBlocks} />
@@ -108,11 +108,11 @@ const Offer = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
-                            className={`group relative h-64 md:h-80 rounded-3xl overflow-hidden cursor-pointer shadow-[0_20px_40px_rgba(43,36,29,0.08)] hover:shadow-[0_30px_60px_rgba(43,36,29,0.15)] transition-all ${btn.label === "Instrumente & Gesang" ? 'md:col-span-2 lg:col-span-1 bg-ink text-paper' : 'bg-white'}`}
+                            className={`group relative h-56 sm:h-64 md:h-80 rounded-3xl overflow-hidden cursor-pointer shadow-[0_20px_40px_rgba(43,36,29,0.08)] hover:shadow-[0_30px_60px_rgba(43,36,29,0.15)] transition-all ${btn.label === "Instrumente & Gesang" ? 'md:col-span-2 lg:col-span-1 bg-ink text-paper' : 'bg-white'}`}
                             onClick={btn.isToggle ? btn.action : undefined}
                         >
                             {btn.to ? (
-                                <Link to={btn.to} className="block w-full h-full relative z-10 p-8 flex flex-col justify-between">
+                                <Link to={btn.to} className="block w-full h-full relative z-10 p-6 sm:p-8 flex flex-col justify-between">
                                     <div className="absolute inset-0 z-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500">
                                         {btn.image && (
                                             <SmartImage
@@ -127,12 +127,12 @@ const Offer = () => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
                                     </div>
                                     <div className="relative z-10 mt-auto">
-                                        <h3 className="text-3xl font-outfit font-black text-paper hover:text-gold transition-colors">{btn.label}</h3>
+                                        <h3 className="text-2xl sm:text-3xl font-outfit font-black text-paper hover:text-gold transition-colors">{btn.label}</h3>
                                         <span className="text-sm font-bold uppercase tracking-widest text-paper/80 mt-2 block group-hover:translate-x-2 transition-transform">Entdecken →</span>
                                     </div>
                                 </Link>
                             ) : (
-                                <div className="w-full h-full relative z-10 p-8 flex flex-col justify-between">
+                                <div className="w-full h-full relative z-10 p-6 sm:p-8 flex flex-col justify-between">
                                     <div className="absolute inset-0 z-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500">
                                         {btn.image && (
                                             <SmartImage
@@ -147,7 +147,7 @@ const Offer = () => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
                                     </div>
                                     <div className="relative z-10 mt-auto">
-                                        <h3 className="text-3xl font-outfit font-black text-paper">{btn.label}</h3>
+                                        <h3 className="text-2xl sm:text-3xl font-outfit font-black text-paper">{btn.label}</h3>
                                         <span className={`text-sm font-bold uppercase tracking-widest text-paper/80 mt-2 block transition-transform ${showInstruments ? 'rotate-90 text-gold' : 'group-hover:translate-y-1'}`}>
                                             {showInstruments ? 'Schließen ×' : 'Anzeigen ↓'}
                                         </span>
@@ -169,7 +169,7 @@ const Offer = () => {
                             className="overflow-hidden"
                         >
                             <div className="mb-12 border-t border-black/10 pt-12">
-                                <h2 className="text-4xl font-outfit font-black text-ink mb-12 text-center uppercase tracking-tight">Wählen Sie Ihr Instrument</h2>
+                                <h2 className="text-2xl sm:text-3xl md:text-4xl font-outfit font-black text-ink mb-8 sm:mb-12 text-center uppercase tracking-tight">Wählen Sie Ihr Instrument</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                     {content.categories.map((cat, index) => (
                                         <motion.div

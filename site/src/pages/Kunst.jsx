@@ -30,7 +30,7 @@ const Kunst = () => {
     return (
         <div className="min-h-screen pb-24 text-ink">
             {/* Hero Section */}
-            <section className="relative h-[60vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
+            <section className="relative h-[45vh] sm:h-[55vh] md:h-[60vh] flex items-end pb-12 sm:pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
                         src={data.headerImage}
@@ -49,7 +49,7 @@ const Kunst = () => {
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-6xl md:text-8xl font-outfit font-black text-ink leading-none tracking-tighter uppercase mb-6"
+                        className="text-4xl sm:text-6xl md:text-8xl font-outfit font-black text-ink leading-none tracking-tighter uppercase mb-6"
                     >
                         {data.title}
                     </motion.h1>
@@ -57,7 +57,7 @@ const Kunst = () => {
             </section>
 
             {/* Content */}
-            <div className="px-6 md:px-12 max-w-6xl mx-auto pt-24 space-y-16">
+            <div className="px-6 md:px-12 max-w-6xl mx-auto pt-16 sm:pt-24 space-y-16">
                 <Blocks blocks={data.blocks} />
 
                 {gallery.length > 0 && (

@@ -118,7 +118,7 @@ const Contact = () => {
     return (
         <div className="min-h-screen">
             {/* Contact Hero */}
-            <section className="relative h-[45vh] flex items-end pb-12 px-6 md:px-12 border-b border-black/10 overflow-hidden pt-32">
+            <section className="relative h-[35vh] sm:h-[45vh] flex items-end pb-10 sm:pb-12 px-6 md:px-12 border-b border-black/10 overflow-hidden pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
                         src="/images/attachments-Image-IMG_11926eb1.jpg"
@@ -133,22 +133,22 @@ const Contact = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/70 to-transparent"></div>
                 </div>
                 <div className="relative z-10 w-full max-w-7xl mx-auto">
-                    <h1 className="text-6xl md:text-9xl font-outfit font-black text-ink leading-none tracking-tighter uppercase">
+                    <h1 className="text-4xl sm:text-6xl md:text-9xl font-outfit font-black text-ink leading-none tracking-tighter uppercase">
                         {content.contact.title}
                     </h1>
                 </div>
             </section>
 
-            <section className="px-6 md:px-12 max-w-7xl mx-auto py-24">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
+            <section className="px-6 md:px-12 max-w-7xl mx-auto py-16 sm:py-24">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
                     {/* Info Side */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="space-y-16"
+                        className="space-y-12 sm:space-y-16"
                     >
                         <div className="space-y-6">
-                            <h2 className="text-xl md:text-3xl text-gold font-bold italic leading-tight">
+                            <h2 className="text-lg sm:text-xl md:text-3xl text-gold font-bold italic leading-tight">
                                 {content.contact.intro}
                             </h2>
                         </div>
@@ -156,7 +156,7 @@ const Contact = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
                             <div className="space-y-4">
                                 <h3 className="text-xs font-black uppercase tracking-[0.4em] text-ink-muted">Adresse</h3>
-                                <div className="text-xl font-bold text-ink leading-relaxed">
+                                <div className="text-base sm:text-lg md:text-xl font-bold text-ink leading-relaxed">
                                     {content.contact.address.map((line, i) => (
                                         <p key={i}>{line}</p>
                                     ))}
@@ -165,7 +165,7 @@ const Contact = () => {
                             <div className="space-y-4">
                                 <h3 className="text-xs font-black uppercase tracking-[0.4em] text-ink-muted">Kontakt</h3>
                                 <div className="flex flex-col gap-2">
-                                    <a href={`tel:${content.contact.phone}`} className="text-2xl font-black text-ink hover:text-gold transition-colors">
+                                    <a href={`tel:${content.contact.phone}`} className="text-xl sm:text-2xl font-black text-ink hover:text-gold transition-colors">
                                         {content.contact.phone}
                                     </a>
                                     <a href={`mailto:${content.contact.email}`} className="text-lg font-bold text-ink-muted hover:text-ink transition-colors">
@@ -177,7 +177,7 @@ const Contact = () => {
                     </motion.div>
 
                     {/* Form Side */}
-                    <div className="bg-paper-strong p-12 rounded-[2rem] border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)] relative">
+                    <div className="bg-paper-strong p-8 sm:p-12 rounded-[2rem] border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)] relative">
                         <form onSubmit={handleSubmit} className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-3">
@@ -225,14 +225,14 @@ const Contact = () => {
                                     onChange={handleChange}
                                     rows="4"
                                     placeholder=""
-                                    className="w-full bg-white border border-black/10 rounded-2xl p-5 text-ink font-bold focus:border-gold/60 focus:outline-none focus:bg-white transition-all placeholder:opacity-20 resize-none"
+                                    className="w-full bg-white border border-black/10 rounded-2xl p-4 sm:p-5 text-ink font-bold focus:border-gold/60 focus:outline-none focus:bg-white transition-all placeholder:opacity-20 resize-none"
                                     required
                                 ></textarea>
                             </div>
                             <button
                                 type="submit"
                                 disabled={status === "sending"}
-                                className="w-full bg-ink text-paper py-6 rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-gold hover:text-ink hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 shadow-[0_18px_40px_rgba(43,36,29,0.2)]"
+                                className="w-full bg-ink text-paper py-4 sm:py-6 rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-gold hover:text-ink hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50 disabled:scale-100 shadow-[0_18px_40px_rgba(43,36,29,0.2)]"
                             >
                                 {content.contact.form.submit}
                             </button>
