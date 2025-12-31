@@ -16,17 +16,30 @@ export const content = {
         "tableTitle": "Unterrichtsgebühren",
         "tableHeader": ["Unterrichtsform", "Monatliche Rate"],
         "table": [
-            { "label": "Einzelunterricht 30 Min.", "price": "44 €" },
-            { "label": "Einzelunterricht 45 Min.", "price": "57 €" },
-            { "label": "Einzelunterricht 60 Min.", "price": "71 €" },
-            { "label": "Einzelunterricht 90 Min.", "price": "88 €" },
-            { "label": "2er Gruppe 45 Min.", "price": "39 €" },
-            { "label": "3er Gruppe 45 Min.", "price": "34 €" },
-            { "label": "10er Karte 30 Min.", "price": "220 €" },
-            { "label": "10er Karte 45 Min.", "price": "310 €" }
+            { "label": "Einzelunterricht 45 Min.", "price": "88,- €" },
+            { "label": "2er Vertrag*", "price": "83,- €" },
+            { "label": "3er Vertrag*", "price": "78,- €" },
+            { "label": "4er und jeder weitere Vertrag*", "price": "73,- €" },
+            { "label": "Einzelunterricht 30 Min.", "price": "67,- €" },
+            { "label": "2er Vertrag*", "price": "62,- €" },
+            { "label": "3er Vertrag*", "price": "57,- €" },
+            { "label": "4er und jeder weitere Vertrag*", "price": "52,- €" },
+            { "label": "Vorschulinstrumentalunterricht 25 Min. (Klavier, Keyboard)", "price": "57,- €" },
+            { "label": "2er Vertrag*", "price": "53,- €" },
+            { "label": "3er Vertrag*", "price": "49,- €" },
+            { "label": "4er und jeder weitere Vertrag*", "price": "45,- €" },
+            { "label": "Gruppenunterricht (ab 4 Teilnehmer, 45 Min.)", "price": "35,- €" },
+            { "label": "Gruppenunterricht (3 Teilnehmer, 45 Min.)", "price": "40,- €" },
+            { "label": "Gruppenunterricht (2 Teilnehmer, 45 Min.)", "price": "50,- €" },
+            { "label": "Musikalische Früherziehung (ab 4 Jahre)", "price": "28,- €" },
+            { "label": "Musikgarten (ab 1 ½ Jahre)", "price": "25,- €" },
+            { "label": "Musiktheorie und Solfeggio", "price": "12,- €" },
+            { "label": "Kunstunterricht Gruppenunterricht 90 Min.", "price": "35,- €" },
+            { "label": "Kunstunterricht Gruppenunterricht 60 Min.", "price": "25,- €" }
         ],
+        "tableFooter": "* - Familien- oder Mehrfächer Ermäßigung",
         "notes": [
-            "Einmalige Anmeldegebühr: 10 €",
+            "Beim Unterrichtsanfang wird eine einmalige Aufnahmegebühr in Höhe von 4,- EUR erhoben.",
             "Die Gebühren sind Jahresgebühren, die in 12 gleichen Monatsraten gezahlt werden.",
             "In den Schulferien und an gesetzlichen Feiertagen von NRW findet kein Unterricht statt."
         ],
@@ -469,8 +482,47 @@ export const content = {
         "agb": {
             "title": "AGB",
             "blocks": [
-                { "type": "h1", "text": "Allgemeine Geschäftsbedingungen" },
-                { "type": "p", "text": "Hier stehen die AGB." }
+                { "type": "h1", "text": "Allgemeine Geschäftsbedingungen (AGB) für die Christliche Musikschule Bielefeld e. V." },
+                { "type": "h3", "text": "(gültig ab 01.04.2010)" },
+                { "type": "p", "text": "Die Christliche Musikschule Bielefeld e. V. ist eine offene für alle Bildungsstätte, die es sich zum Ziel gesetzt hat, die musikalische, geistliche, kulturelle und soziale Entwicklung von Personen jedes Alters, besonders von Kindern und Jugendlichen zu fördern. Die musikalische Ausbildung erfolgt in Anlehnung an den Strukturplan und das Lehrplanwerk des Verbandes deutschen Musikschulen (VdM)." },
+                { "type": "p", "text": "Die AGB sind Bestandteil des Unterrichtsvertrags zwischen der Musikschule und dem/der Schüler/in bzw. dem/der gesetzlichen Vertreter/in." },
+
+                { "type": "h2", "text": "Unterrichtsanfang" },
+                { "type": "p", "text": "Der Unterricht kann jederzeit angefangen werden. Allerdings richtet sich der Unterrichtsanfang nach dem Vorhandensein der freien Unterrichtsplätze im jeweiligen Fach. Die Lehrkräfte werden von der Musikschule vermittelt. Schüler/innen haben keinen Anspruch auf ein bestimmtes Anfangsdatum oder eine bestimmte Lehrkraft. Mit der Wahrnehmung der ersten Unterrichtsstunde kommt zwischen Schüler/in und Musikschule ein wirksamer Unterrichtsvertrag zustande." },
+
+                { "type": "h2", "text": "Unterrichtsordnung" },
+                { "type": "p", "text": "Die Schüler sind zum regelmäßigen und pünktlichen Besuch der Unterrichtsstunden verpflichtet. Versäumnisse minderjähriger Schüler muss der Erziehungsberechtigte entschuldigen. Im Fall einer Verhinderung, ist die Musikschule rechtzeitig zu informieren." },
+                { "type": "p", "text": "Erforderliche Lehrmittel (Musikinstrument, Noten) müssen von dem Schüler (dem Erziehungsberechtigten) beschafft werden. Der Unterricht findet nur in den von der Musikschule genutzten Räumen statt. Eine Aufsichtspflicht durch die Schule besteht nur während der Unterrichtszeit innerhalb der Unterrichtsräume." },
+                { "type": "p", "text": "Die Schüler der Musikschule müssen die Weisungen des Schulleiters oder der beauftragten Lehrkräfte beachten. Sie dürfen durch ihr Verhalten nicht die Ausbildungsziele der Musikschule gefährden. Die in den Unterrichtsgebäuden geltenden Hausordnungen sind für alle Schüler und Besucher der Schule verbindlich. Alle Anlagen, Einrichtungen und Instrumente sind pfleglich zu behandeln." },
+                { "type": "p", "text": "Bei Verstößen gegen diese AGB, groben Verstoßen gegen Disziplin, bei dauerhaft mangelndem Fleiß kann der Schulleiter nach Beratung mit Fachlehrern den Ausschluss anordnen. Im Falle einer Unterrichtsausschlusses, sind die Unterrichtsentgelte bis zum Ende der regulären Kündigungsfrist zu zahlen." },
+
+                { "type": "h2", "text": "Veranstaltungen" },
+                { "type": "p", "text": "Die von der Musikschule angesetzten Veranstaltungen einschließlich der hierfür erforderlichen Vorbereitungen, sowie Leistungsprüfungen sind Bestandteil des Unterrichts. Teilnahme an ihnen ist verbindlich. Wenn es für den Schüler aus einem wichtigen Grund (wie z. B. Erkrankung des Schülers) nicht möglich ist, bei dem Vorspiel dabei zu sein, muss sein Fehlen durch den Erziehungsberechtigten entschuldigt werden." },
+                { "type": "p", "text": "Die Unterrichtsstunden, auf die zeitlich ein Vorspiel fällt (einschließlich Vor- und Nachbereitungszeit, Zeit für Proben, Ein- und Warmspielen), werden durch dieses ersetzt. Sie müssen nicht nachgegeben oder verrechnet werden." },
+
+                { "type": "h2", "text": "Prüfungen, Zeugnisse" },
+                { "type": "p", "text": "Im Rahmen der Ausbildung der Schüler in der Christlichen Musikschule Bielefeld werden regelmäßig Leistungsprüfungen durchgeführt (außer Vorschulkinder). Prüfungen stellen den Entwicklungsstand des Schülers fest, sie bieten eine objektive Beurteilung durch Lehrer, die hohe Qualifizierungen besitzen. Die Ergebnisse der Prüfungen werden in Zwischenzeugnissen festgehalten. Am Tag der Prüfung finden die regelmäßigen Unterrichtsstunden nicht statt. Am Ende des Lernens wird das Schlusszeugnis ausgestellt." },
+
+                { "type": "h2", "text": "Unterrichtsgebühren" },
+                { "type": "p", "text": "Der Unterricht wird entsprechend der zur Zeit gültigen Gebührentabelle bezahlt. Die Unterrichtsgebühren sind monatlich am 15 Tag des jeweiligen Monats auf das Schulkonto zu entrichten." },
+                { "type": "p", "text": "Der Musikunterricht wird im Anfangsmonat anteilig bezahlt." },
+
+                { "type": "h2", "text": "Mahnungen" },
+                { "type": "p", "text": "Beim Nichteinhalten der Zahlungsfrist (der 15 des jeweiligen Monats) nach Ablauf von 2 Wochen erfolgt eine schriftliche Mahnung. Damit wird eine Mahngebühr in Höhe von 4,- EUR fällig. Bei Rücklastschriften wird eine Rückbuchungsgebühr in Höhe von 6,- EUR berechnet." },
+
+                { "type": "h2", "text": "Ferien, Feiertage, Unterrichtsausfall, Krankheitsfälle" },
+                { "type": "p", "text": "Die Ferien- und Feiertagsordnung für die öffentlichen Schulen des Landes NRW gilt in gleicher Weise für die Musikschule. Für die Ferien- und Feiertage müssen Gebühren in gleicher Höhe entrichtet werden. Fällt der Unterricht aus Gründen, die vom Schüler zu vertreten sind aus, so hat das keinen Einfluss auf die Gebührenentrichtung. Die Stunden müssen in diesem Fall nicht nachgegeben werden. Das gleiche gilt für den Fall der höheren Gewalt." },
+                { "type": "p", "text": "Im Krankheitsfall seitens des Schülers sind die ersten 3 Wochen innerhalb des Schuljahres zu bezahlen. Im Krankheitsfall seitens der Lehrkraft ist die dritte Stunde mit einer anderen Lehrkraft zu ersetzen, bzw. nach Vereinbarung mit dem Schüler nachzuholen. Hierzu können die Schüler in Gruppe zusammengefasst werden. Beim Auftreten ansteckender Krankheiten sind die Gesundheitsbestimmungen für allgemeinbildende Schulen anzuwenden." },
+
+                { "type": "h2", "text": "Verwenden von Bild- und Schallaufzeichnungen, Datenschutz" },
+                { "type": "p", "text": "Die Musikschule ist berechtigt, im Unterricht und in Veranstaltungen Bild- und Schallaufzeichnungen herzustellen und für ihren Eigenbedarf sowie ihre Selbstdarstellung (z. B. Fotoständer, Flyer, Plakate, schulische Website ...) zu verwenden. Der / die Schüler / in / Erziehungsberechtigte erklärt sich durch den Vertragabschluss damit einverstanden, das solche Aufnahmen gemacht und auf die genannte Weise verwendet werden. Eine Vergütungspflicht seitens der Schule besteht nicht." },
+                { "type": "p", "text": "Die Schule ist berechtigt personenbezogene Daten, wie Name, Adresse, Postanschrift, Telefonnummer zu speichern und für schulische Organisation im dafür erforderlichen Umfang zu benutzen. Personenbezogene Daten werden nicht ohne ausdrückliches Einverständnis an Dritte weiter gegeben. Übermittlungen persönlicher Daten an staatliche Einrichtungen und Behörden erfolgen nur im Rahmen zwingender Rechtsvorschriften." },
+
+                { "type": "h2", "text": "Anpassung der Gebühren oder der AGB" },
+                { "type": "p", "text": "Gebührenanpassungen oder Änderungen der AGB müssen von der Schule den Schülern (bzw. den Erziehungsberechtigten) mindestens einen Monat vor wirksam werden bekannt gegeben werden. Dabei steht dem/der Schüler/in ein außerordentliches Kündigungsrecht zum Tag des wirksam Werdens der Änderung zu. Die außerordentliche Kündigung muss der Schule spätestens 14 Tage vor dem wirksam werden vorliegen. Nach Ablauf von 2 Wochen nach der Bekanntgabe der Änderung gelten die neuen Bedingungen als anerkannt." },
+
+                { "type": "h2", "text": "Kündigung des Vertrages" },
+                { "type": "p", "text": "Die Kündigung darf nur zum 15.10 und zum 15.04 mit einer monatlichen Kündigungsfrist erfolgen. Die Kündigung muss der Musikschule bis zum 15.09 bzw. 15.03 vorliegen. Im letzten Monat wird die Hälfte der Monatsgebühr entrichtet." }
             ]
         },
         "datenschutz": {

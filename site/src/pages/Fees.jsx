@@ -51,10 +51,10 @@ const Fees = () => {
                                             >
                                                 <td className="p-8 text-ink-muted group-hover:text-ink transition-colors">
                                                     {row.label}
-                                                    {row.price && <span className="block md:hidden text-gold text-sm font-black mt-2">{row.price.replace('-', '€')}</span>}
+                                                    {row.price && <span className="block md:hidden text-gold text-sm font-black mt-2">{row.price}</span>}
                                                 </td>
                                                 <td className="p-8 text-right font-black text-ink text-2xl group-hover:text-gold transition-colors hidden md:table-cell">
-                                                    {row.price.replace('-', '€')}
+                                                    {row.price}
                                                 </td>
                                             </tr>
                                         ))}
@@ -96,8 +96,8 @@ const Fees = () => {
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 };
 
