@@ -30,40 +30,6 @@ const Home = () => {
         return startBlocks.filter((block) => !(block.type === "h1" && heroTexts.has(block.text)));
     }, [startBlocks, content.hero.subtitle, content.hero.title]);
     const offerIntro = content.offer?.blocks?.[0]?.text || content.offer?.title;
-    const { announcementGroups, closingBlocks } = useMemo(() => {
-        const splitIndex = startMainBlocks.findIndex(
-            (block) => block.type === "h1" && block.text === "Wir freuen uns, dass Sie uns im Internet besuchen!"
-        );
-
-        if (splitIndex === -1) {
-            return { announcementGroups: [], closingBlocks: startMainBlocks };
-        }
-
-        const announcements = startMainBlocks.slice(0, splitIndex);
-        const closing = startMainBlocks.slice(splitIndex);
-        const cardStarts = [
-            "JeKits-Abschlusskonzert",
-            "Klicken Sie hier",
-            "Im Schuljahr",
-            "Gemeinsames Konzert"
-        ];
-
-        const groups = [];
-        let current = [];
-
-        announcements.forEach((block) => {
-            const isCardStart = block.type === "p" && cardStarts.some((prefix) => block.text.startsWith(prefix));
-            if (isCardStart && current.length) {
-                groups.push(current);
-                current = [block];
-                return;
-            }
-            current.push(block);
-        });
-
-        if (current.length) groups.push(current);
-        return { announcementGroups: groups, closingBlocks: closing };
-    }, [startMainBlocks]);
     const titleWords = content.hero.title.split(" ");
     const primaryWords = titleWords.slice(0, 3);
     const secondaryWords = titleWords.slice(3).join(" ");
@@ -159,30 +125,7 @@ const Home = () => {
 
             <section className="py-24 px-6 md:px-12 bg-paper/60">
                 <div className="max-w-5xl mx-auto space-y-12">
-                    {announcementGroups.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {announcementGroups.map((group, index) => {
-                                const [firstBlock, ...restBlocks] = group;
-                                return (
-                                    <div
-                                        key={`announcement-${index}`}
-                                        className="bg-white/90 rounded-[2rem] p-8 border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.12)] space-y-6"
-                                    >
-                                        {firstBlock?.type === "p" ? (
-                                            <h3 className="text-xl md:text-2xl font-black text-ink uppercase tracking-tight">
-                                                {firstBlock.text}
-                                            </h3>
-                                        ) : (
-                                            <Blocks blocks={firstBlock ? [firstBlock] : []} />
-                                        )}
-                                        {restBlocks.length > 0 && <Blocks blocks={restBlocks} />}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <Blocks blocks={startMainBlocks} />
-                    )}
+                    <Blocks blocks={startMainBlocks} />
 
                     {content.pages?.start?.videoEmbedId && (
                         <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)]">
@@ -196,9 +139,6 @@ const Home = () => {
                         </div>
                     )}
 
-                    {announcementGroups.length > 0 && closingBlocks.length > 0 && (
-                        <Blocks blocks={closingBlocks} />
-                    )}
                 </div>
             </section>
 

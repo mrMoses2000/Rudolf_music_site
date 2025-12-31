@@ -34,16 +34,19 @@
     - Added MotionConfig global defaults (reducedMotion=user, lightweight transitions).
     - Updated instrument titles (Gitarre/Horn/Queerflöte/Klarinete/Gesang).
     - Updated Blocks h4 to preserve line breaks; Offer page now renders content blocks.
+    - Removed Start announcement cards/text as requested.
+    - Removed About icon rendering (no external image).
+    - Removed Musikkurse logo strip images.
+    - Added lightweight container animation for long block pages and About content.
   - Now:
-    - Investigate 1s header/hero image load latency; decide on srcset/preload or animation tweaks.
-    - Validate any remaining legacy-only assets (e.g., About icon local copy) and ensure no missing images after cleanup.
+    - Clarify "current Impressum data" requirements and adjust if different from live/legacy.
+    - Investigate 1s header/hero image load latency if still reported; decide on srcset/preload or animation tweaks.
   - Next:
-    - If allowed, download PostHeaderIcon locally to `/site/public/images/` to avoid mixed-content risks.
     - Propose/iterate additional lightweight animations only if desired after reviewing performance.
 - Open questions (UNCONFIRMED if needed):
+  - UNCONFIRMED: Какие именно данные для Impressum должны быть «нынешними» (адрес/телефон/email/ответственные)?
   - UNCONFIRMED: Which page/which “оглавление” image loads slowly (hero/offer cards/etc.) and is it network delay or motion fade?
   - UNCONFIRMED: Restore legacy header phone/psalm strip on desktop, or keep current cleaner header?
-  - UNCONFIRMED: Prefer local hosting for About icon (requires network access) vs external URL?
 - Working set (files/ids/commands):
   - Files: `site/src/data/content.js`, `site/src/pages/About.jsx`, `site/src/pages/Offer.jsx`, `site/src/pages/JeKits.jsx`, `site/src/pages/Musikkurse.jsx`, `site/src/components/Blocks.jsx`, `site/src/App.jsx`.
   - Commands: `rg --files`, image conversion scripts (`cwebp`).

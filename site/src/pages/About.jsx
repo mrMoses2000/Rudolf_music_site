@@ -1,7 +1,6 @@
 
 import { motion } from "framer-motion";
 import { content } from "../data/content";
-import SmartImage from "../components/SmartImage";
 
 const About = () => {
     const data = content.pages.about;
@@ -40,19 +39,13 @@ const About = () => {
 
             {/* About Content */}
             <section className="px-6 md:px-12 max-w-7xl mx-auto py-32 grid grid-cols-1 font-bold text-ink-muted text-xl leading-relaxed">
-                <div className="space-y-12">
-                    {data.icon && (
-                        <div className="w-16 h-16">
-                            <SmartImage
-                                src={data.icon}
-                                alt={data.title}
-                                className="block w-full h-full"
-                                imgClassName="w-full h-full object-contain"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                        </div>
-                    )}
+                <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    className="space-y-12"
+                >
                     {data.blocks.map((block, index) => {
                         if (block.type === "h1" && block.text?.trim() === data.title) return null;
                         if (block.type === "h1") {
@@ -82,7 +75,7 @@ const About = () => {
                             </p>
                         );
                     })}
-                </div>
+                </motion.div>
             </section>
 
         </div>

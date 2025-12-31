@@ -264,13 +264,6 @@ export const content = {
             "blocks": [
                 { "type": "h1", "text": "Hallo und herzlich willkommen auf der Homepage der" },
                 { "type": "h1", "text": "Musikschule CMS Bielefeld" },
-                { "type": "p", "text": "JeKits-Abschlusskonzert" },
-                { "type": "p", "text": "Am 09.07.2025 um 17.00 Uhr in der Sporthalle der Georg-Müller-Grundschule" },
-                { "type": "p", "text": "findet das JeKits-Abschlusskonzert statt." },
-                { "type": "p", "text": "Wir laden dazu alle herzlich ein!" },
-                { "type": "p", "text": "Klicken Sie hier für das Video, in dem Ihr über die Musikkurse bei der GMS-Grundschule und dem GMS-Gymnasium informiert werdet." },
-                { "type": "p", "text": "Im Schuljahr 2024-2025 finden bei der Georg-Müller-Gesamtschule und dem Georg-Müller-Gymnasium Musikkurse für die Fünft- und Sechstklässler statt.\n\nFolgende Musikinstrumente werden angeboten:\n\nGitarre, Klavier/Keyboard, Klarinette, Saxophon, Querflöte, Trompete, Geige, Cello.\n\nDie Anmeldungen (zuerst unverbindlich und ohne Zusage der Musikschule) können jetzt schon eingereicht werden." },
-                { "type": "p", "text": "Gemeinsames Konzert der JeKiTS- Kurse in der Grundschule der GMS- Bielefeld" },
                 { "type": "h1", "text": "Wir freuen uns, dass Sie uns im Internet besuchen!" },
                 { "type": "p", "text": "Unsere Musikschule erteilt Musikunterricht, Gesangunterricht und Kunstunterricht an verschiedenen Unterrichtsorten." },
                 { "type": "p", "text": "Informieren Sie sich auf unserer Website über uns und unser Angebot." },
@@ -281,7 +274,6 @@ export const content = {
         },
         "about": {
             "title": "Über uns",
-            "icon": "https://www.cms-bielefeld.de/templates/cms_bi/images/PostHeaderIcon.png",
             "blocks": [
                 { "type": "p", "text": "„Lobe den Herrn meine Seele und vergiss nicht, was er dir Gutes getan hat... “" },
                 { "type": "h4", "text": "Dieser Psalm wurde von König David aufgeschrieben und drückt aus, wozu er sich selbst aufrief und ermutigte: „Lobe den Herrn, meine Seele!“ Er ermahnte sich dazu, Gott zu loben!" },
@@ -387,10 +379,6 @@ export const content = {
         "musikkurse": {
             "title": "Musikkurse MK 5,6",
             "headerImage": "/images/Musikkurse.png",
-            "logos": [
-                { "src": "/images/Screenshot 2024-03-23 at 12.02.036eb1.png", "alt": "Musikkurse Logo 1" },
-                { "src": "/images/Screenshot 2024-03-23 at 12.04.586eb1.png", "alt": "Musikkurse Logo 2" }
-            ],
             "blocks": [
                 { "type": "p", "text": "Die Musikkurse „MK 5,6“ ist ein musikalisches Angebot der Christlichen Musikschule Bielefeld für die Fünft- und Sechstklässler in der Gesamtschule und dem Gymnasium der Georg-Müller-Schule." },
                 { "type": "p", "text": "Jeder Mensch kann im Prinzip allein Musik machen. Allerdings macht es sehr viel Spaß, zusammen zu musizieren mit vielen Menschen, die auf vielen verschiedenen Instrumenten spielen." },
