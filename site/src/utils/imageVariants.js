@@ -24,9 +24,9 @@ const webpSrcSets = {
     "/images/Akkordeon.png": buildWebpSrcSet("/images/Akkordeon.png", [1280, 1920, 4800]),
     "/images/attachments-Image-IMG_11926eb1.jpg": buildWebpSrcSet("/images/attachments-Image-IMG_11926eb1.jpg", [1280, 1920, 4032]),
     "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg": buildWebpSrcSet("/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg", [1280, 1560]),
-    "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg": buildWebpSrcSet("/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg", [1280, 1560])
+    "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg": buildWebpSrcSet("/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg", [1280, 1560]),
+    "/images/Aktuelles.png": buildWebpSrcSet("/images/Aktuelles.png", [1280, 1920, 3120]),
+    "/images/Gebuehren.png": buildWebpSrcSet("/images/Gebuehren.png", [1280, 1920, 2640])
 };
 
 export const getWebpSrcSet = (src) => webpSrcSets[src];
-    "/images/Aktuelles.png": buildWebpSrcSet("/images/Aktuelles.png", [1280, 1920, 3120]),
-    "/images/Gebuehren.png": buildWebpSrcSet("/images/Gebuehren.png", [1280, 1920, 2640]),

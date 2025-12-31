@@ -1,11 +1,12 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { content } from "../data/content";
 
 const Layout = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
+    const reduceMotion = useReducedMotion();
 
     // Close menu when route changes
     useEffect(() => {
@@ -106,7 +107,14 @@ const Layout = () => {
             </AnimatePresence>
 
             <main className="">
-                <Outlet />
+                <motion.div
+                    key={location.pathname}
+                    initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                    animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+                    transition={reduceMotion ? undefined : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                >
+                    <Outlet />
+                </motion.div>
             </main>
 
             <footer className="py-20 border-t border-black/10 bg-[#F0E6D8] px-6">

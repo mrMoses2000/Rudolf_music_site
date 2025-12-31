@@ -5,7 +5,7 @@
 - Constraints/Assumptions:
   - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
   - Use Context7 before implementing new functionality (framework/API usage).
-  - Sandbox: workspace-write; network restricted; approval_policy untrusted.
+  - Sandbox: danger-full-access; network enabled; approval_policy never.
 - Key decisions:
   - Use `SmartImage` with `<picture>` and WebP `srcSet` for hero/large images.
   - Add lightbox overlay for Kunst gallery with `AnimatePresence` and Esc/overlay close.
@@ -41,6 +41,8 @@
     - Fixed Blocks/Über uns animations to mount (avoid invisible content).
     - Added WebP + srcset for Aktuelles/Gebuehren hero images; wired sizes/useSrcSet.
     - Fixed Aktuelles missing Blocks import.
+    - Fixed `imageVariants.js` syntax error causing build failure (moved Aktuelles/Gebuehren entries into object).
+    - Added consistent page-level fade-in in Layout (respects reduced motion).
   - Now:
     - Clarify "current Impressum data" requirements and adjust if different from live/legacy.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
