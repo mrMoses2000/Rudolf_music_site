@@ -179,7 +179,7 @@ const Home = () => {
                                     <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
                                     <div className="p-8 md:p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">
-                                        <h3 className="text-2xl md:text-4xl font-black text-ink group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
+                                        <h3 className="text-xl md:text-3xl font-black text-ink group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
                                     </div>
 
                                     <div className="absolute top-8 right-8 w-12 h-12 md:w-16 md:h-16 bg-gold rounded-full flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 shadow-2xl shadow-gold/40 z-30">
