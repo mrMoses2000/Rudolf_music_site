@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { content } from "../data/content";
+import SmartImage from "../components/SmartImage";
 
 const InstrumentPage = () => {
     const { name } = useParams();
@@ -42,10 +43,15 @@ const InstrumentPage = () => {
             {/* Header Hero Area - Premium Reveal */}
             <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
                 <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
-                    <img
+                    <SmartImage
                         src={instrumentData.image || "/images/attachments-Image-IMG_11926eb1.jpg"}
-                        className="w-full h-full object-cover opacity-55 saturate-110"
                         alt={instrumentData.title}
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover opacity-55 saturate-110"
+                        loading="eager"
+                        fetchPriority="high"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/70 to-transparent"></div>
                 </motion.div>

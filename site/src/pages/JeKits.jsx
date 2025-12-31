@@ -1,21 +1,28 @@
 import { content } from "../data/content";
 import Blocks from "../components/Blocks";
+import SmartImage from "../components/SmartImage";
 import { motion } from "framer-motion";
 
 const JeKits = () => {
     const data = content.pages.jekits;
     const images = data.images || [];
     const isSingleImage = images.length === 1;
+    const logos = data.logos || [];
 
     return (
         <div className="min-h-screen pb-24 text-ink">
             {/* Hero Section */}
             <section className="relative h-[60vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0">
-                    <img
+                    <SmartImage
                         src={data.headerImage}
                         alt={data.title}
-                        className="w-full h-full object-cover opacity-90"
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover opacity-90"
+                        loading="eager"
+                        fetchPriority="high"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/40 to-transparent"></div>
                 </div>
@@ -33,15 +40,34 @@ const JeKits = () => {
 
             {/* Content */}
             <div className="px-6 md:px-12 max-w-5xl mx-auto pt-24 space-y-16">
+                {logos.length > 0 && (
+                    <div className="flex flex-wrap items-center justify-center gap-6">
+                        {logos.map((logo, index) => (
+                            <div key={index} className="h-16 sm:h-20">
+                                <SmartImage
+                                    src={logo.src}
+                                    alt={logo.alt || "JeKits Logo"}
+                                    className="block h-full w-auto"
+                                    imgClassName="h-full w-auto object-contain"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <Blocks blocks={data.blocks} />
             </div>
 
             {isSingleImage && (
                 <section className="relative h-[50vh] mt-16 overflow-hidden border-t border-black/10">
-                    <img
+                    <SmartImage
                         src={images[0].src}
                         alt={images[0].alt || "JeKits"}
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0"
+                        imgClassName="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/40 to-transparent"></div>
                 </section>
@@ -59,12 +85,13 @@ const JeKits = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[4/3]"
                             >
-                                <img
+                                <SmartImage
                                     src={image.src}
                                     alt={image.alt || "JeKits"}
+                                    className="block w-full h-full"
+                                    imgClassName="w-full h-full object-cover"
                                     loading="lazy"
                                     decoding="async"
-                                    className="w-full h-full object-cover"
                                 />
                             </motion.div>
                         ))}

@@ -1,8 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { content } from "../data/content";
 import Blocks from "../components/Blocks";
+import SmartImage from "../components/SmartImage";
 
 const Home = () => {
     const heroRef = useRef(null);
@@ -24,8 +25,45 @@ const Home = () => {
     };
 
     const startBlocks = content.pages?.start?.blocks || [];
-    const startMainBlocks = startBlocks;
+    const startMainBlocks = useMemo(() => {
+        const heroTexts = new Set([content.hero.subtitle, content.hero.title].filter(Boolean));
+        return startBlocks.filter((block) => !(block.type === "h1" && heroTexts.has(block.text)));
+    }, [startBlocks, content.hero.subtitle, content.hero.title]);
     const offerIntro = content.offer?.blocks?.[0]?.text || content.offer?.title;
+    const { announcementGroups, closingBlocks } = useMemo(() => {
+        const splitIndex = startMainBlocks.findIndex(
+            (block) => block.type === "h1" && block.text === "Wir freuen uns, dass Sie uns im Internet besuchen!"
+        );
+
+        if (splitIndex === -1) {
+            return { announcementGroups: [], closingBlocks: startMainBlocks };
+        }
+
+        const announcements = startMainBlocks.slice(0, splitIndex);
+        const closing = startMainBlocks.slice(splitIndex);
+        const cardStarts = [
+            "JeKits-Abschlusskonzert",
+            "Klicken Sie hier",
+            "Im Schuljahr",
+            "Gemeinsames Konzert"
+        ];
+
+        const groups = [];
+        let current = [];
+
+        announcements.forEach((block) => {
+            const isCardStart = block.type === "p" && cardStarts.some((prefix) => block.text.startsWith(prefix));
+            if (isCardStart && current.length) {
+                groups.push(current);
+                current = [block];
+                return;
+            }
+            current.push(block);
+        });
+
+        if (current.length) groups.push(current);
+        return { announcementGroups: groups, closingBlocks: closing };
+    }, [startMainBlocks]);
     const titleWords = content.hero.title.split(" ");
     const primaryWords = titleWords.slice(0, 3);
     const secondaryWords = titleWords.slice(3).join(" ");
@@ -35,11 +73,15 @@ const Home = () => {
             {/* Hero Section - Premium Parallax */}
             <section ref={heroRef} className="relative min-h-[100vh] flex items-end pb-32 px-6 md:px-12 overflow-hidden">
                 <motion.div style={{ y, scale: scaleHero }} className="absolute inset-0 z-0">
-                    <img
+                    <SmartImage
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
                         alt="Musikschule Background"
-                        className="w-full h-full object-cover opacity-75"
-                        fetchpriority="high"
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover opacity-75"
+                        loading="eager"
+                        fetchPriority="high"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-transparent"></div>
                 </motion.div>
@@ -67,7 +109,7 @@ const Home = () => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="text-sm md:text-base text-ink-muted uppercase tracking-[0.4em] font-black"
+                            className="text-sm md:text-base text-ink-muted tracking-[0.15em] font-black"
                         >
                             {content.hero.subtitle}
                         </motion.p>
@@ -117,7 +159,31 @@ const Home = () => {
 
             <section className="py-24 px-6 md:px-12 bg-paper/60">
                 <div className="max-w-5xl mx-auto space-y-12">
-                    <Blocks blocks={startMainBlocks} />
+                    {announcementGroups.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {announcementGroups.map((group, index) => {
+                                const [firstBlock, ...restBlocks] = group;
+                                return (
+                                    <div
+                                        key={`announcement-${index}`}
+                                        className="bg-white/90 rounded-[2rem] p-8 border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.12)] space-y-6"
+                                    >
+                                        {firstBlock?.type === "p" ? (
+                                            <h3 className="text-xl md:text-2xl font-black text-ink uppercase tracking-tight">
+                                                {firstBlock.text}
+                                            </h3>
+                                        ) : (
+                                            <Blocks blocks={firstBlock ? [firstBlock] : []} />
+                                        )}
+                                        {restBlocks.length > 0 && <Blocks blocks={restBlocks} />}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <Blocks blocks={startMainBlocks} />
+                    )}
+
                     {content.pages?.start?.videoEmbedId && (
                         <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)]">
                             <iframe
@@ -128,6 +194,10 @@ const Home = () => {
                                 allowFullScreen
                             ></iframe>
                         </div>
+                    )}
+
+                    {announcementGroups.length > 0 && closingBlocks.length > 0 && (
+                        <Blocks blocks={closingBlocks} />
                     )}
                 </div>
             </section>
@@ -172,10 +242,11 @@ const Home = () => {
                                         }}
                                     />
 
-                                <img
+                                <SmartImage
                                     src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
-                                    className="absolute inset-0 w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
                                     alt={cat.title}
+                                    className="absolute inset-0"
+                                    imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
                                     loading="lazy"
                                     decoding="async"
                                 />

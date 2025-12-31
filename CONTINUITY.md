@@ -1,0 +1,49 @@
+# CONTINUITY.md
+
+- Goal (incl. success criteria):
+  - Ensure 1:1 content migration from `music_site_copy/` to `site/` (text structure/blocks, logos/abbreviations) and deliver UX upgrades without breaking routing; address perceived header-image load lag; all changes in Russian comms.
+- Constraints/Assumptions:
+  - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
+  - Use Context7 before implementing new functionality (framework/API usage).
+  - Sandbox: workspace-write; network restricted; approval_policy untrusted.
+- Key decisions:
+  - Use `SmartImage` with `<picture>` and WebP `srcSet` for hero/large images.
+  - Add lightbox overlay for Kunst gallery with `AnimatePresence` and Esc/overlay close.
+  - Reformat start-page announcements into cards grouped by related paragraphs.
+- State:
+  - Done:
+    - Fixed Blocks support for `ul/items`, `p` uses `whitespace-pre-line`, and reduced motion handling.
+    - Disabled initial animation in `App.jsx` and kept `ScrollToTop`.
+    - JeKits image styling: full-width hero when single image; grid when multiple.
+    - Musikkurse image grid rendering fixed for string/object array.
+    - Jobs CTA button to `/contact` with prefilled subject.
+    - Contact subject prefill from location state/instrument/query.
+    - InstrumentPage slug bug fix (`gesangunterricht` -> `gesang`) and preserved newlines.
+    - Kunst gallery lazy loading; content updates from legacy.
+    - Home hero h1 filtering and `fetchPriority` on hero image.
+    - Header acronym set to CMS and title updated.
+    - `content.js` updated with legacy start blocks, JeKits/Kunst/Standorte content, fees doc URL.
+    - All image references validated against `site/public/images` (missing 0 at the time).
+    - Generated WebP assets for all JPG/PNG and responsive `-1280.webp`/`-1920.webp` where applicable.
+    - Added `SmartImage` + `imageVariants` map; replaced `<img>` usage across pages for WebP + srcset.
+    - Implemented Kunst gallery lightbox with overlay and Esc/scroll lock.
+    - Reworked start-page announcements into card grid with preserved text blocks.
+    - Synced legacy text structure for Start, Angebot, Kontakt, Gebühren/Anmeldung, Aktuelles, Musikkurse, JeKits, Standorte, Jobs, Kunst, Über uns.
+    - Updated AGB/Impressum/Datenschutz blocks to match legacy text, headings, and list items.
+    - Added JeKits/Musikkurse logos and About icon slot; About icon points to external URL due to network restriction.
+    - Added MotionConfig global defaults (reducedMotion=user, lightweight transitions).
+    - Updated instrument titles (Gitarre/Horn/Queerflöte/Klarinete/Gesang).
+    - Updated Blocks h4 to preserve line breaks; Offer page now renders content blocks.
+  - Now:
+    - Investigate 1s header/hero image load latency; decide on srcset/preload or animation tweaks.
+    - Validate any remaining legacy-only assets (e.g., About icon local copy) and ensure no missing images after cleanup.
+  - Next:
+    - If allowed, download PostHeaderIcon locally to `/site/public/images/` to avoid mixed-content risks.
+    - Propose/iterate additional lightweight animations only if desired after reviewing performance.
+- Open questions (UNCONFIRMED if needed):
+  - UNCONFIRMED: Which page/which “оглавление” image loads slowly (hero/offer cards/etc.) and is it network delay or motion fade?
+  - UNCONFIRMED: Restore legacy header phone/psalm strip on desktop, or keep current cleaner header?
+  - UNCONFIRMED: Prefer local hosting for About icon (requires network access) vs external URL?
+- Working set (files/ids/commands):
+  - Files: `site/src/data/content.js`, `site/src/pages/About.jsx`, `site/src/pages/Offer.jsx`, `site/src/pages/JeKits.jsx`, `site/src/pages/Musikkurse.jsx`, `site/src/components/Blocks.jsx`, `site/src/App.jsx`.
+  - Commands: `rg --files`, image conversion scripts (`cwebp`).

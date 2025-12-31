@@ -1,17 +1,25 @@
 
 import { motion } from "framer-motion";
 import { content } from "../data/content";
+import SmartImage from "../components/SmartImage";
 
 const About = () => {
+    const data = content.pages.about;
+
     return (
         <div className="min-h-screen">
             {/* About Hero */}
             <section className="relative h-[70vh] flex items-end pb-20 px-6 md:px-12 overflow-hidden pt-32">
                 <div className="absolute inset-0 z-0">
-                    <img
+                    <SmartImage
                         src="/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"
                         alt="About Background"
-                        className="w-full h-full object-cover opacity-65 saturate-110 transition-all duration-1000"
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover opacity-65 saturate-110 transition-all duration-1000"
+                        loading="eager"
+                        fetchPriority="high"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-transparent"></div>
                 </div>
@@ -23,7 +31,7 @@ const About = () => {
                         className="space-y-6"
                     >
                         <h1 className="text-7xl md:text-[8rem] font-outfit font-black text-ink leading-none tracking-tighter uppercase">
-                            {content.pages.about.title}
+                            {data.title}
                         </h1>
 
                     </motion.div>
@@ -33,24 +41,43 @@ const About = () => {
             {/* About Content */}
             <section className="px-6 md:px-12 max-w-7xl mx-auto py-32 grid grid-cols-1 font-bold text-ink-muted text-xl leading-relaxed">
                 <div className="space-y-12">
-                    {content.pages.about.blocks.map((block, index) => {
-                        if (block.type === "h1") return null; // Already shown in hero
-                        if (block.type === "h2") {
+                    {data.icon && (
+                        <div className="w-16 h-16">
+                            <SmartImage
+                                src={data.icon}
+                                alt={data.title}
+                                className="block w-full h-full"
+                                imgClassName="w-full h-full object-contain"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        </div>
+                    )}
+                    {data.blocks.map((block, index) => {
+                        if (block.type === "h1" && block.text?.trim() === data.title) return null;
+                        if (block.type === "h1") {
                             return (
-                                <h2 key={index} className="text-sm font-black uppercase tracking-[0.4em] text-ink mt-16 first:mt-0">
+                                <h2 key={index} className="text-2xl md:text-3xl font-outfit font-black text-ink mt-16 first:mt-0">
                                     {block.text}
                                 </h2>
                             );
                         }
-                        if (block.type === "h3") {
+                        if (block.type === "h2") {
                             return (
-                                <h3 key={index} className="text-2xl md:text-3xl text-gold font-bold italic leading-tight my-8">
+                                <h3 key={index} className="text-sm font-black uppercase tracking-[0.4em] text-ink mt-16 first:mt-0">
                                     {block.text}
                                 </h3>
                             );
                         }
+                        if (block.type === "h3") {
+                            return (
+                                <h4 key={index} className="text-2xl md:text-3xl text-gold font-bold italic leading-tight my-8">
+                                    {block.text}
+                                </h4>
+                            );
+                        }
                         return (
-                            <p key={index} className="max-w-3xl">
+                            <p key={index} className="max-w-3xl whitespace-pre-line">
                                 {block.text}
                             </p>
                         );

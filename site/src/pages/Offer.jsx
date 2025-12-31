@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { content } from "../data/content";
+import SmartImage from "../components/SmartImage";
 import Blocks from "../components/Blocks";
 
 const Offer = () => {
@@ -20,6 +21,12 @@ const Offer = () => {
             }, 100);
         }
     };
+
+    const offerBlocks = content.offer?.blocks || [];
+    const offerIntro = content.offer?.intro || "";
+    const filteredOfferBlocks = offerIntro
+        ? offerBlocks.filter((block, index) => !(index === 0 && block.text === offerIntro))
+        : offerBlocks;
 
     const offerMainButtons = [
         {
@@ -55,10 +62,15 @@ const Offer = () => {
             {/* Offer Hero */}
             <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0 text-center">
-                    <img
+                    <SmartImage
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
                         alt="Offer Background"
-                        className="w-full h-full object-cover opacity-30 saturate-0 scale-105"
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover opacity-30 saturate-0 scale-105"
+                        loading="eager"
+                        fetchPriority="high"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-transparent"></div>
                 </div>
@@ -72,14 +84,21 @@ const Offer = () => {
                         <h1 className="text-6xl md:text-9xl font-outfit font-black text-ink leading-none tracking-tighter uppercase mb-6">
                             {content.offer.title}
                         </h1>
-                        <div className="max-w-2xl text-ink-muted text-lg md:text-xl font-medium leading-relaxed">
-                            {content.offer.intro}
-                        </div>
+                        {offerIntro && (
+                            <div className="max-w-2xl text-ink-muted text-lg md:text-xl font-medium leading-relaxed">
+                                {offerIntro}
+                            </div>
+                        )}
                     </motion.div>
                 </div>
             </section>
 
             <div className="px-6 md:px-12 max-w-7xl mx-auto py-24">
+                {filteredOfferBlocks.length > 0 && (
+                    <div className="max-w-4xl mx-auto mb-16">
+                        <Blocks blocks={filteredOfferBlocks} />
+                    </div>
+                )}
 
                 {/* Main Feature Buttons */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
@@ -95,7 +114,16 @@ const Offer = () => {
                             {btn.to ? (
                                 <Link to={btn.to} className="block w-full h-full relative z-10 p-8 flex flex-col justify-between">
                                     <div className="absolute inset-0 z-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500">
-                                        {btn.image && <img src={btn.image} alt={btn.label} className="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700" />}
+                                        {btn.image && (
+                                            <SmartImage
+                                                src={btn.image}
+                                                alt={btn.label}
+                                                className="absolute inset-0"
+                                                imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        )}
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
                                     </div>
                                     <div className="relative z-10 mt-auto">
@@ -106,7 +134,16 @@ const Offer = () => {
                             ) : (
                                 <div className="w-full h-full relative z-10 p-8 flex flex-col justify-between">
                                     <div className="absolute inset-0 z-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500">
-                                        {btn.image && <img src={btn.image} alt={btn.label} className="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700" />}
+                                        {btn.image && (
+                                            <SmartImage
+                                                src={btn.image}
+                                                alt={btn.label}
+                                                className="absolute inset-0"
+                                                imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        )}
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
                                     </div>
                                     <div className="relative z-10 mt-auto">
@@ -144,7 +181,14 @@ const Offer = () => {
                                         >
                                             <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-paper-strong relative">
                                                 {cat.image && (
-                                                    <img src={cat.image} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                                    <SmartImage
+                                                        src={cat.image}
+                                                        alt={cat.title}
+                                                        className="block w-full h-full"
+                                                        imgClassName="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
                                                 )}
                                             </div>
                                             <h3 className="text-xl font-black text-ink mb-4">{cat.title}</h3>

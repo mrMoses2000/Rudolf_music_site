@@ -1,6 +1,7 @@
 
 import { motion } from "framer-motion";
 import { content } from "../data/content";
+import SmartImage from "../components/SmartImage";
 
 const Fees = () => {
     return (
@@ -8,10 +9,13 @@ const Fees = () => {
             {/* Fees Hero */}
             <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0">
-                    <img
+                    <SmartImage
                         src="/images/fees_hero_upscale_1767157346173.png"
                         alt="Fees Background"
-                        className="w-full h-full object-cover opacity-50 saturate-110"
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover opacity-50 saturate-110"
+                        loading="eager"
+                        fetchPriority="high"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/70 to-transparent"></div>
                 </div>
