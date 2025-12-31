@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
 - Goal (incl. success criteria):
-  - Ensure 1:1 content migration from `music_site_copy/` to `site/` (text structure/blocks, logos/abbreviations) and deliver UX upgrades without breaking routing; address perceived header-image load lag; all changes in Russian comms.
+  - Ensure 1:1 content migration from `music_site_copy/` to `site/` (text structure/blocks, logos/abbreviations) and deliver UX upgrades without breaking routing; address perceived header-image load lag; fix About page rendering; all changes in Russian comms.
 - Constraints/Assumptions:
   - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
   - Use Context7 before implementing new functionality (framework/API usage).
@@ -43,8 +43,11 @@
     - Fixed Aktuelles missing Blocks import.
     - Fixed `imageVariants.js` syntax error causing build failure (moved Aktuelles/Gebuehren entries into object).
     - Added consistent page-level fade-in in Layout (respects reduced motion).
+    - Fixed Über uns crash by restoring SmartImage import.
+    - Reformatted Gebühren price values to “число €”.
   - Now:
-    - Clarify "current Impressum data" requirements and adjust if different from live/legacy.
+    - Fix Über uns page rendering regression.
+    - Adjust Gebühren/Anmeldung price formatting to “число + €” while keeping legacy values.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
   - Next:
     - Propose/iterate additional lightweight animations only if desired after reviewing performance.

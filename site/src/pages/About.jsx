@@ -1,6 +1,7 @@
 
 import { motion } from "framer-motion";
 import { content } from "../data/content";
+import SmartImage from "../components/SmartImage";
 
 const About = () => {
     const data = content.pages.about;
