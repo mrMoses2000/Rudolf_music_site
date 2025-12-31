@@ -215,6 +215,24 @@ export const content = {
             "Datenschutz"
         ]
     },
+    "contact": {
+        "title": "Kontakt",
+        "intro": "Wir freuen uns auf Ihre Nachricht! Nutzen Sie das Formular unten oder kontaktieren Sie uns direkt.",
+        "address": [
+            "Christliche Musikschule Bielefeld e. V.",
+            "Kleebrink 3",
+            "33719 Bielefeld"
+        ],
+        "phone": "0521/3367416",
+        "email": "info@cms-bielefeld.de",
+        "form": {
+            "nameLabel": "Name",
+            "emailLabel": "E-Mail-Adresse",
+            "subjectLabel": "Betreff",
+            "messageLabel": "Nachricht",
+            "submit": "Nachricht senden"
+        }
+    },
     "pages": {
         "start": {
             "title": "Start",

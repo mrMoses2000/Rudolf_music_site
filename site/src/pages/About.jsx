@@ -23,44 +23,38 @@ const About = () => {
                         className="space-y-6"
                     >
                         <h1 className="text-7xl md:text-[8rem] font-outfit font-black text-ink leading-none tracking-tighter uppercase">
-                            {content.about.title}
+                            {content.pages.about.title}
                         </h1>
-                        <p className="text-xl md:text-3xl text-gold font-bold italic max-w-2xl leading-tight">
-                            {content.about.quote}
-                        </p>
+
                     </motion.div>
                 </div>
             </section>
 
             {/* About Content */}
-            <section className="px-6 md:px-12 max-w-7xl mx-auto py-32 grid grid-cols-1 lg:grid-cols-2 gap-24 font-bold text-ink-muted text-xl leading-relaxed">
+            <section className="px-6 md:px-12 max-w-7xl mx-auto py-32 grid grid-cols-1 font-bold text-ink-muted text-xl leading-relaxed">
                 <div className="space-y-12">
-                    <div className="space-y-8">
-                        <h2 className="text-sm font-black uppercase tracking-[0.4em] text-ink">Unsere Philosophie</h2>
-                        {content.about.description.map((paragraph, index) => (
-                            <p key={index}>{paragraph}</p>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="space-y-16">
-                    <div className="space-y-8">
-                        <h2 className="text-sm font-black uppercase tracking-[0.4em] text-ink">Geschichte</h2>
-                        <div className="space-y-6">
-                            {content.about.history.map((paragraph, index) => (
-                                <p key={index} className="pl-6 border-l-2 border-gold/30">{paragraph}</p>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="space-y-8">
-                        <h2 className="text-sm font-black uppercase tracking-[0.4em] text-ink">Unsere Mission</h2>
-                        <div className="space-y-6">
-                            {content.about.mission.map((paragraph, index) => (
-                                <p key={index}>{paragraph}</p>
-                            ))}
-                        </div>
-                    </div>
+                    {content.pages.about.blocks.map((block, index) => {
+                        if (block.type === "h1") return null; // Already shown in hero
+                        if (block.type === "h2") {
+                            return (
+                                <h2 key={index} className="text-sm font-black uppercase tracking-[0.4em] text-ink mt-16 first:mt-0">
+                                    {block.text}
+                                </h2>
+                            );
+                        }
+                        if (block.type === "h3") {
+                            return (
+                                <h3 key={index} className="text-2xl md:text-3xl text-gold font-bold italic leading-tight my-8">
+                                    {block.text}
+                                </h3>
+                            );
+                        }
+                        return (
+                            <p key={index} className="max-w-3xl">
+                                {block.text}
+                            </p>
+                        );
+                    })}
                 </div>
             </section>
 
