@@ -299,12 +299,12 @@ export const content = {
                 { "type": "p", "text": "www.jekits.de" }
             ],
             "images": [
-                { "src": "/images/Jekitz-ts16957280966eb1.jpg", "alt": "JeKits Unterricht" }
+                { "src": "/images/uploaded_image_1_1767170720365.png", "alt": "JeKits Unterricht" }
             ]
         },
         "jobs": {
             "title": "Stellenangebote",
-            "headerImage": "/images/header_jobs_1767161822812.png",
+            "headerImage": "/images/Stellenangebote.png",
             "blocks": [
                 { "type": "h1", "text": "Stellenangebote für Musiklehrer" },
                 { "type": "p", "text": "Der Musik- oder Kunstunterricht ist nicht nur Entwicklung von entsprechenden Fähigkeiten, sondern auch Erziehung. Wir haben qualifizierte Lehrkräfte in allen Fächern. Die Lehrerinnen und Lehrer der Musikschule vertreten selber und vermitteln bewusst den Schülern christliche Werte." },
@@ -351,6 +351,11 @@ export const content = {
                 { "type": "p", "text": "Musikinstrumente können für die Dauer des Kurses ausgeliehen werden." },
                 { "type": "p", "text": "Die Kursdauer – ein Jahr. Sowohl die Fünftklässler als auch die Sechstklässler können sich zum Kurs anmelden." },
                 { "type": "p", "text": "Das Gelernte wird bei den Vorspielen vor vielen Schülern und Eltern präsentiert." }
+            ],
+            "images": [
+                "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg",
+                "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg",
+                "/images/attachments-Image-IMG_11926eb1.jpg"
             ]
         },
         "kunst": {

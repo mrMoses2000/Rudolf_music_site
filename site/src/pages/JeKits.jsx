@@ -43,7 +43,7 @@ const JeKits = () => {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[4/3]"
+                                className={`rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[16/9] ${images.length === 1 ? 'md:col-span-3 aspect-[21/9]' : 'aspect-[4/3]'}`}
                             >
                                 <img src={image.src} alt={image.alt || "JeKits"} className="w-full h-full object-cover" />
                             </motion.div>

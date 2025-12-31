@@ -32,6 +32,23 @@ const Musikkurse = () => {
             {/* Content */}
             <div className="px-6 md:px-12 max-w-5xl mx-auto pt-24 space-y-12">
                 <Blocks blocks={data.blocks} />
+
+                {data.images && data.images.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
+                        {data.images.map((img, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[4/3]"
+                            >
+                                <img src={img} alt={`Musikkurse ${i + 1}`} className="w-full h-full object-cover" />
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

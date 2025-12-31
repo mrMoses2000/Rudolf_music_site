@@ -108,6 +108,22 @@ const Blocks = ({ blocks = [], className = "" }) => {
             continue;
         }
 
+        if (block.type === "ul" && block.items) {
+            elements.push(
+                <motion.div key={`ul-${index}`} variants={itemVariants}>
+                    <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
+                        {block.items.map((item, itemIndex) => (
+                            <li key={`ul-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
+                                {renderTextWithLink(item)}
+                            </li>
+                        ))}
+                    </ul>
+                </motion.div>
+            );
+            index += 1;
+            continue;
+        }
+
         const Tag = TAG_CLASSES[block.type] ? block.type : "p";
         elements.push(
             <motion.div key={`block-${index}`} variants={itemVariants}>

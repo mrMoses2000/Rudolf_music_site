@@ -1,61 +1,67 @@
-# AGENTS.md - Project Context & Guidelines
+# AGENTS.md - Codex & Developer Guide
 
 > [!IMPORTANT]
-> **Language Rule:** ALWAYS communicate with the user in **Russian** (Русский язык).
+> **Primary Directive:** You are an autonomous agent (Codex). Your mission is to ensure the **exact** and **complete** migration of content from the legacy site (`music_site_copy/`) to the new React site (`site/`).
+> **Language Rule:** Communicate with the user in **Russian** (Русский язык).
+> **Autonomy:** You are authorized and EXPECTED to fix content discrepancies (missing text, wrong prices, broken images) **without asking for permission**, provided the source is the legacy website.
 
+## 1. Project Overview & Architecture
+**Name:** Musikschule CMS Bielefeld (Rudolf Music Site)
+**Goal:** Modernize the school's web presence while preserving 100% of the original content and "soul".
+**Tech Stack:**
+- **Frontend:** React (Vite) + Tailwind CSS + Framer Motion.
+- **Data Source:** `site/src/data/content.js` (Central JSON Store).
+- **Structure:**
+    - `site/src/pages/*.jsx`: Page templates. They fetch data from `content.js`.
+    - `site/src/components/Blocks.jsx`: Renders the content blocks (`h1`, `p`, `li`, `ul`). **Updated to support `ul` with `items` array.**
 
-## 1. Project Overview
-**Name:** Rudolf Music Site (Musikschule CMS Bielefeld)
-**Goal:** A complete redesign and modernization of a traditional music school website. The goal is to move from an old, static HTML site to a modern, dynamic React application without losing ANY content or "soul", but significantly improving the visual appeal ("Wow-Factor") and checking responsiveness.
+## 2. Critical Workflows for Codex
 
-**Current State:**
-- **Stack:** React (Vite), Tailwind CSS, Framer Motion.
-- **Hosting:** Direct Docker container on an Ubuntu VPS.
-- **Deploy:** `./run.sh` script (Handles build & docker restart).
-- **Design:** Currently "Spotify-Dark" theme (Black/Gold/Green), but feedback indicates it may be **too dark/oppressive** for the target audience (older director, parents). We are pivoting to a friendlier, brighter, but still premium aesthetic.
+### A. Content Verification (The "Source of Truth")
+The legacy website files are in `music_site_copy/`. This is your Bible.
+1.  **Compare:** Open a page on the new site (e.g., `/jekits`) and compare it with the legacy HTML (`JeKits.html`).
+2.  **Identify Gaps:** Look for missing paragraphs, missing "Details" sections, or incorrect prices.
+3.  **Fix:**
+    - Open `site/src/data/content.js`.
+    - Locate the corresponding key (e.g., `pages.jekits`).
+    - Add/Update the `blocks` array to match the legacy content 1:1.
+    - **Do not ask "Should I update?":** Just do it.
 
-## 2. Directory Structure
+### B. Image Handling
+1.  **Source:** All images are in `site/public/images/`.
+2.  **Usage:** Reference them in `content.js` as `/images/filename.png` or `/images/filename.jpg`.
+3.  **Missing Images?**
+    - Check `music_site_copy/` to see what *should* be there.
+    - Check `site/public/images/` to find a matching or suitable replacement.
+    - If the user provides new images (e.g., `uploaded_image_*.png`), prioritize those.
+4.  **Gallery/Grid:** Pages like `Musikkurse` and `Kunst` rely on `images` arrays in `content.js`. If a page looks empty of images, check if the `images` array is populated in `content.js`.
 
-### `site/` (The Application)
-- `src/main.jsx`: Entry point.
-- `src/App.jsx`: Main Router (React Router). **Crucial:** Handles page transitions (`AnimatePresence`).
-- `src/components/Layout.jsx`: The global shell. Contains the **Header** (Nav) and **Footer**.
-- `src/pages/`:
-    - `Home.jsx`: Landing page. Parallax hero, categories grid.
-    - `InstrumentPage.jsx`: Dynamic template for *all* instruments (`/instrument/:name`). Uses `useParams` to fetch data.
-    - `Contact.jsx`: Contact form. **Integrated with Web3Forms** (Key: `e6f51cb3...`).
-    - `Fees.jsx`: Pricing table.
-    - `About.jsx`: School history and mission.
-- `src/data/content.js`: **THE BRAIN.** This file contains ALL text, image paths, and instrument data.
-    - *Agent Note:* If you need to fix a typo, add a new instrument, or change a price, you edit **ONLY** this file.
+### C. Troubleshooting Common Issues
+-   **Blank Page (White Screen):**
+    -   Usually caused by `Blocks.jsx` encountering an unknown data type.
+    -   *Check:* Does `content.js` have a block with `type: "ul"`? Ensure `Blocks.jsx` handles it (It was patched to handle `ul` with `items`).
+-   **"Worse" Animation/Performance:**
+    -   We disabled `mode="wait"` in `App.jsx` to make navigation snappier.
+    -   Avoid adding heavy entrance animations to *every* text block if it harms readability.
+-   **Routing Issues:**
+    -   `ScrollToTop` component handles scroll reset on consumption.
+    -   `App.jsx` handles the routes.
 
-### `music_site_copy/` (The Source of Truth)
-- Contains the ripped HTML of the *original* website.
-- **Rule:** If the user asks "Did we miss something?", check this directory. Every page here (e.g., `JeKits.html`, `Kunst.html`) MUST have an equivalent representation in the new `site/`.
+## 3. Deployment
+-   **Command:** `./run.sh`
+-   **Context:** This script builds the React app and restarts the Nginx Docker container. Run this only if explicitly asked or if you need to verify a "production" build behavior, but usually `dev` mode is sufficient for verification.
 
-## 3. Design Philosophy (Updated)
-- **Primary:** "Premium, Friendly, Trustworthy."
-- **Old Direction:** "Spotify Dark" (Too dark).
-- **New Direction:** "Warm & Bright Premium."
-    - Less #000000 (Pure Black).
-    - More Warm Whites, Creams, or very soft/warm darks if used.
-    - **Typography:** Big, bold, legible (`Outfit` for headers, `Inter` for body).
-    - **Motion:** Staggered reveals, smooth scrolling, parallax. "It should feel alive."
+## 4. Specific Page nuances
+-   **Jobs (`/jobs`):** Content is in `pages.jobs`. Header image is `Stellenangebote.png`. If missing, check `content.js`.
+-   **JeKits (`/jekits`):** Content is in `pages.jekits`. Uses a grid for images.
+-   **Musikkurse (`/musikkurse`):** Content is in `pages.musikkurse`. Uses `blocks` for text and `images` for the gallery grid.
+-   **Offer (`/offer`):** Hub page. Links to instruments.
 
-## 4. Operational "Agents" Workflow (Future)
-We are building towards a **Headless AI CMS**.
-1.  **User** sends a request via Telegram ("Update price of Piano").
-2.  **n8n** triggers an **AI Agent**.
-3.  **AI Agent** creates a command for the **Gemini CLI** on the server.
-4.  **Gemini CLI** (running via SSH) edits `src/data/content.js` directly.
-5.  **Rebuild:** The system runs `./run.sh` to redeploy.
+## 5. Contact & Forms
+-   **Web3Forms:** Configured in `Contact.jsx`.
+-   **Target Email:** `mosesvasilenko0002@gmail.com`
+-   **API Key:** `e6f51cb3-ae9e-4deb-9989-5cf892fbc8a4`
 
-## 5. Critical Constraints
-- **Responsiveness:** MUST look good on mobile. (Watch out for long German words like *Streichinstrumente*).
-- **Images:** Stored in `/images` (public folder). Real content images are vital.
-- **Email:** `Contact.jsx` must point to `mosesvasilenko0002@gmail.com` via Web3Forms.
-
-## 6. How to Edit
-1.  **Code Changes:** Edit file in `site/src/...`.
-2.  **Content Changes:** Edit `site/src/data/content.js`.
-3.  **Deploy:** Run `./run.sh` in the root.
+---
+**Message to Codex:**
+Trust your eyes and the `music_site_copy` data. If the new site looks "empty" compared to the old HTML, fill it up. You have full write access to `content.js`. Make it perfect.
