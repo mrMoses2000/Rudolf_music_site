@@ -35,7 +35,10 @@ const Musikkurse = () => {
 
                 {data.images && data.images.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
-                        {data.images.map((img, i) => (
+                        {data.images.map((img, i) => {
+                            const src = typeof img === "string" ? img : img.src;
+                            const alt = typeof img === "string" ? `Musikkurse ${i + 1}` : (img.alt || `Musikkurse ${i + 1}`);
+                            return (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, scale: 0.9 }}
@@ -44,9 +47,16 @@ const Musikkurse = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[4/3]"
                             >
-                                <img src={img} alt={`Musikkurse ${i + 1}`} className="w-full h-full object-cover" />
+                                <img
+                                    src={src}
+                                    alt={alt}
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="w-full h-full object-cover"
+                                />
                             </motion.div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>

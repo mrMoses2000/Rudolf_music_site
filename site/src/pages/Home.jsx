@@ -24,7 +24,7 @@ const Home = () => {
     };
 
     const startBlocks = content.pages?.start?.blocks || [];
-    const startMainBlocks = startBlocks.length > 2 ? startBlocks.slice(2) : startBlocks;
+    const startMainBlocks = startBlocks;
     const offerIntro = content.offer?.blocks?.[0]?.text || content.offer?.title;
     const titleWords = content.hero.title.split(" ");
     const primaryWords = titleWords.slice(0, 3);
@@ -39,6 +39,7 @@ const Home = () => {
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
                         alt="Musikschule Background"
                         className="w-full h-full object-cover opacity-75"
+                        fetchpriority="high"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-transparent"></div>
                 </motion.div>
@@ -171,11 +172,13 @@ const Home = () => {
                                         }}
                                     />
 
-                                    <img
-                                        src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
-                                        className="absolute inset-0 w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
-                                        alt={cat.title}
-                                    />
+                                <img
+                                    src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
+                                    className="absolute inset-0 w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
+                                    alt={cat.title}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
                                     <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
                                     <div className="p-8 md:p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">

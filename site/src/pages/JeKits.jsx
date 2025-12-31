@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 const JeKits = () => {
     const data = content.pages.jekits;
     const images = data.images || [];
+    const isSingleImage = images.length === 1;
 
     return (
         <div className="min-h-screen pb-24 text-ink">
@@ -33,9 +34,22 @@ const JeKits = () => {
             {/* Content */}
             <div className="px-6 md:px-12 max-w-5xl mx-auto pt-24 space-y-16">
                 <Blocks blocks={data.blocks} />
+            </div>
 
-                {images.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-12">
+            {isSingleImage && (
+                <section className="relative h-[50vh] mt-16 overflow-hidden border-t border-black/10">
+                    <img
+                        src={images[0].src}
+                        alt={images[0].alt || "JeKits"}
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/40 to-transparent"></div>
+                </section>
+            )}
+
+            {!isSingleImage && images.length > 0 && (
+                <div className="px-6 md:px-12 max-w-6xl mx-auto pt-12">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {images.map((image, i) => (
                             <motion.div
                                 key={i}
@@ -43,14 +57,20 @@ const JeKits = () => {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className={`rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[16/9] ${images.length === 1 ? 'md:col-span-3 aspect-[21/9]' : 'aspect-[4/3]'}`}
+                                className="rounded-3xl overflow-hidden border border-black/10 shadow-lg aspect-[4/3]"
                             >
-                                <img src={image.src} alt={image.alt || "JeKits"} className="w-full h-full object-cover" />
+                                <img
+                                    src={image.src}
+                                    alt={image.alt || "JeKits"}
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="w-full h-full object-cover"
+                                />
                             </motion.div>
                         ))}
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -46,7 +46,13 @@ const Kunst = () => {
                                 className="rounded-3xl overflow-hidden border border-black/10 bg-white/80 shadow-[0_20px_50px_rgba(43,36,29,0.12)] group"
                             >
                                 <div className="aspect-[4/3] bg-white overflow-hidden">
-                                    <img src={item.src} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                    <img
+                                        src={item.src}
+                                        alt={item.title}
+                                        loading="lazy"
+                                        decoding="async"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                    />
                                 </div>
                                 <div className="p-6 text-lg text-ink-muted font-bold">{item.title}</div>
                             </motion.div>

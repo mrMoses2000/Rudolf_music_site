@@ -50,8 +50,8 @@ export const content = {
         ],
         "documentsTitle": "Downloads",
         "documents": [
-            { "name": "Anmeldeformular & Vertrag", "url": "/documents/data-documents-Unterrichtsvertrag-A.pdf" },
-            { "name": "Gebührenordnung", "url": "/documents/data-documents-Unterrichtsvertrag-B.pdf" }
+            { "name": "Anmeldeformular & Vertrag", "url": "/images/data-documents-Unterrichtsvertrag-A.pdf" },
+            { "name": "Gebührenordnung", "url": "/images/data-documents-Unterrichtsvertrag-B.pdf" }
         ]
     },
     "offer": {
@@ -275,7 +275,21 @@ export const content = {
         },
         "standorte": {
             "title": "Standorte",
-            "blocks": []
+            "blocks": [
+                { "type": "p", "text": "Wir erteilen Musikunterricht an folgenden Standorten:" },
+                { "type": "h2", "text": "33647 Bielefeld - Brackwede" },
+                { "type": "p", "text": "Glockenweg 9" },
+                { "type": "p", "text": "(Gemeindehaus der MCG Bi-Brackwede)" },
+                { "type": "h2", "text": "33719 Bielefeld - Heepen" },
+                { "type": "p", "text": "Kleebrink 3" },
+                { "type": "p", "text": "(Gemeindehaus der MBG Bi-Heepen)" },
+                { "type": "h2", "text": "Christliche Musikschule Leopoldshöhe" },
+                { "type": "p", "text": "33818 Leopoldshöhe" },
+                { "type": "p", "text": "Krentruper Str. 20" },
+                { "type": "h2", "text": "32108 Bad Salzuflen (Kreis Lippe)" },
+                { "type": "p", "text": "Lagesche Str. 109" },
+                { "type": "p", "text": "Ameldung unter: 0521/3367416" }
+            ]
         },
         "jekits": {
             "title": "JeKits",
@@ -362,25 +376,28 @@ export const content = {
             "title": "Kunstunterricht",
             "headerImage": "/images/Kunstunterricht.png",
             "blocks": [
-                { "type": "h1", "text": "Kunstunterricht" },
+                { "type": "p", "text": "Christliche Musikschule Bielefeld e. V." },
                 { "type": "p", "text": "Im Kunstunterricht wird Freude und Interesse an ästhetischen Ausdrucksformen geweckt und gefördert. Das Vorstellungsvermögen der Schüler, ihre Kreativität und Fantasie werden entfaltet und entwickelt." },
                 { "type": "p", "text": "Ziel des Kunstunterrichts ist Bildung praktischer Fähigkeiten in verschiedenen Arten der künstlerischen Tätigkeit: Zeichnen; Öl-, Aquarellmalerei; Komposition, plastisches Gestalten." },
-                { "type": "h2", "text": "Angebot & Standorte" },
-                { "type": "p", "text": "Wir bieten Kunstunterricht in Kleingruppen in Unterrichtseinheiten von 90 Min. 1-mal in der Woche an." },
-                {
-                    "type": "ul", "items": [
-                        "Kleebrink 3, 33719 Bielefeld",
-                        "Krentruper Str. 20, 33818 Leopoldshöhe",
-                        "Osnabrücker Str. 176, 32257 Bünde"
-                    ]
-                },
+                { "type": "p", "text": "Wir bieten Kunstunterricht in Kleingruppen in:" },
+                { "type": "p", "text": "Kleebrink 3, 33719 Bielefeld." },
+                { "type": "p", "text": "Krentruper Str. 20, 33818 Leopoldshöhe," },
+                { "type": "p", "text": "Osnabrücker Str. 176, 32257 Bünde" },
+                { "type": "p", "text": "in Unterrichtseinheiten von 90 Min. 1-mal in der Woche." },
                 { "type": "p", "text": "Monatliche Gebühr: 35,- EUR" },
-                { "type": "p", "text": "Anmeldung unter: 0521/3367416 oder info@cms-bielefeld.de" }
+                { "type": "p", "text": "Anmeldung unter: 0521/3367416" },
+                { "type": "p", "text": "oder info@cms-bielefeld.de" },
+                { "type": "p", "text": "besuchen Sie uns im Internet: https://www.musikschule-cms-bielefeld.de" },
+                { "type": "h2", "text": "Bildergalerie" }
             ],
             "gallery": [
-                { "src": "/images/uploaded_image_0_1767156067013.png", "title": "Kunst Galerie 1" },
-                { "src": "/images/uploaded_image_1_1767156067013.png", "title": "Kunst Galerie 2" },
-                { "src": "/images/uploaded_image_2_1767156067013.png", "title": "Kunst Galerie 3" }
+                { "title": "Dyck Jana Landschaft Afrika 2018", "src": "/images/42189ee51904f4cfac9dd78268430f01_fit.jpg" },
+                { "title": "Lorenz Anna Sophie 2016", "src": "/images/4b091b29c8d513583704bf772ff526e2_fit.jpg" },
+                { "title": "Lorenz Anna Sophie 2018", "src": "/images/a5ec80309870f8e02ecee1673f45dc32_fit.jpg" },
+                { "title": "Nicole Reger Portrait Aquarell 2018", "src": "/images/dcdade3ee948f10294535505b95fc5b7_fit.jpg" },
+                { "title": "Schelling Amelie Brennen 2018", "src": "/images/6f8e937184f590ec3bae64094cf13f0d_fit.jpg" },
+                { "title": "Unruh Lea  Stilleben 2018", "src": "/images/8456442b2aa8f5b22c877a3fb7612916_fit.jpg" },
+                { "title": "Unruh Lea Kohle-Portrait 2018", "src": "/images/823d64ce71e48517301eab8d134ca26a_fit.jpg" }
             ]
         },
 

@@ -1,17 +1,15 @@
-import { content } from "../data/content";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import Blocks from "../components/Blocks";
+import { content } from "../data/content";
 
 const Jobs = () => {
-    // Ensure we access pages.jobs, falling back to safe defaults
     const data = content.pages?.jobs || {};
-    const title = data.title || "Stellenangebote";
+    const blocks = data.blocks || [];
+    const titleBlockIndex = blocks.findIndex((block) => block.type === "h1");
+    const title = titleBlockIndex >= 0 ? blocks[titleBlockIndex].text : data.title || "Stellenangebote";
     const headerImage = data.headerImage || "/images/Stellenangebote.png";
-
-    // Hardcoded fallback content if content.js structure is mismatched
-    const intro = "Wir suchen Verstärkung für unser Team!";
-    // Contact details from header or hardcoded if missing in jobs specific
-    const email = "info@cms-bielefeld.de";
-    const phone = content.header?.phone || "+49 (0) 521 3367416";
+    const bodyBlocks = blocks.filter((_, index) => index !== titleBlockIndex);
 
     return (
         <div className="min-h-screen pb-24 text-ink">
@@ -39,23 +37,16 @@ const Jobs = () => {
 
             {/* Content */}
             <div className="px-6 md:px-12 max-w-4xl mx-auto pt-24 mb-24">
-                <div className="glass p-10 rounded-3xl border border-black/10 space-y-8 shadow-[0_20px_60px_rgba(199,154,85,0.1)]">
-                    <p className="text-2xl text-gold font-bold italic">
-                        "{intro}"
-                    </p>
-
-                    <div className="text-ink-muted text-lg leading-relaxed space-y-6">
-                        <p>Aktuell haben wir keine offenen Stellen. Wir freuen uns jedoch immer über Initiativbewerbungen engagierter Lehrkräfte.</p>
-                        <p>Senden Sie Ihre Unterlagen bitte per E-Mail an:</p>
-                    </div>
-
-                    <div className="pt-8 border-t border-black/10">
-                        <h3 className="text-ink-muted uppercase tracking-widest text-sm font-black mb-6">Kontakt für Bewerbungen</h3>
-                        <div className="flex flex-col md:flex-row md:items-center gap-6">
-                            <a href={`mailto:${email}`} className="text-xl md:text-3xl text-ink font-bold hover:text-gold transition-colors">
-                                {email}
-                            </a>
-                        </div>
+                <div className="glass p-10 rounded-3xl border border-black/10 space-y-10 shadow-[0_20px_60px_rgba(199,154,85,0.1)]">
+                    <Blocks blocks={bodyBlocks} />
+                    <div className="pt-6 border-t border-black/10">
+                        <Link
+                            to="/contact"
+                            state={{ subject: "Bewerbung: Stellenangebote" }}
+                            className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-ink text-paper font-black uppercase tracking-widest text-sm hover:bg-gold hover:text-ink transition-colors"
+                        >
+                            Jetzt Anmelden
+                        </Link>
                     </div>
                 </div>
             </div>

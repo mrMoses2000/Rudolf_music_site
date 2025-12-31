@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 const TAG_CLASSES = {
     h1: "text-3xl md:text-4xl font-outfit font-black text-ink leading-tight",
     h2: "text-2xl md:text-3xl font-outfit font-bold text-ink leading-tight",
     h3: "text-xl md:text-2xl font-outfit font-bold text-ink leading-tight",
     h4: "text-lg md:text-xl font-outfit font-semibold text-ink/90 leading-relaxed",
-    p: "text-base md:text-lg text-ink-muted leading-relaxed",
+    p: "text-base md:text-lg text-ink-muted leading-relaxed whitespace-pre-line",
     li: "text-base md:text-lg text-ink-muted leading-relaxed"
 };
 
@@ -83,6 +83,8 @@ const renderTextWithLink = (text) => {
 };
 
 const Blocks = ({ blocks = [], className = "" }) => {
+    const reduceMotion = useReducedMotion();
+    const enableMotion = !reduceMotion && blocks.length <= 20;
     const elements = [];
     let index = 0;
 
@@ -95,30 +97,54 @@ const Blocks = ({ blocks = [], className = "" }) => {
                 index += 1;
             }
             elements.push(
-                <motion.div key={`list-${index}`} variants={itemVariants}>
-                    <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
-                        {items.map((item, itemIndex) => (
-                            <li key={`li-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
-                                {renderTextWithLink(item)}
-                            </li>
-                        ))}
-                    </ul>
-                </motion.div>
+                enableMotion ? (
+                    <motion.div key={`list-${index}`} variants={itemVariants}>
+                        <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
+                            {items.map((item, itemIndex) => (
+                                <li key={`li-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
+                                    {renderTextWithLink(item)}
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
+                ) : (
+                    <div key={`list-${index}`}>
+                        <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
+                            {items.map((item, itemIndex) => (
+                                <li key={`li-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
+                                    {renderTextWithLink(item)}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )
             );
             continue;
         }
 
         if (block.type === "ul" && block.items) {
             elements.push(
-                <motion.div key={`ul-${index}`} variants={itemVariants}>
-                    <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
-                        {block.items.map((item, itemIndex) => (
-                            <li key={`ul-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
-                                {renderTextWithLink(item)}
-                            </li>
-                        ))}
-                    </ul>
-                </motion.div>
+                enableMotion ? (
+                    <motion.div key={`ul-${index}`} variants={itemVariants}>
+                        <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
+                            {block.items.map((item, itemIndex) => (
+                                <li key={`ul-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
+                                    {renderTextWithLink(item)}
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
+                ) : (
+                    <div key={`ul-${index}`}>
+                        <ul className="list-disc pl-6 space-y-2 marker:text-gold/70">
+                            {block.items.map((item, itemIndex) => (
+                                <li key={`ul-${index}-${itemIndex}`} className={TAG_CLASSES.li}>
+                                    {renderTextWithLink(item)}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )
             );
             index += 1;
             continue;
@@ -126,13 +152,25 @@ const Blocks = ({ blocks = [], className = "" }) => {
 
         const Tag = TAG_CLASSES[block.type] ? block.type : "p";
         elements.push(
-            <motion.div key={`block-${index}`} variants={itemVariants}>
-                <Tag className={TAG_CLASSES[block.type] || TAG_CLASSES.p}>
-                    {renderTextWithLink(block.text)}
-                </Tag>
-            </motion.div>
+            enableMotion ? (
+                <motion.div key={`block-${index}`} variants={itemVariants}>
+                    <Tag className={TAG_CLASSES[block.type] || TAG_CLASSES.p}>
+                        {renderTextWithLink(block.text)}
+                    </Tag>
+                </motion.div>
+            ) : (
+                <div key={`block-${index}`}>
+                    <Tag className={TAG_CLASSES[block.type] || TAG_CLASSES.p}>
+                        {renderTextWithLink(block.text)}
+                    </Tag>
+                </div>
+            )
         );
         index += 1;
+    }
+
+    if (!enableMotion) {
+        return <div className={`space-y-6 ${className}`}>{elements}</div>;
     }
 
     return (

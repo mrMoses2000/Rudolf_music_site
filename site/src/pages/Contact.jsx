@@ -20,7 +20,9 @@ const Contact = () => {
 
         let initialSubject = "";
 
-        if (location.state?.instrument) {
+        if (location.state?.subject) {
+            initialSubject = location.state.subject;
+        } else if (location.state?.instrument) {
             initialSubject = `Anmeldung für: ${location.state.instrument}`;
         } else if (querySubject) {
             initialSubject = querySubject;

@@ -5,8 +5,13 @@ import { content } from "../data/content";
 
 const InstrumentPage = () => {
     const { name } = useParams();
-    // Fallback to piano if not found, but name usually matches slug
-    const instrumentData = content.instruments[name.toLowerCase()] || content.instruments["klavier"];
+    const normalizedName = name.toLowerCase();
+    const resolvedKey = content.instruments[normalizedName]
+        ? normalizedName
+        : normalizedName === "gesangunterricht"
+          ? "gesang"
+          : normalizedName;
+    const instrumentData = content.instruments[resolvedKey] || content.instruments["klavier"];
     const containerRef = useRef(null);
 
     const { scrollYProgress } = useScroll({
@@ -26,10 +31,11 @@ const InstrumentPage = () => {
         })
     );
 
-    const lines = instrumentData.lines || instrumentData.description || [];
-
-    // Ensure we handle array or string description
-    const descriptionContent = Array.isArray(lines) ? lines : [lines];
+    const descriptionContent = Array.isArray(instrumentData.lines)
+        ? instrumentData.lines
+        : typeof instrumentData.description === "string"
+          ? instrumentData.description.split(/\n\s*\n/).map((line) => line.trim()).filter(Boolean)
+          : [];
 
     return (
         <div ref={containerRef} className="min-h-screen">
@@ -61,7 +67,7 @@ const InstrumentPage = () => {
                         </h1>
 
                         <Link
-                            to={`/contact?subject=Anmeldung für ${instrumentData.title}`}
+                            to={`/contact?subject=${encodeURIComponent(`Anmeldung für ${instrumentData.title}`)}`}
                             className="inline-flex items-center gap-4 bg-gold text-paper px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-sm hover:bg-ink hover:text-white hover:scale-105 transition-all shadow-[0_20px_40px_rgba(199,154,85,0.4)]"
                         >
                             Jetzt Anmelden <span className="text-xl">→</span>
@@ -86,6 +92,7 @@ const InstrumentPage = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.05 * i }}
+                            className="whitespace-pre-line"
                         >
                             {line}
                         </motion.p>
