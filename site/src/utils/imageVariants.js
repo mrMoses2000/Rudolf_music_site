@@ -28,3 +28,5 @@ const webpSrcSets = {
 };
 
 export const getWebpSrcSet = (src) => webpSrcSets[src];
+    "/images/Aktuelles.png": buildWebpSrcSet("/images/Aktuelles.png", [1280, 1920, 3120]),
+    "/images/Gebuehren.png": buildWebpSrcSet("/images/Gebuehren.png", [1280, 1920, 2640]),

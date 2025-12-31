@@ -41,8 +41,7 @@ const About = () => {
             <section className="px-6 md:px-12 max-w-7xl mx-auto py-32 grid grid-cols-1 font-bold text-ink-muted text-xl leading-relaxed">
                 <motion.div
                     initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     className="space-y-12"
                 >

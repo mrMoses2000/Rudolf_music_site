@@ -38,9 +38,12 @@
     - Removed About icon rendering (no external image).
     - Removed Musikkurse logo strip images.
     - Added lightweight container animation for long block pages and About content.
+    - Fixed Blocks/Über uns animations to mount (avoid invisible content).
+    - Added WebP + srcset for Aktuelles/Gebuehren hero images; wired sizes/useSrcSet.
+    - Fixed Aktuelles missing Blocks import.
   - Now:
     - Clarify "current Impressum data" requirements and adjust if different from live/legacy.
-    - Investigate 1s header/hero image load latency if still reported; decide on srcset/preload or animation tweaks.
+    - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
   - Next:
     - Propose/iterate additional lightweight animations only if desired after reviewing performance.
 - Open questions (UNCONFIRMED if needed):

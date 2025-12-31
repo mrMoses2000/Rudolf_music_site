@@ -10,12 +10,14 @@ const Fees = () => {
             <section className="relative h-[50vh] flex items-end pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
-                        src="/images/fees_hero_upscale_1767157346173.png"
+                        src={content.fees.headerImage || "/images/Gebuehren.png"}
                         alt="Fees Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-50 saturate-110"
                         loading="eager"
                         fetchPriority="high"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/70 to-transparent"></div>
                 </div>

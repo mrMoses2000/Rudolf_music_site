@@ -13,8 +13,9 @@ export const content = {
         "aboutBtn": "Über uns"
     },
     "fees": {
-        "title": "Gebühren/Anmeldung",
-        "tableTitle": "Gebührenliste",
+        "title": "Gebühren & Anmeldung",
+        "headerImage": "/images/Gebuehren.png",
+        "tableTitle": "Unterrichtsentgelte",
         "tableHeader": [
             "Instrumentalunterricht / Gesangunterricht / Kunstunterricht",
             "Monatliche Unterrichtsgebühr\n(für die Verträge ab den 01.01.2024"
@@ -346,6 +347,7 @@ export const content = {
         },
         "aktuelles": {
             "title": "Aktuelles",
+            "headerImage": "/images/Aktuelles.png",
             "blocks": [
                 { "type": "p", "text": "Abschlussprüfungen 2024-2025 in Leopoldshöhe" },
                 { "type": "p", "text": "Liebe Schüler, liebe Eltern," },

@@ -178,8 +178,7 @@ const Blocks = ({ blocks = [], className = "" }) => {
             <motion.div
                 className={`space-y-6 ${className}`}
                 initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
                 {elements}
