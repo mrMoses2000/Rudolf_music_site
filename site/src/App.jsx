@@ -27,7 +27,7 @@ const App = () => {
       reducedMotion="user"
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
-      <AnimatePresence initial={false}>
+      <AnimatePresence>
         <ScrollToTop />
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Layout />}>

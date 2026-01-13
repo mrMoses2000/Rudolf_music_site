@@ -24,6 +24,7 @@ export default {
         outfit: ['Outfit', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
         libre: ['"Libre Baskerville"', 'serif'],
+        cinzel: ['Cinzel', 'serif'],
       }
     },
   },

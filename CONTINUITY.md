@@ -1,10 +1,10 @@
 # CONTINUITY.md
 
 - Goal (incl. success criteria):
-  - Ensure 1:1 content migration from `music_site_copy/` to `site/` (text structure/blocks, logos/abbreviations) and deliver UX upgrades without breaking routing; address perceived header-image load lag; fix About page rendering; all changes in Russian comms.
+  - Make Psalm 103 label/line appear after typewriter completes and set their color to black; keep hero animations stable; create a Russian git commit for the hero changes.
 - Constraints/Assumptions:
   - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
-  - Use Context7 before implementing new functionality (framework/API usage).
+  - Language rule: communicate in Russian.
   - Sandbox: danger-full-access; network enabled; approval_policy never.
 - Key decisions:
   - Use `SmartImage` with `<picture>` and WebP `srcSet` for hero/large images.
@@ -49,15 +49,33 @@
     - Mobile responsiveness pass across Home/Offer/Fees/About/Contact/JeKits/Musikkurse/Kunst/Jobs/Aktuelles/InstrumentPage (hero sizing, spacing, buttons, table padding).
     - Fees mobile table header now visible (mobile-only header) with price column header hidden on small screens.
     - Mobile hamburger menu now matches desktop nav items/order.
+    - Attempted `./run.sh`; script progressed to generating `site/Dockerfile`/`site/nginx.conf` but failed on missing `free` and `sudo` password prompt.
+    - Home page implementation reviewed (structure, data flow, performance/SEO/accessibility risks identified).
+    - User confirmed local run via Vite (`npm run dev`) and HMR workflow.
+    - Tightened hero title/subtitle spacing on Home page (`-mt-8` -> `-mt-12`).
+    - Started Vite dev server on `http://localhost:5173/` (PID 31875) after sandbox escalation.
+    - Tightened hero title/subtitle spacing further (`-mt-12` -> `-mt-16`).
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 32310).
+    - Identified spacing issue cause: parent `space-y` rule overrides child margin utility.
+    - Grouped hero title + subtitle in wrapper with `space-y-2` to control their spacing directly.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 32665).
+    - Increased hero title/subtitle spacing by changing wrapper `space-y-2` to `space-y-6`.
+    - Re-enabled initial animations by removing `initial={false}` from `AnimatePresence` in `App.jsx`.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 34942).
+    - Added typewriter effect for hero psalm with German quotes and blinking caret.
+    - Increased visibility for Psalm 103 line/label with darker gold and shadow.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 35764).
+    - Set Psalm 103 line/label to black and delayed their appearance until typewriter finishes.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 36276).
+    - Added root `.gitignore` to ignore `.DS_Store`.
+    - Added `font-cinzel` to Tailwind config to match the new hero title font.
+    - Ignored generated `site/Dockerfile` and `site/nginx.conf` in `site/.gitignore`.
   - Now:
-    - Verify Über uns and Impressum rendering on the server after recent fixes.
-    - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
+    - Prepare a Russian commit; stage updated files.
   - Next:
-    - Propose/iterate additional lightweight animations only if desired after reviewing performance.
+    - Fine-tune spacing if needed.
 - Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: Какие именно данные для Impressum должны быть «нынешними» (адрес/телефон/email/ответственные)?
-  - UNCONFIRMED: Which page/which “оглавление” image loads slowly (hero/offer cards/etc.) and is it network delay or motion fade?
-  - UNCONFIRMED: Restore legacy header phone/psalm strip on desktop, or keep current cleaner header?
+  - UNCONFIRMED: Нужен ли перезапуск Vite после правки `tailwind.config.js`?
 - Working set (files/ids/commands):
-  - Files: `site/src/data/content.js`, `site/src/pages/About.jsx`, `site/src/pages/Offer.jsx`, `site/src/pages/JeKits.jsx`, `site/src/pages/Musikkurse.jsx`, `site/src/components/Blocks.jsx`, `site/src/App.jsx`.
-  - Commands: `rg --files`, image conversion scripts (`cwebp`).
+  - Files: `site/src/pages/Home.jsx`, `site/src/data/content.js`, `site/src/components/Blocks.jsx`.
+  - Commands: `rg --files`, `npm run dev`.

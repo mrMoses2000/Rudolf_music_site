@@ -1,6 +1,6 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import { content } from "../data/content";
 import Blocks from "../components/Blocks";
 import SmartImage from "../components/SmartImage";
@@ -17,12 +17,56 @@ const Home = () => {
     const scaleHero = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const reduceMotion = useReducedMotion();
+
+    const psalmText = (content.hero?.psalm || "")
+        .replace(/["“”„]/g, "")
+        .replace(/\s*Psalm\s*103\s*$/i, "")
+        .trim();
+    const psalmQuote = psalmText ? `„${psalmText}“` : "";
+    const [typedPsalm, setTypedPsalm] = useState(psalmQuote);
+    const [isPsalmDone, setIsPsalmDone] = useState(true);
 
     const handleMouseMove = (e) => {
         const { clientX, clientY, currentTarget } = e;
         const { left, top } = currentTarget.getBoundingClientRect();
         setMousePos({ x: clientX - left, y: clientY - top });
     };
+
+    useEffect(() => {
+        if (!psalmQuote) {
+            setTypedPsalm("");
+            setIsPsalmDone(true);
+            return;
+        }
+        if (reduceMotion) {
+            setTypedPsalm(psalmQuote);
+            setIsPsalmDone(true);
+            return;
+        }
+
+        let index = 0;
+        let timeoutId;
+
+        setTypedPsalm("");
+        setIsPsalmDone(false);
+
+        const tick = () => {
+            index += 1;
+            setTypedPsalm(psalmQuote.slice(0, index));
+            if (index < psalmQuote.length) {
+                timeoutId = setTimeout(tick, 28);
+            } else {
+                setIsPsalmDone(true);
+            }
+        };
+
+        timeoutId = setTimeout(tick, 220);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [psalmQuote, reduceMotion]);
 
     const startBlocks = content.pages?.start?.blocks || [];
     const startMainBlocks = useMemo(() => {
@@ -69,60 +113,67 @@ const Home = () => {
                         >
                             {/* Quote Text */}
                             <p className="font-libre text-lg sm:text-xl md:text-2xl text-ink italic leading-relaxed flex-1">
-                                "{content.hero.psalm.replace(' Psalm 103', '')}"
+                                {typedPsalm}
+                                {!reduceMotion && typedPsalm.length < psalmQuote.length && (
+                                    <span className="typewriter-caret" aria-hidden="true">
+                                        |
+                                    </span>
+                                )}
                             </p>
 
                             {/* Psalm 103 Badge - On the Right */}
                             <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.8, duration: 0.6 }}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={isPsalmDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                                transition={{ duration: 0.6 }}
                                 className="flex items-center gap-3 shrink-0"
                             >
-                                <span className="w-10 h-0.5 bg-gold rounded-full"></span>
-                                <span className="text-gold font-black uppercase tracking-[0.2em] text-sm whitespace-nowrap">
+                                <span className="w-12 h-1 bg-ink rounded-full"></span>
+                                <span className="text-ink font-black uppercase tracking-[0.2em] text-sm whitespace-nowrap">
                                     Psalm 103
                                 </span>
                             </motion.div>
                         </motion.blockquote>
 
-                        {/* Main Title - First */}
-                        <h1 className="text-3xl sm:text-5xl md:text-[7rem] font-outfit font-black leading-[0.9] tracking-tighter uppercase max-w-5xl text-ink break-words hyphens-auto mt-40">
-                            {primaryWords.map((word, i) => (
-                                <motion.span
-                                    key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
-                                    className="inline-block mr-4"
-                                >
-                                    {word}
-                                </motion.span>
-                            ))}
-                            {secondaryWords && (
-                                <>
-                                    <br />
+                        <div className="space-y-6">
+                            {/* Main Title - First */}
+                            <h1 className="text-3xl sm:text-5xl md:text-[7rem] font-outfit font-black leading-[0.9] tracking-tighter uppercase max-w-5xl text-ink break-words hyphens-auto mt-40">
+                                {primaryWords.map((word, i) => (
                                     <motion.span
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.9, duration: 1 }}
-                                        className="text-gold inline-block"
+                                        key={i}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
+                                        className="inline-block mr-4"
                                     >
-                                        {secondaryWords}
+                                        {word}
                                     </motion.span>
-                                </>
-                            )}
-                        </h1>
+                                ))}
+                                {secondaryWords && (
+                                    <>
+                                        <br />
+                                        <motion.span
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.9, duration: 1 }}
+                                            className="text-gold inline-block"
+                                        >
+                                            {secondaryWords}
+                                        </motion.span>
+                                    </>
+                                )}
+                            </h1>
 
-                        {/* Welcome Text - Second */}
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1, duration: 0.8 }}
-                            className="text-sm sm:text-base md:text-lg text-ink tracking-[0.1em] font-black uppercase -mt-8"
-                        >
-                            {content.hero.subtitle}
-                        </motion.p>
+                            {/* Welcome Text - Second */}
+                            <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 1, duration: 0.8 }}
+                                className="text-sm sm:text-base md:text-lg text-ink tracking-[0.1em] font-black uppercase"
+                            >
+                                {content.hero.subtitle}
+                            </motion.p>
+                        </div>
 
                         {/* CTA Buttons */}
                         <motion.div
