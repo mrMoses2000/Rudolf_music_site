@@ -37,7 +37,7 @@ const Home = () => {
     return (
         <div className="text-ink">
             {/* Hero Section - Premium Parallax */}
-            <section ref={heroRef} className="relative min-h-[100vh] flex items-end pb-20 sm:pb-32 px-6 md:px-12 overflow-hidden">
+            <section ref={heroRef} className="relative min-h-[100vh] flex items-end pb-20 sm:pb-32 pt-28 md:pt-32 px-6 md:px-12 overflow-hidden">
                 <motion.div style={{ y, scale: scaleHero }} className="absolute inset-0 z-0">
                     <SmartImage
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
@@ -58,34 +58,42 @@ const Home = () => {
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="space-y-8"
+                        className="space-y-12 md:space-y-16"
                     >
-                        <div className="flex items-center gap-4">
-                            <motion.span
-                                initial={{ width: 0 }}
-                                animate={{ width: 48 }}
-                                transition={{ delay: 0.5, duration: 0.8 }}
-                                className="h-1 bg-gold rounded-full"
-                            ></motion.span>
-                            <span className="text-gold font-black uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[10px]">
-                                {content.hero.psalm.split(' ').slice(-2).join(' ')}
-                            </span>
-                        </div>
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
+                        {/* Psalm Quote - Elegant Design */}
+                        <motion.blockquote
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6, duration: 0.8 }}
-                            className="text-sm sm:text-base md:text-xl text-ink tracking-[0.1em] font-black uppercase"
+                            transition={{ delay: 0.3, duration: 0.8 }}
+                            className="relative flex flex-col md:flex-row md:items-start gap-6 md:gap-10"
                         >
-                            {content.hero.subtitle}
-                        </motion.p>
-                        <h1 className="text-3xl sm:text-5xl md:text-[10rem] font-outfit font-black mb-6 leading-[0.85] tracking-tighter uppercase max-w-6xl text-ink break-words hyphens-auto">
+                            {/* Quote Text */}
+                            <p className="font-libre text-lg sm:text-xl md:text-2xl text-ink italic leading-relaxed flex-1">
+                                "{content.hero.psalm.replace(' Psalm 103', '')}"
+                            </p>
+
+                            {/* Psalm 103 Badge - On the Right */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.8, duration: 0.6 }}
+                                className="flex items-center gap-3 shrink-0"
+                            >
+                                <span className="w-10 h-0.5 bg-gold rounded-full"></span>
+                                <span className="text-gold font-black uppercase tracking-[0.2em] text-sm whitespace-nowrap">
+                                    Psalm 103
+                                </span>
+                            </motion.div>
+                        </motion.blockquote>
+
+                        {/* Main Title - First */}
+                        <h1 className="text-3xl sm:text-5xl md:text-[7rem] font-outfit font-black leading-[0.9] tracking-tighter uppercase max-w-5xl text-ink break-words hyphens-auto mt-40">
                             {primaryWords.map((word, i) => (
                                 <motion.span
                                     key={i}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2 + i * 0.1, duration: 0.8 }}
+                                    transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
                                     className="inline-block mr-4"
                                 >
                                     {word}
@@ -97,7 +105,7 @@ const Home = () => {
                                     <motion.span
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.6, duration: 1 }}
+                                        transition={{ delay: 0.9, duration: 1 }}
                                         className="text-gold inline-block"
                                     >
                                         {secondaryWords}
@@ -105,11 +113,23 @@ const Home = () => {
                                 </>
                             )}
                         </h1>
+
+                        {/* Welcome Text - Second */}
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 1, duration: 0.8 }}
+                            className="text-sm sm:text-base md:text-lg text-ink tracking-[0.1em] font-black uppercase -mt-8"
+                        >
+                            {content.hero.subtitle}
+                        </motion.p>
+
+                        {/* CTA Buttons */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row gap-6"
+                            transition={{ delay: 1.2, duration: 0.8 }}
+                            className="flex flex-col sm:flex-row gap-6 mt-8"
                         >
                             <Link to="/offer" className="group bg-ink text-paper px-8 py-4 sm:px-14 sm:py-5 rounded-full font-black text-base sm:text-lg uppercase tracking-widest hover:text-ink transition-all active:scale-95 shadow-[0_20px_50px_rgba(43,36,29,0.25)] relative overflow-hidden text-center w-full sm:w-auto">
                                 <span className="relative z-10">{content.hero.offerBtn}</span>
@@ -208,24 +228,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Quote Section */}
-            <section className="py-32 sm:py-48 lg:py-60 bg-[#F0E6D8] relative overflow-hidden">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.5 }}
-                    className="max-w-5xl mx-auto px-6 text-center"
-                >
-                    <h2 className="text-3xl sm:text-4xl md:text-7xl font-outfit font-black text-ink leading-[1.1] md:px-12 italic opacity-90 tracking-tighter uppercase">
-                        {content.hero.psalm}
-                    </h2>
-                    <div className="mt-10 sm:mt-16 flex items-center justify-center gap-6">
-                        <div className="w-20 h-[1px] bg-gold/50"></div>
-                        <p className="text-gold uppercase tracking-[0.8em] text-[10px] font-black">Psalm 103</p>
-                        <div className="w-20 h-[1px] bg-gold/50"></div>
-                    </div>
-                </motion.div>
-            </section>
         </div>
     );
 };
