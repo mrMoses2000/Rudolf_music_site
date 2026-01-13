@@ -182,14 +182,14 @@ const Home = () => {
                                         }}
                                     />
 
-                                <SmartImage
-                                    src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
-                                    alt={cat.title}
-                                    className="absolute inset-0"
-                                    imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
+                                    <SmartImage
+                                        src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
+                                        alt={cat.title}
+                                        className="absolute inset-0"
+                                        imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
                                     <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
                                     <div className="p-6 sm:p-8 md:p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">

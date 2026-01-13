@@ -17,12 +17,11 @@ const Layout = () => {
         <div className="min-h-screen bg-paper text-ink font-inter selection:bg-gold selection:text-paper">
             <header className="fixed top-0 w-full z-50 bg-paper/80 backdrop-blur-md py-4 px-6 md:px-12 flex justify-between items-center border-b border-black/5">
                 <Link to="/" className="flex items-center gap-3 group relative z-50">
-                    <div className="w-10 h-10 bg-ink rounded-full flex items-center justify-center font-outfit font-black text-paper text-[10px] tracking-[0.3em] pl-[0.3em] transition-transform group-hover:scale-110">
-                        {content.header.acronym || content.header.title.split(' ').map(word => word[0]).join('')}
-                    </div>
-                    <span className="font-outfit text-xl font-black tracking-tighter uppercase text-ink">
-                        {content.header.acronym || content.header.title.split(' ').map(word => word[0]).join('')}
-                    </span>
+                    <img
+                        src="/images/logo.svg"
+                        alt="CMS Logo"
+                        className="h-16 w-auto grayscale brightness-0 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-300"
+                    />
                 </Link>
 
                 {/* Desktop Nav */}
@@ -108,9 +107,11 @@ const Layout = () => {
             <footer className="py-20 border-t border-black/10 bg-[#F0E6D8] px-6">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div className="space-y-6">
-                        <div className="w-12 h-12 bg-ink rounded-full flex items-center justify-center font-outfit font-black text-paper text-[11px] tracking-[0.35em] pl-[0.35em]">
-                            {content.header.acronym || content.header.title.split(' ').map(word => word[0]).join('')}
-                        </div>
+                        <img
+                            src="/images/logo.svg"
+                            alt="CMS Logo"
+                            className="h-20 w-auto grayscale brightness-0 hover:grayscale-0 hover:brightness-100 transition-all duration-300"
+                        />
                         <p className="text-ink-muted text-sm leading-relaxed max-w-xs italic">
                             {content.hero.psalm}
                         </p>
