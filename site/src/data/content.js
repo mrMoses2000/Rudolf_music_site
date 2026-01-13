@@ -6,8 +6,8 @@ export const content = {
         "acronym": "CMS"
     },
     "hero": {
-        "title": "Musikschule CMS Bielefeld",
-        "subtitle": "Hallo und herzlich willkommen auf der Homepage der",
+        "title": "Christliche Musikschule Bielefeld",
+        "subtitle": "Hallo und herzlich willkommen auf unserer Homepage",
         "psalm": "\"Lobe den Herrn meine Seele und vergiss nicht, was er dir Gutes getan hat...\" Psalm 103",
         "offerBtn": "Angebot",
         "aboutBtn": "Über uns"
@@ -263,8 +263,8 @@ export const content = {
         "start": {
             "title": "Start",
             "blocks": [
-                { "type": "h1", "text": "Hallo und herzlich willkommen auf der Homepage der" },
-                { "type": "h1", "text": "Musikschule CMS Bielefeld" },
+                { "type": "h1", "text": "Hallo und herzlich willkommen auf unserer Homepage" },
+                { "type": "h1", "text": "Christliche Musikschule Bielefeld" },
                 { "type": "h1", "text": "Wir freuen uns, dass Sie uns im Internet besuchen!" },
                 { "type": "p", "text": "Unsere Musikschule erteilt Musikunterricht, Gesangunterricht und Kunstunterricht an verschiedenen Unterrichtsorten." },
                 { "type": "p", "text": "Informieren Sie sich auf unserer Website über uns und unser Angebot." },

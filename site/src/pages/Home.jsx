@@ -75,7 +75,7 @@ const Home = () => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="text-xs sm:text-sm md:text-base text-ink-muted tracking-[0.15em] font-black"
+                            className="text-sm sm:text-base md:text-xl text-ink tracking-[0.1em] font-black uppercase"
                         >
                             {content.hero.subtitle}
                         </motion.p>
