@@ -15,57 +15,55 @@ const Layout = () => {
 
     return (
         <div className="min-h-screen bg-paper text-ink font-inter selection:bg-gold selection:text-paper">
-            <header className="fixed top-0 w-full z-50 bg-paper/80 backdrop-blur-md py-4 px-6 md:px-12 flex justify-between items-center border-b border-black/5">
-                <Link to="/" className="flex items-center gap-3 group relative z-50">
+            <header className="fixed top-0 w-full z-50 bg-paper/80 backdrop-blur-md py-3 px-6 md:px-12 flex justify-between items-center border-b border-black/5">
+                {/* Left: Logo + Text */}
+                <Link to="/" className="flex items-center gap-2 group relative z-50">
                     <img
                         src="/images/logo.svg"
                         alt="CMS Logo"
-                        className="h-16 w-auto grayscale brightness-0 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-300"
+                        className="h-14 w-auto grayscale brightness-0 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-300"
                     />
+                    <div className="hidden sm:flex flex-col h-14 justify-center gap-0.5 ml-2">
+                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Christliche</span>
+                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Musikschule</span>
+                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Bielefeld</span>
+                    </div>
                 </Link>
 
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex gap-8 font-bold text-sm uppercase tracking-widest text-ink-muted">
-                    <Link to="/" className="hover:text-ink transition-colors">Start</Link>
-                    <Link to="/about" className="hover:text-ink transition-colors">Über uns</Link>
-                    <Link to="/offer" className="hover:text-ink transition-colors">Angebot</Link>
-                    <Link to="/aktuelles" className="hover:text-ink transition-colors">Aktuelles</Link>
-                    <Link to="/fees" className="hover:text-ink transition-colors">Gebühren/Anmeldung</Link>
-                    <Link to="/agb" className="hover:text-ink transition-colors">AGB</Link>
-                    <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
-                </nav>
+                {/* Right: Nav + Button grouped */}
+                <div className="flex items-center gap-4 lg:gap-6">
+                    {/* Desktop Nav */}
+                    <nav className="hidden lg:flex gap-5 font-bold text-xs uppercase tracking-widest text-ink-muted">
+                        <Link to="/" className="hover:text-ink transition-colors">Start</Link>
+                        <Link to="/about" className="hover:text-ink transition-colors">Über uns</Link>
+                        <Link to="/offer" className="hover:text-ink transition-colors">Angebot</Link>
+                        <Link to="/aktuelles" className="hover:text-ink transition-colors">Aktuelles</Link>
+                        <Link to="/fees" className="hover:text-ink transition-colors">Gebühren/Anmeldung</Link>
+                        <Link to="/agb" className="hover:text-ink transition-colors">AGB</Link>
+                        <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
+                    </nav>
 
-                <div className="flex items-center gap-4 md:gap-8">
-                    <div className="hidden lg:flex flex-col items-end">
-                        {/* Phone number removed as per user request
-                        <span className="text-[10px] font-black uppercase tracking-widest text-gold opacity-80">Rufen Sie uns an</span>
-                        <a href={`tel:${content.header.phone.replace(/\D/g, '')}`} className="text-ink font-bold text-sm hover:text-gold transition-colors">
-                            {content.header.phone}
-                        </a>
-                        */}
-                    </div>
-
-                    {/* Anmelden Button - Fixed */}
-                    <Link to="/contact" className="hidden sm:block bg-ink text-paper px-8 py-3 rounded-full font-black text-sm uppercase tracking-widest hover:bg-gold hover:text-ink hover:scale-105 transition-all active:scale-95 shadow-[0_18px_40px_rgba(43,36,29,0.2)]">
+                    {/* Kontakt Button */}
+                    <Link to="/contact" className="hidden sm:block bg-ink text-paper px-6 py-2.5 rounded-full font-black text-xs uppercase tracking-widest hover:bg-gold hover:text-ink hover:scale-105 transition-all active:scale-95 shadow-[0_12px_30px_rgba(43,36,29,0.15)]">
                         {content.header.cta}
                     </Link>
 
                     {/* Mobile Hamburger */}
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="md:hidden relative z-50 w-10 h-10 flex flex-col justify-center items-end gap-1.5 group"
+                        className="lg:hidden relative z-50 w-10 h-10 flex flex-col justify-center items-end gap-1.5 group"
                     >
                         <motion.span
                             animate={isMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                            className="w-8 h-[2px] bg-ink block origin-center"
+                            className="w-7 h-[2px] bg-ink block origin-center"
                         />
                         <motion.span
                             animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-                            className="w-6 h-[2px] bg-ink block"
+                            className="w-5 h-[2px] bg-ink block"
                         />
                         <motion.span
-                            animate={isMenuOpen ? { rotate: -45, y: -6, width: 32 } : { rotate: 0, y: 0, width: 16 }}
-                            className="w-4 h-[2px] bg-ink block origin-center group-hover:w-8 transition-all"
+                            animate={isMenuOpen ? { rotate: -45, y: -6, width: 28 } : { rotate: 0, y: 0, width: 14 }}
+                            className="w-3.5 h-[2px] bg-ink block origin-center group-hover:w-7 transition-all"
                         />
                     </button>
                 </div>
