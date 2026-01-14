@@ -24,6 +24,8 @@
     - Встроен `LazyYouTube` (ленивая подгрузка iframe по клику) для снижения начальной нагрузки JS.
     - Исправлены ссылки на устаревшие `.png` в `content.js` на `.webp`.
     - Подключены self‑host шрифты Inter/Outfit/Libre Baskerville (woff2) и убран Google Fonts import.
+    - Добавлены уменьшенные WebP‑варианты для hero/карточек (Offer/Kunst/Contact/About) и расширены srcset‑списки.
+    - В Kunst‑галерее включены `useSrcSet` + `sizes` для более лёгких превью.
   - Now:
     - Завершить merge‑коммит после разрешения конфликтов.
     - Проверить, что `run.sh` и HTTPS работают после мерджа.
