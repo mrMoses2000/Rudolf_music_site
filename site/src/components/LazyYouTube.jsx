@@ -12,6 +12,11 @@ const LazyYouTube = ({
     if (!videoId) return null;
 
     const thumbnailSrc = `https://i.ytimg.com/vi/${videoId}/${thumbnailQuality}.jpg`;
+    const thumbnailSrcSet = [
+        `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg 1280w`,
+        `https://i.ytimg.com/vi/${videoId}/sddefault.jpg 640w`,
+        `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg 480w`
+    ].join(", ");
     const label = title ? `Смотреть видео: ${title}` : "Смотреть видео";
 
     return (
@@ -39,6 +44,8 @@ const LazyYouTube = ({
                         className="w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        srcSet={thumbnailSrcSet}
+                        sizes="100vw"
                     />
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300"></div>
                     <div className="absolute inset-0 flex items-center justify-center">

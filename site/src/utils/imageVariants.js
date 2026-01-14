@@ -43,7 +43,7 @@ const imageWidths = {
     "/images/823d64ce71e48517301eab8d134ca26a_fit.webp": [512, 599],
     "/images/Aktuelles.webp": [768, 1280, 1920],
     "/images/Gebuehren.webp": [768, 1280, 1920],
-    "/images/Jekitz-ts16957280966eb1.webp": [400, 600, 1200],
+    "/images/Jekitz-ts16957280966eb1.webp": [400, 700, 1400],
     "/images/header_blockfloete_1767158508450.webp": [512, 768, 1024],
     "/images/header_cello_1767158494629.webp": [512, 768, 1024],
     "/images/header_gesang_1767157543115.webp": [512, 768, 1024],
