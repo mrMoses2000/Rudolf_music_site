@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { content } from "../data/content";
 import SmartImage from "../components/SmartImage";
 import Blocks from "../components/Blocks";
@@ -52,6 +52,23 @@ const Offer = () => {
         }
     ];
 
+    useEffect(() => {
+        const urls = offerMainButtons
+            .map((btn) => btn.image)
+            .filter(Boolean)
+            .map((src) => src.replace(/\.webp$/i, "-768.avif"));
+
+        urls.forEach((href) => {
+            if (document.querySelector(`link[rel="preload"][href="${href}"]`)) return;
+            const link = document.createElement("link");
+            link.rel = "preload";
+            link.as = "image";
+            link.type = "image/avif";
+            link.href = href;
+            document.head.appendChild(link);
+        });
+    }, [offerMainButtons]);
+
     return (
         <div className="min-h-screen bg-paper pb-32">
             {/* Offer Hero */}
@@ -88,7 +105,7 @@ const Offer = () => {
                 </div>
             </section>
 
-            <div className="px-6 md:px-12 max-w-7xl mx-auto py-20 sm:py-24 cv-auto">
+            <div className="px-6 md:px-12 max-w-7xl mx-auto py-20 sm:py-24">
                 {filteredOfferBlocks.length > 0 && (
                     <div className="max-w-4xl mx-auto mb-16">
                         <Blocks blocks={filteredOfferBlocks} />
@@ -117,7 +134,7 @@ const Offer = () => {
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
                                                 loading="eager"
                                                 decoding="async"
-                                                fetchPriority={i < 2 ? "high" : "auto"}
+                                                fetchPriority="high"
                                                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                                 useSrcSet
                                             />
@@ -140,7 +157,7 @@ const Offer = () => {
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
                                                 loading="eager"
                                                 decoding="async"
-                                                fetchPriority={i < 2 ? "high" : "auto"}
+                                                fetchPriority="high"
                                                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                                 useSrcSet
                                             />

@@ -69,6 +69,24 @@ const Home = () => {
         };
     }, [psalmQuote, reduceMotion]);
 
+    useEffect(() => {
+        const urls = content.categories
+            .slice(0, 8)
+            .map((cat) => cat.image)
+            .filter(Boolean)
+            .map((src) => src.replace(/\.webp$/i, "-768.avif"));
+
+        urls.forEach((href) => {
+            if (document.querySelector(`link[rel="preload"][href="${href}"]`)) return;
+            const link = document.createElement("link");
+            link.rel = "preload";
+            link.as = "image";
+            link.type = "image/avif";
+            link.href = href;
+            document.head.appendChild(link);
+        });
+    }, []);
+
     const startBlocks = content.pages?.start?.blocks || [];
     const startMainBlocks = useMemo(() => {
         const heroTexts = new Set([content.hero.subtitle, content.hero.title].filter(Boolean));
@@ -223,7 +241,7 @@ const Home = () => {
             </section>
 
             {/* Categories Preview - Spotlight Grid */}
-            <section className="py-24 sm:py-32 lg:py-40 px-6 md:px-12 relative z-20 cv-auto">
+            <section className="py-24 sm:py-32 lg:py-40 px-6 md:px-12 relative z-20">
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
@@ -267,9 +285,9 @@ const Home = () => {
                                         alt={cat.title}
                                         className="absolute inset-0"
                                         imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
-                                        loading={index < 4 ? "eager" : "lazy"}
+                                        loading="eager"
                                         decoding="async"
-                                        fetchPriority={index < 4 ? "high" : "auto"}
+                                        fetchPriority="high"
                                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                                         useSrcSet
                                     />
