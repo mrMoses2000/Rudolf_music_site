@@ -18,10 +18,16 @@
     - Добавлены `SSL_GUIDE.md` и `SSL_OS_DEEP_DIVE.md`.
     - Сильно уменьшены большие WebP (макс. 2560px, q=72), восстановлены `Cajon.webp`/`Keyboard.webp`, обновлены размеры в `imageVariants`.
     - Удалены Musikkurse (страница/контент/кнопка/изображения) по просьбе клиента.
+    - Добавлен lazy‑loading страниц через `React.lazy` и `Suspense` вокруг `Outlet`.
+    - Добавлены preconnect к Google Fonts и корректный preload WebP hero в `index.html`.
+    - Добавлены srcset‑варианты 512/768/1024 для карточек категорий и подключены `useSrcSet`/`sizes` на главной и Offer.
+    - Встроен `LazyYouTube` (ленивая подгрузка iframe по клику) для снижения начальной нагрузки JS.
+    - Исправлены ссылки на устаревшие `.png` в `content.js` на `.webp`.
+    - Подключены self‑host шрифты Inter/Outfit/Libre Baskerville (woff2) и убран Google Fonts import.
   - Now:
     - Завершить merge‑коммит после разрешения конфликтов.
     - Проверить, что `run.sh` и HTTPS работают после мерджа.
-    - Диагностировать медленную первую загрузку (bundle/fonts/hero).
+    - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
   - Next:
     - При необходимости: code splitting и self‑host шрифтов для ускорения first‑load.
 - Open questions (UNCONFIRMED if needed):

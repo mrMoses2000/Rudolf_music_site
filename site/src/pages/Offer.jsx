@@ -117,6 +117,8 @@ const Offer = () => {
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
                                                 loading="lazy"
                                                 decoding="async"
+                                                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                                                useSrcSet
                                             />
                                         )}
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
@@ -137,6 +139,8 @@ const Offer = () => {
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
                                                 loading="lazy"
                                                 decoding="async"
+                                                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                                                useSrcSet
                                             />
                                         )}
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
@@ -183,6 +187,8 @@ const Offer = () => {
                                                         imgClassName="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                                         loading="lazy"
                                                         decoding="async"
+                                                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                                                        useSrcSet
                                                     />
                                                 )}
                                             </div>

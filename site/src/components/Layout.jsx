@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { content } from "../data/content";
 
@@ -124,7 +124,9 @@ const Layout = () => {
                     animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
                     transition={reduceMotion ? undefined : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <Outlet />
+                    <Suspense fallback={<div className="min-h-[40vh]" />}>
+                        <Outlet />
+                    </Suspense>
                 </motion.div>
             </main>
 

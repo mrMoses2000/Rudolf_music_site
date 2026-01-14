@@ -680,7 +680,7 @@ Telefon: 0521/3367416
 
 info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/blechblasinstrumente_1767156191476.png"
+            "image": "/images/blechblasinstrumente_1767156191476.webp"
         },
         "mandoline": {
             "title": "Mandoline",
@@ -701,7 +701,7 @@ Telefon: 0521/3367416
 
 info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/header_gitarre_1767157500546.png"
+            "image": "/images/header_gitarre_1767157500546.webp"
         },
         "dirigieren": {
             "title": "Dirigentenunterricht (Chor- und Orchesterdirigieren)",
@@ -722,7 +722,7 @@ Telefon: 0521/3367416
 
 info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/gesang_1767156238520.png"
+            "image": "/images/gesang_1767156238520.webp"
         },
         "horn": {
             "title": "Horn (Waldhorn, Tenorhorn, Baritonhorn)",

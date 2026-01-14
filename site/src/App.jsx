@@ -1,22 +1,24 @@
+import { lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import ScrollToTop from "./components/ScrollToTop";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Fees from "./pages/Fees";
-import InstrumentPage from "./pages/InstrumentPage";
-import Offer from "./pages/Offer";
-import Contact from "./pages/Contact";
-import Jobs from "./pages/Jobs";
-import Aktuelles from "./pages/Aktuelles";
-import JeKits from "./pages/JeKits";
-import Kunst from "./pages/Kunst";
-import Standorte from "./pages/Standorte";
-import AGB from "./pages/AGB";
-import Impressum from "./pages/Impressum";
-import Datenschutz from "./pages/Datenschutz";
-import Musikunterricht from "./pages/Musikunterricht";
+
+const About = lazy(() => import("./pages/About"));
+const Fees = lazy(() => import("./pages/Fees"));
+const InstrumentPage = lazy(() => import("./pages/InstrumentPage"));
+const Offer = lazy(() => import("./pages/Offer"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Jobs = lazy(() => import("./pages/Jobs"));
+const Aktuelles = lazy(() => import("./pages/Aktuelles"));
+const JeKits = lazy(() => import("./pages/JeKits"));
+const Kunst = lazy(() => import("./pages/Kunst"));
+const Standorte = lazy(() => import("./pages/Standorte"));
+const AGB = lazy(() => import("./pages/AGB"));
+const Impressum = lazy(() => import("./pages/Impressum"));
+const Datenschutz = lazy(() => import("./pages/Datenschutz"));
+const Musikunterricht = lazy(() => import("./pages/Musikunterricht"));
 
 const App = () => {
   const location = useLocation();

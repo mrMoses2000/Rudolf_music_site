@@ -4,6 +4,7 @@ import { useRef, useState, useMemo, useEffect } from "react";
 import { content } from "../data/content";
 import Blocks from "../components/Blocks";
 import SmartImage from "../components/SmartImage";
+import LazyYouTube from "../components/LazyYouTube";
 
 const Home = () => {
     const heroRef = useRef(null);
@@ -209,13 +210,11 @@ const Home = () => {
                                 </p>
                             )}
                             <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)]">
-                                <iframe
+                                <LazyYouTube
+                                    videoId={content.pages.start.videoEmbedId}
+                                    title={content.pages?.start?.videoTitle || "YouTube video player"}
                                     className="w-full h-full"
-                                    src={`https://www.youtube.com/embed/${content.pages.start.videoEmbedId}?controls=1`}
-                                    title="YouTube video player"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                ></iframe>
+                                />
                             </div>
                         </div>
                     )}
@@ -270,6 +269,8 @@ const Home = () => {
                                         imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
                                         loading="lazy"
                                         decoding="async"
+                                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                                        useSrcSet
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
