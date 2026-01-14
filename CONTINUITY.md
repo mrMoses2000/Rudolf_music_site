@@ -103,11 +103,11 @@
     - Switched hero layout to `items-start` and reduced bottom padding to push content upward.
     - Repositioned hero content to slightly below center and added extra spacing under the psalm.
   - Now:
-    - Подготовить git-коммит всех правок с русским сообщением.
+    - Коммит выполнен.
   - Next:
-    - Подтвердить результат коммита.
+    - Ждать следующую задачу.
 - Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: Предпочтительный формат сообщения коммита (если нужен иной стиль).
+  - UNCONFIRMED: Нужен ли дополнительный коммит с иным сообщением.
 - Working set (files/ids/commands):
   - Files: `site/src/pages/Home.jsx`, `site/src/data/content.js`, `site/src/components/Blocks.jsx`.
   - Commands: `rg --files`, `npm run dev`.
