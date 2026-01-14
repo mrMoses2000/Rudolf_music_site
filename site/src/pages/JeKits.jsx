@@ -68,6 +68,8 @@ const JeKits = () => {
                         imgClassName="w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        sizes="100vw"
+                        useSrcSet
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/40 to-transparent"></div>
                 </section>
@@ -92,6 +94,8 @@ const JeKits = () => {
                                     imgClassName="w-full h-full object-cover"
                                     loading="lazy"
                                     decoding="async"
+                                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                                    useSrcSet
                                 />
                             </motion.div>
                         ))}

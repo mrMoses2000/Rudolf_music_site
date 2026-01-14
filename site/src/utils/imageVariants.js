@@ -10,17 +10,17 @@ const buildWebpSrcSet = (src, widths) => {
 };
 
 const webpSrcSets = {
-    "/images/Trompete.webp": buildWebpSrcSet("/images/Trompete.webp", [1280, 1920, 2560]),
-    "/images/Stellenangebote.webp": buildWebpSrcSet("/images/Stellenangebote.webp", [1280, 1920, 2560]),
-    "/images/Saxophon.webp": buildWebpSrcSet("/images/Saxophon.webp", [1280, 1920, 2560]),
-    "/images/Kunstunterricht.webp": buildWebpSrcSet("/images/Kunstunterricht.webp", [768, 1280, 1920, 2560]),
-    "/images/Keyboard.webp": buildWebpSrcSet("/images/Keyboard.webp", [1280, 1920]),
-    "/images/JeKits.webp": buildWebpSrcSet("/images/JeKits.webp", [768, 1280, 1920, 2560]),
-    "/images/Horn.webp": buildWebpSrcSet("/images/Horn.webp", [1280, 1920, 2560]),
-    "/images/Clarinet.webp": buildWebpSrcSet("/images/Clarinet.webp", [1280, 1920, 2560]),
-    "/images/Cajon.webp": buildWebpSrcSet("/images/Cajon.webp", [1280, 1920]),
-    "/images/Bratsche.webp": buildWebpSrcSet("/images/Bratsche.webp", [1280, 1920, 2560]),
-    "/images/Akkordeon.webp": buildWebpSrcSet("/images/Akkordeon.webp", [1280, 1920, 2560]),
+    "/images/Trompete.webp": buildWebpSrcSet("/images/Trompete.webp", [768, 1280, 1920]),
+    "/images/Stellenangebote.webp": buildWebpSrcSet("/images/Stellenangebote.webp", [768, 1280, 1920]),
+    "/images/Saxophon.webp": buildWebpSrcSet("/images/Saxophon.webp", [768, 1280, 1920]),
+    "/images/Kunstunterricht.webp": buildWebpSrcSet("/images/Kunstunterricht.webp", [768, 1280, 1920]),
+    "/images/Keyboard.webp": buildWebpSrcSet("/images/Keyboard.webp", [768, 1280, 1920]),
+    "/images/JeKits.webp": buildWebpSrcSet("/images/JeKits.webp", [768, 1280, 1920]),
+    "/images/Horn.webp": buildWebpSrcSet("/images/Horn.webp", [768, 1280, 1920]),
+    "/images/Clarinet.webp": buildWebpSrcSet("/images/Clarinet.webp", [768, 1280, 1920]),
+    "/images/Cajon.webp": buildWebpSrcSet("/images/Cajon.webp", [768, 1280, 1920]),
+    "/images/Bratsche.webp": buildWebpSrcSet("/images/Bratsche.webp", [768, 1280, 1920]),
+    "/images/Akkordeon.webp": buildWebpSrcSet("/images/Akkordeon.webp", [768, 1280, 1920]),
     "/images/streichinstrumente_1767156138943.webp": buildWebpSrcSet("/images/streichinstrumente_1767156138943.webp", [512, 768, 1024]),
     "/images/zupfinstrumente_1767156152934.webp": buildWebpSrcSet("/images/zupfinstrumente_1767156152934.webp", [512, 768, 1024]),
     "/images/holzblasinstrumente_1767156168170.webp": buildWebpSrcSet("/images/holzblasinstrumente_1767156168170.webp", [512, 768, 1024]),
@@ -28,7 +28,7 @@ const webpSrcSets = {
     "/images/tasteninstrumente_1767156206992.webp": buildWebpSrcSet("/images/tasteninstrumente_1767156206992.webp", [512, 768, 1024]),
     "/images/schlaginstrumente_1767156223197.webp": buildWebpSrcSet("/images/schlaginstrumente_1767156223197.webp", [512, 768, 1024]),
     "/images/gesang_1767156238520.webp": buildWebpSrcSet("/images/gesang_1767156238520.webp", [512, 768, 1024]),
-    "/images/attachments-Image-IMG_11926eb1.webp": buildWebpSrcSet("/images/attachments-Image-IMG_11926eb1.webp", [768, 1280, 1920, 2560]),
+    "/images/attachments-Image-IMG_11926eb1.webp": buildWebpSrcSet("/images/attachments-Image-IMG_11926eb1.webp", [768, 1280, 1920]),
     "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp": buildWebpSrcSet("/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp", [768, 1280, 1560]),
     "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp": buildWebpSrcSet("/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp", [768, 1280, 1560]),
     "/images/jekits_unique_1767157360834.webp": buildWebpSrcSet("/images/jekits_unique_1767157360834.webp", [512, 768, 1024]),
@@ -41,8 +41,18 @@ const webpSrcSets = {
     "/images/6f8e937184f590ec3bae64094cf13f0d_fit.webp": buildWebpSrcSet("/images/6f8e937184f590ec3bae64094cf13f0d_fit.webp", [512, 714]),
     "/images/8456442b2aa8f5b22c877a3fb7612916_fit.webp": buildWebpSrcSet("/images/8456442b2aa8f5b22c877a3fb7612916_fit.webp", [512, 768, 800]),
     "/images/823d64ce71e48517301eab8d134ca26a_fit.webp": buildWebpSrcSet("/images/823d64ce71e48517301eab8d134ca26a_fit.webp", [512, 599]),
-    "/images/Aktuelles.webp": buildWebpSrcSet("/images/Aktuelles.webp", [1280, 1920, 2560]),
-    "/images/Gebuehren.webp": buildWebpSrcSet("/images/Gebuehren.webp", [1280, 1920, 2640])
+    "/images/Aktuelles.webp": buildWebpSrcSet("/images/Aktuelles.webp", [768, 1280, 1920]),
+    "/images/Gebuehren.webp": buildWebpSrcSet("/images/Gebuehren.webp", [768, 1280, 1920]),
+    "/images/Jekitz-ts16957280966eb1.webp": buildWebpSrcSet("/images/Jekitz-ts16957280966eb1.webp", [400, 600]),
+    "/images/header_blockfloete_1767158508450.webp": buildWebpSrcSet("/images/header_blockfloete_1767158508450.webp", [512, 768, 1024]),
+    "/images/header_cello_1767158494629.webp": buildWebpSrcSet("/images/header_cello_1767158494629.webp", [512, 768, 1024]),
+    "/images/header_gesang_1767157543115.webp": buildWebpSrcSet("/images/header_gesang_1767157543115.webp", [512, 768, 1024]),
+    "/images/header_gitarre_1767157500546.webp": buildWebpSrcSet("/images/header_gitarre_1767157500546.webp", [512, 768, 1024]),
+    "/images/header_klavier_1767157516215.webp": buildWebpSrcSet("/images/header_klavier_1767157516215.webp", [512, 768, 1024]),
+    "/images/header_oboe_1767158542257.webp": buildWebpSrcSet("/images/header_oboe_1767158542257.webp", [512, 768, 1024]),
+    "/images/header_querfloete_1767158524080.webp": buildWebpSrcSet("/images/header_querfloete_1767158524080.webp", [512, 768, 1024]),
+    "/images/header_schlagzeug_1767157529915.webp": buildWebpSrcSet("/images/header_schlagzeug_1767157529915.webp", [512, 768, 1024]),
+    "/images/header_violine_1767157486934.webp": buildWebpSrcSet("/images/header_violine_1767157486934.webp", [512, 768, 1024])
 };
 
 const normalizeWebpKey = (src) => src?.replace(/\.(png|jpe?g)$/i, ".webp");

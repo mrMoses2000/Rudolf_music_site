@@ -26,6 +26,7 @@
     - Подключены self‑host шрифты Inter/Outfit/Libre Baskerville (woff2) и убран Google Fonts import.
     - Добавлены уменьшенные WebP‑варианты для hero/карточек (Offer/Kunst/Contact/About) и расширены srcset‑списки.
     - В Kunst‑галерее включены `useSrcSet` + `sizes` для более лёгких превью.
+    - Агрессивно пересжаты WebP (q=60) и уменьшены 2560px базы до 1920px, добавлены/обновлены 768/512 варианты и srcset для header‑изображений и JeKits.
   - Now:
     - Завершить merge‑коммит после разрешения конфликтов.
     - Проверить, что `run.sh` и HTTPS работают после мерджа.
