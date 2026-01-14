@@ -115,8 +115,9 @@ const Offer = () => {
                                                 alt={btn.label}
                                                 className="absolute inset-0"
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
-                                                loading="lazy"
+                                                loading="eager"
                                                 decoding="async"
+                                                fetchPriority={i === 0 ? "high" : "auto"}
                                                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                                 useSrcSet
                                             />
@@ -137,8 +138,9 @@ const Offer = () => {
                                                 alt={btn.label}
                                                 className="absolute inset-0"
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
-                                                loading="lazy"
+                                                loading="eager"
                                                 decoding="async"
+                                                fetchPriority={i === 0 ? "high" : "auto"}
                                                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                                 useSrcSet
                                             />
@@ -185,7 +187,7 @@ const Offer = () => {
                                                         alt={cat.title}
                                                         className="block w-full h-full"
                                                         imgClassName="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                                        loading="lazy"
+                                                        loading={index < 4 ? "eager" : "lazy"}
                                                         decoding="async"
                                                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                                                         useSrcSet

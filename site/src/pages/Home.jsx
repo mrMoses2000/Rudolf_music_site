@@ -267,8 +267,9 @@ const Home = () => {
                                         alt={cat.title}
                                         className="absolute inset-0"
                                         imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
-                                        loading="lazy"
+                                        loading={index < 4 ? "eager" : "lazy"}
                                         decoding="async"
+                                        fetchPriority={index < 2 ? "high" : "auto"}
                                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                                         useSrcSet
                                     />
