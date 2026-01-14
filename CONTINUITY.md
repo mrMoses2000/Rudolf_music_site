@@ -33,6 +33,7 @@
     - Прелоад AVIF‑карточек на главной и в Offer, карточки переведены на eager + high priority.
     - Добавлены meta description, `robots.txt` и `sitemap.xml` для SEO.
     - Добавлен подробный разбор TLS/сертификатов и роли Cloudflare: `TLS_CERT_UNDER_THE_HOOD.md`.
+    - Повышено качество hero‑изображений (WebP/AVIF) и апскейлнут низкокачественный снимок на JeKits.
   - Now:
     - Завершить merge‑коммит после разрешения конфликтов.
     - Проверить, что `run.sh` и HTTPS работают после мерджа.
