@@ -31,6 +31,7 @@
     - Добавлены AVIF‑варианты и srcset для всех ключевых изображений, SmartImage теперь отдаёт AVIF→WebP.
     - Включён `content-visibility: auto` для тяжёлых секций и длительный кэш для `/fonts` в nginx.
     - Прелоад AVIF‑карточек на главной и в Offer, карточки переведены на eager + high priority.
+    - Добавлен подробный разбор TLS/сертификатов и роли Cloudflare: `TLS_CERT_UNDER_THE_HOOD.md`.
   - Now:
     - Завершить merge‑коммит после разрешения конфликтов.
     - Проверить, что `run.sh` и HTTPS работают после мерджа.
