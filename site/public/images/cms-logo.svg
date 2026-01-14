@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400">
+  <!-- Green C -->
+  <g id="letter-c">
+    <!-- Shadow/3D Effect -->
+    <path d="M 90 150 Q 50 150 50 100 Q 50 50 90 50 L 120 50 L 120 70 L 95 70 Q 70 70 70 100 Q 70 130 95 130 L 120 130 L 120 150 Z" 
+          fill="#2d7a2d" opacity="0.5" transform="translate(2, 2)"/>
+    <!-- Main Letter -->
+    <path d="M 90 150 Q 50 150 50 100 Q 50 50 90 50 L 120 50 L 120 70 L 95 70 Q 70 70 70 100 Q 70 130 95 130 L 120 130 L 120 150 Z" 
+          fill="#3fa33f" stroke="#2d7a2d" stroke-width="3"/>
+    <!-- Highlight -->
+    <path d="M 75 60 Q 65 65 65 75" 
+          fill="none" stroke="#80d680" stroke-width="4" opacity="0.6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Blue M -->
+  <g id="letter-m">
+    <!-- Shadow/3D Effect -->
+    <path d="M 170 150 L 170 50 L 200 50 L 230 110 L 260 50 L 290 50 L 290 150 L 270 150 L 270 80 L 245 130 L 215 130 L 190 80 L 190 150 Z" 
+          fill="#1a5bb8" opacity="0.5" transform="translate(2, 2)"/>
+    <!-- Main Letter -->
+    <path d="M 170 150 L 170 50 L 200 50 L 230 110 L 260 50 L 290 50 L 290 150 L 270 150 L 270 80 L 245 130 L 215 130 L 190 80 L 190 150 Z" 
+          fill="#2e7dd1" stroke="#1a5bb8" stroke-width="3"/>
+    <!-- Highlight -->
+    <path d="M 180 60 L 180 85" 
+          fill="none" stroke="#6db5ff" stroke-width="4" opacity="0.6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Orange S -->
+  <g id="letter-s">
+    <!-- Shadow/3D Effect -->
+    <path d="M 350 70 Q 350 50 380 50 Q 410 50 410 70 Q 410 85 390 90 L 370 95 Q 340 100 340 120 Q 340 150 380 150 Q 420 150 420 130 L 420 120 L 400 120 L 400 130 Q 400 135 380 135 Q 360 135 360 120 Q 360 110 380 105 L 400 100 Q 430 95 430 70 Q 430 50 390 50 Q 340 50 340 80 L 340 90 L 360 90 L 360 80 Q 360 70 380 70 Z" 
+          fill="#d85a1f" opacity="0.5" transform="translate(2, 2)"/>
+    <!-- Main Letter -->
+    <path d="M 350 70 Q 350 50 380 50 Q 410 50 410 70 Q 410 85 390 90 L 370 95 Q 340 100 340 120 Q 340 150 380 150 Q 420 150 420 130 L 420 120 L 400 120 L 400 130 Q 400 135 380 135 Q 360 135 360 120 Q 360 110 380 105 L 400 100 Q 430 95 430 70 Q 430 50 390 50 Q 340 50 340 80 L 340 90 L 360 90 L 360 80 Q 360 70 380 70 Z" 
+          fill="#ff6b2b" stroke="#d85a1f" stroke-width="3"/>
+    <!-- Highlight -->
+    <path d="M 370 60 Q 365 62 365 68" 
+          fill="none" stroke="#ffab7f" stroke-width="4" opacity="0.6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Musical staff lines (5 lines) -->
+  <g id="staff-lines">
+    <!-- Line 1 (top) - Blue -->
+    <rect x="150" y="210" width="350" height="10" fill="#2e7dd1" rx="2"/>
+    <rect x="150" y="211" width="350" height="4" fill="#4a9ae8" opacity="0.5"/>
+    
+    <!-- Line 2 - Gray -->
+    <rect x="150" y="240" width="350" height="10" fill="#8a9aa8" rx="2"/>
+    <rect x="150" y="241" width="350" height="4" fill="#b0bcc8" opacity="0.5"/>
+    
+    <!-- Line 3 - Blue -->
+    <rect x="150" y="270" width="350" height="10" fill="#2e7dd1" rx="2"/>
+    <rect x="150" y="271" width="350" height="4" fill="#4a9ae8" opacity="0.5"/>
+    
+    <!-- Line 4 - Gray -->
+    <rect x="150" y="300" width="350" height="10" fill="#8a9aa8" rx="2"/>
+    <rect x="150" y="301" width="350" height="4" fill="#b0bcc8" opacity="0.5"/>
+    
+    <!-- Line 5 (bottom) - Blue -->
+    <rect x="150" y="330" width="350" height="10" fill="#2e7dd1" rx="2"/>
+    <rect x="150" y="331" width="350" height="4" fill="#4a9ae8" opacity="0.5"/>
+  </g>
+</svg>

@@ -1,6 +1,6 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import { content } from "../data/content";
 import Blocks from "../components/Blocks";
 import SmartImage from "../components/SmartImage";
@@ -17,12 +17,56 @@ const Home = () => {
     const scaleHero = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const reduceMotion = useReducedMotion();
+
+    const psalmText = (content.hero?.psalm || "")
+        .replace(/["“”„]/g, "")
+        .replace(/\s*Psalm\s*103\s*$/i, "")
+        .trim();
+    const psalmQuote = psalmText ? `„${psalmText}“` : "";
+    const [typedPsalm, setTypedPsalm] = useState(psalmQuote);
+    const [isPsalmDone, setIsPsalmDone] = useState(true);
 
     const handleMouseMove = (e) => {
         const { clientX, clientY, currentTarget } = e;
         const { left, top } = currentTarget.getBoundingClientRect();
         setMousePos({ x: clientX - left, y: clientY - top });
     };
+
+    useEffect(() => {
+        if (!psalmQuote) {
+            setTypedPsalm("");
+            setIsPsalmDone(true);
+            return;
+        }
+        if (reduceMotion) {
+            setTypedPsalm(psalmQuote);
+            setIsPsalmDone(true);
+            return;
+        }
+
+        let index = 0;
+        let timeoutId;
+
+        setTypedPsalm("");
+        setIsPsalmDone(false);
+
+        const tick = () => {
+            index += 1;
+            setTypedPsalm(psalmQuote.slice(0, index));
+            if (index < psalmQuote.length) {
+                timeoutId = setTimeout(tick, 28);
+            } else {
+                setIsPsalmDone(true);
+            }
+        };
+
+        timeoutId = setTimeout(tick, 220);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [psalmQuote, reduceMotion]);
 
     const startBlocks = content.pages?.start?.blocks || [];
     const startMainBlocks = useMemo(() => {
@@ -37,7 +81,10 @@ const Home = () => {
     return (
         <div className="text-ink">
             {/* Hero Section - Premium Parallax */}
-            <section ref={heroRef} className="relative min-h-[100vh] flex items-end pb-20 sm:pb-32 pt-28 md:pt-32 px-6 md:px-12 overflow-hidden">
+            <section
+                ref={heroRef}
+                className="relative min-h-[100svh] flex items-center pb-[clamp(2rem,5vh,3.5rem)] pt-[clamp(3rem,7vh,5.5rem)] px-6 md:px-12 overflow-hidden"
+            >
                 <motion.div style={{ y, scale: scaleHero }} className="absolute inset-0 z-0">
                     <SmartImage
                         src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
@@ -52,90 +99,97 @@ const Home = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-transparent"></div>
                 </motion.div>
 
-                <div className="relative z-10 w-full max-w-7xl mx-auto">
+                <div className="relative z-10 w-full max-w-7xl mx-auto translate-y-4 sm:translate-y-6">
                     <motion.div
                         style={{ opacity: opacityHero }}
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="space-y-12 md:space-y-16"
+                        className="space-y-[clamp(1.5rem,3vh,2.6rem)]"
                     >
                         {/* Psalm Quote - Elegant Design */}
                         <motion.blockquote
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.8 }}
-                            className="relative flex flex-col md:flex-row md:items-start gap-6 md:gap-10"
+                            className="relative flex flex-col md:flex-row md:items-start gap-[clamp(0.75rem,2vh,1.5rem)] mb-2 sm:mb-4"
                         >
                             {/* Quote Text */}
-                            <p className="font-libre text-lg sm:text-xl md:text-2xl text-ink italic leading-relaxed flex-1">
-                                "{content.hero.psalm.replace(' Psalm 103', '')}"
+                            <p className="font-libre text-base sm:text-lg md:text-xl text-ink italic leading-relaxed flex-1">
+                                {typedPsalm}
+                                {!reduceMotion && typedPsalm.length < psalmQuote.length && (
+                                    <span className="typewriter-caret" aria-hidden="true">
+                                        |
+                                    </span>
+                                )}
                             </p>
 
                             {/* Psalm 103 Badge - On the Right */}
                             <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.8, duration: 0.6 }}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={isPsalmDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                                transition={{ duration: 0.6 }}
                                 className="flex items-center gap-3 shrink-0"
                             >
-                                <span className="w-10 h-0.5 bg-gold rounded-full"></span>
-                                <span className="text-gold font-black uppercase tracking-[0.2em] text-sm whitespace-nowrap">
+                                <span className="w-12 h-1 bg-ink rounded-full"></span>
+                                <span className="text-ink font-black uppercase tracking-[0.2em] text-xs sm:text-sm whitespace-nowrap">
                                     Psalm 103
                                 </span>
                             </motion.div>
                         </motion.blockquote>
 
-                        {/* Main Title - First */}
-                        <h1 className="text-3xl sm:text-5xl md:text-[7rem] font-outfit font-black leading-[0.9] tracking-tighter uppercase max-w-5xl text-ink break-words hyphens-auto mt-40">
-                            {primaryWords.map((word, i) => (
-                                <motion.span
-                                    key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
-                                    className="inline-block mr-4"
-                                >
-                                    {word}
-                                </motion.span>
-                            ))}
-                            {secondaryWords && (
-                                <>
-                                    <br />
+                        <div className="space-y-4">
+                            {/* Main Title - First */}
+                            <h1 className="text-[clamp(2.4rem,6.2vw,4.8rem)] font-cinzel font-black leading-[1.05] tracking-tighter uppercase max-w-5xl text-ink break-normal hyphens-none">
+                                {primaryWords.map((word, i) => (
                                     <motion.span
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.9, duration: 1 }}
-                                        className="text-gold inline-block"
+                                        key={i}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
+                                        className="inline-block mr-4"
                                     >
-                                        {secondaryWords}
+                                        {word}
                                     </motion.span>
-                                </>
-                            )}
-                        </h1>
+                                ))}
+                                {secondaryWords && (
+                                    <>
+                                        <br />
+                                        <motion.span
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.9, duration: 1 }}
+                                            className="text-gold inline-block"
+                                        >
+                                            {secondaryWords}
+                                        </motion.span>
+                                    </>
+                                )}
+                            </h1>
 
-                        {/* Welcome Text - Second */}
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1, duration: 0.8 }}
-                            className="text-sm sm:text-base md:text-lg text-ink tracking-[0.1em] font-black uppercase -mt-8"
-                        >
-                            {content.hero.subtitle}
-                        </motion.p>
+                            {/* Welcome Text - Second */}
+                            <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 1, duration: 0.8 }}
+                                className="text-xs sm:text-sm md:text-base text-ink tracking-[0.12em] font-black uppercase"
+                            >
+                                {content.hero.subtitle}
+                            </motion.p>
+                        </div>
 
                         {/* CTA Buttons */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1.2, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row gap-6 mt-8"
+                            className="flex flex-col sm:flex-row gap-5"
                         >
-                            <Link to="/offer" className="group bg-ink text-paper px-8 py-4 sm:px-14 sm:py-5 rounded-full font-black text-base sm:text-lg uppercase tracking-widest hover:text-ink transition-all active:scale-95 shadow-[0_20px_50px_rgba(43,36,29,0.25)] relative overflow-hidden text-center w-full sm:w-auto">
+                            <Link to="/offer" className="group bg-ink text-paper px-7 py-3 sm:px-11 sm:py-4 rounded-full font-black text-sm sm:text-base uppercase tracking-widest hover:text-ink transition-all active:scale-95 shadow-[0_20px_50px_rgba(43,36,29,0.25)] relative overflow-hidden text-center w-full sm:w-auto">
                                 <span className="relative z-10">{content.hero.offerBtn}</span>
                                 <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                             </Link>
-                            <Link to="/about" className="bg-transparent text-ink border-2 border-ink/20 px-8 py-4 sm:px-14 sm:py-5 rounded-full font-black text-base sm:text-lg uppercase tracking-widest hover:bg-ink hover:text-paper transition-all text-center w-full sm:w-auto">
+                            <Link to="/about" className="bg-transparent text-ink border-2 border-ink/20 px-7 py-3 sm:px-11 sm:py-4 rounded-full font-black text-sm sm:text-base uppercase tracking-widest hover:bg-ink hover:text-paper transition-all text-center w-full sm:w-auto">
                                 {content.hero.aboutBtn}
                             </Link>
                         </motion.div>
@@ -148,14 +202,21 @@ const Home = () => {
                     <Blocks blocks={startMainBlocks} />
 
                     {content.pages?.start?.videoEmbedId && (
-                        <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)]">
-                            <iframe
-                                className="w-full h-full"
-                                src={`https://www.youtube.com/embed/${content.pages.start.videoEmbedId}?controls=1`}
-                                title="YouTube video player"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowFullScreen
-                            ></iframe>
+                        <div className="space-y-4">
+                            {content.pages?.start?.videoTitle && (
+                                <p className="text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-ink-muted">
+                                    {content.pages.start.videoTitle}
+                                </p>
+                            )}
+                            <div className="aspect-video w-full rounded-3xl overflow-hidden border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.18)]">
+                                <iframe
+                                    className="w-full h-full"
+                                    src={`https://www.youtube.com/embed/${content.pages.start.videoEmbedId}?controls=1`}
+                                    title="YouTube video player"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
                         </div>
                     )}
 
@@ -212,8 +273,10 @@ const Home = () => {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-paper/95 via-paper/30 to-transparent opacity-100"></div>
 
-                                    <div className="p-6 sm:p-8 md:p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4">
-                                        <h3 className="text-xl md:text-3xl font-black text-ink group-hover:text-gold transition-colors leading-none mb-3 uppercase tracking-tighter break-words hyphens-auto">{cat.title}</h3>
+                                    <div className="p-6 sm:p-8 md:p-10 relative z-20 transition-transform duration-500 group-hover:-translate-y-4 -ml-1">
+                                        <h3 className="text-base sm:text-base lg:text-[0.95rem] xl:text-[1.05rem] font-black text-ink group-hover:text-gold transition-colors leading-snug mb-3 uppercase tracking-tight break-normal hyphens-none whitespace-normal">
+                                            {cat.title}
+                                        </h3>
                                     </div>
 
                                     <div className="absolute top-6 right-6 sm:top-8 sm:right-8 w-12 h-12 md:w-16 md:h-16 bg-gold rounded-full flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 shadow-2xl shadow-gold/40 z-30">

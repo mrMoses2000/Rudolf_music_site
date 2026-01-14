@@ -1,80 +1,30 @@
 # CONTINUITY.md
 
 - Goal (incl. success criteria):
-  - Ensure 1:1 content migration from `music_site_copy/` to `site/` (text structure/blocks, logos/abbreviations) and deliver UX upgrades without breaking routing; address perceived header-image load lag; fix About page rendering; all changes in Russian comms.
+  - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
 - Constraints/Assumptions:
-  - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
-  - Use Context7 before implementing new functionality (framework/API usage).
+  - Следовать AGENTS.md; контент править через `site/src/data/content.js`.
+  - Коммуникация на русском.
   - Sandbox: danger-full-access; network enabled; approval_policy never.
 - Key decisions:
-  - Use `SmartImage` with `<picture>` and WebP `srcSet` for hero/large images.
-  - Add lightbox overlay for Kunst gallery with `AnimatePresence` and Esc/overlay close.
-  - Reformat start-page announcements into cards grouped by related paragraphs.
+  - Используем `SmartImage` + WebP (`imageVariants`) для всех изображений.
+  - В `run.sh` встроены certbot, cron‑продление и генерация nginx.conf с HTTPS.
+  - В nginx включены gzip и cache headers для `/assets` и `/images`.
 - State:
   - Done:
-    - Fixed Blocks support for `ul/items`, `p` uses `whitespace-pre-line`, and reduced motion handling.
-    - Disabled initial animation in `App.jsx` and kept `ScrollToTop`.
-    - JeKits image styling: full-width hero when single image; grid when multiple.
-    - Musikkurse image grid rendering fixed for string/object array.
-    - Jobs CTA button to `/contact` with prefilled subject.
-    - Contact subject prefill from location state/instrument/query.
-    - InstrumentPage slug bug fix (`gesangunterricht` -> `gesang`) and preserved newlines.
-    - Kunst gallery lazy loading; content updates from legacy.
-    - Home hero h1 filtering and `fetchPriority` on hero image.
-    - Header acronym set to CMS and title updated.
-    - `content.js` updated with legacy start blocks, JeKits/Kunst/Standorte content, fees doc URL.
-    - All image references validated against `site/public/images` (missing 0 at the time).
-    - Generated WebP assets for all JPG/PNG and responsive `-1280.webp`/`-1920.webp` where applicable.
-    - Added `SmartImage` + `imageVariants` map; replaced `<img>` usage across pages for WebP + srcset.
-    - Implemented Kunst gallery lightbox with overlay and Esc/scroll lock.
-    - Reworked start-page announcements into card grid with preserved text blocks.
-    - Synced legacy text structure for Start, Angebot, Kontakt, Gebühren/Anmeldung, Aktuelles, Musikkurse, JeKits, Standorte, Jobs, Kunst, Über uns.
-    - Updated AGB/Impressum/Datenschutz blocks to match legacy text, headings, and list items.
-    - Added JeKits/Musikkurse logos and About icon slot; About icon points to external URL due to network restriction.
-    - Added MotionConfig global defaults (reducedMotion=user, lightweight transitions).
-    - Updated instrument titles (Gitarre/Horn/Queerflöte/Klarinete/Gesang).
-    - Updated Blocks h4 to preserve line breaks; Offer page now renders content blocks.
-    - Removed Start announcement cards/text as requested.
-    - Removed About icon rendering (no external image).
-    - Removed Musikkurse logo strip images.
-    - Added lightweight container animation for long block pages and About content.
-    - Fixed Blocks/Über uns animations to mount (avoid invisible content).
-    - Added WebP + srcset for Aktuelles/Gebuehren hero images; wired sizes/useSrcSet.
-    - Fixed Aktuelles missing Blocks import.
-    - Fixed `imageVariants.js` syntax error causing build failure (moved Aktuelles/Gebuehren entries into object).
-    - Added consistent page-level fade-in in Layout (respects reduced motion).
-    - Fixed Über uns crash by restoring SmartImage import.
-    - Reformatted Gebühren price values to “число €”.
-    - Updated cookie disclosure to “no own cookies; possible third‑party (YouTube) cookies; Google Fonts connection data”.
-    - Mobile responsiveness pass across Home/Offer/Fees/About/Contact/JeKits/Musikkurse/Kunst/Jobs/Aktuelles/InstrumentPage (hero sizing, spacing, buttons, table padding).
-    - Fees mobile table header now visible (mobile-only header) with price column header hidden on small screens.
-    - Mobile hamburger menu now matches desktop nav items/order.
-    - Switched all `/images/*.png|*.jpg` references to `.webp` across pages/content and updated `imageVariants` to accept `.webp`.
-    - Removed duplicate `.png/.jpg` files from `site/public/images` after verifying `.webp` coverage.
-    - Added HTTPS (443) automation in `run.sh`: certbot install/check, auto-issue/renew, 80→443 redirect, 443 mount, cron renewal script.
-    - Documented DNS/HTTPS setup in `README.md`.
-    - `run.sh` now auto-sources `/etc/music_school.env` or local `.env` for DOMAIN/CERTBOT_EMAIL.
-    - Added `SSL_GUIDE.md` with formal, visual TLS/certificate explanation.
-    - Added `SSL_OS_DEEP_DIVE.md` with OS/kernel/network stack details for TLS/HTTPS.
-    - Fixed `run.sh` to check cert files with `sudo test`/`sudo openssl` (avoid false negatives due to permissions).
-    - `run.sh` now disables `certbot.timer` when cron renewal is configured.
-    - Added gzip + cache headers for `/assets` and `/images` in generated nginx.conf to improve load speed.
+    - Синхронизация контента с легаси, исправления блоков/страниц.
+    - Перевод всех изображений на WebP и удаление дублей PNG/JPG.
+    - Автоматизация HTTPS в `run.sh` (certbot + cron + 80→443).
+    - Добавлены `SSL_GUIDE.md` и `SSL_OS_DEEP_DIVE.md`.
   - Now:
-    - Verify Über uns and Impressum rendering on the server after recent fixes.
-    - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
-    - Decide HTTPS approach details (musikschule-cms-bielefeld.de DNS + certificate provisioning) and enable on server.
-    - Ports check shows only 80 listening; need to open/listen on 443 after HTTPS enablement.
-    - User confirms EC2 SG allows 443; listener will appear after HTTPS container runs.
-    - Investigate slow first-load performance (initial JS/CSS, fonts, hero image); consider route-based code splitting and font hosting/preload.
+    - Разрешить конфликтные файлы после `git merge shera`.
+    - Проверить, что `run.sh` и HTTPS работают после мерджа.
+    - Диагностировать медленную первую загрузку (bundle/fonts/hero).
   - Next:
-    - Propose/iterate additional lightweight animations only if desired after reviewing performance.
+    - При необходимости: code splitting и self‑host шрифтов для ускорения first‑load.
 - Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: Какие именно данные для Impressum должны быть «нынешними» (адрес/телефон/email/ответственные)?
-  - UNCONFIRMED: Which page/which “оглавление” image loads slowly (hero/offer cards/etc.) and is it network delay or motion fade?
-  - UNCONFIRMED: Restore legacy header phone/psalm strip on desktop, or keep current cleaner header?
-  - UNCONFIRMED: Подтверждаем домен `musikschule-cms-bielefeld.de` и путь к сертификатам `/etc/letsencrypt/live/...`?
-  - UNCONFIRMED: DNS сейчас настроен как URL-forwarding; можно ли заменить на A/CNAME записи?
-  - UNCONFIRMED: What is the main first-load bottleneck (JS bundle vs hero images vs fonts)? Need waterfall data.
+  - UNCONFIRMED: Какие актуальные данные для Impressum (адрес/телефон/ответственные)?
+  - UNCONFIRMED: Что именно тормозит первый заход (JS‑bundle/шрифты/hero)?
 - Working set (files/ids/commands):
-  - Files: `site/src/data/content.js`, `site/src/pages/About.jsx`, `site/src/pages/Offer.jsx`, `site/src/pages/JeKits.jsx`, `site/src/pages/Musikkurse.jsx`, `site/src/components/Blocks.jsx`, `site/src/App.jsx`.
-  - Commands: `rg --files`, image conversion scripts (`cwebp`).
+  - Files: `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
+  - Commands: `rg --files`, `./run.sh`.

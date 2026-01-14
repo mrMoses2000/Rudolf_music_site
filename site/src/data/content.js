@@ -69,16 +69,15 @@ export const content = {
             },
             {
                 "type": "h4",
-                "text": "Streichinstrumente: Violine, Bratsche, Cello;\nZupfinstrumente: akkusische Gitarre, Bass-Gitarre, E-Gitarre, Mandoline;\nHolzblasinstrumente: Blockflöte, Querflöte, Oboe, Klarinette, Saxophon;\nBlechblasinstrumente: Trompete, Posaune, Tenor- und Baritonhorn;\nTasteninstrumente: Klavier, Akkordeon, Keyboard;\nSchlaginstrumente: Schlagzeug, Cajon"
+                "text": "Streichinstrumente: Violine, Bratsche, Cello;\nZupfinstrumente: akkusische Gitarre, Bass-Gitarre, E-Gitarre, Mandoline;\nHolzblasinstrumente: Blockflöte, Querflöte, Oboe, Klarinette, Saxophon;\nBlechblasinstrumente: Trompete, Posaune, Waldhorn, Tenor- und Baritonhorn;\nTasteninstrumente: Klavier, Akkordeon, Keyboard;\nSchlaginstrumente: Schlagzeug, Cajon"
             },
             {
                 "type": "h4",
-                "text": "Gesangunterricht / Stimmbildung;\nGesang für Kinder ab 5 Jahre;\nDirigentenunterricht (Chor- und Orchesterdirigieren)."
+                "text": "Gesangunterricht / Stimmbildung;\nDirigentenunterricht (Chor- und Orchesterdirigieren)."
             }
         ],
         "extras": [
             { "label": "JeKits", "to": "/jekits" },
-            { "label": "Musikkurse 5,6", "to": "/musikkurse" },
             { "label": "Kunstunterricht", "to": "/kunst" },
             { "label": "Stellenangebote", "to": "/jobs" }
         ]
@@ -122,7 +121,7 @@ export const content = {
                 },
                 {
                     "label": "Mandoline",
-                    "slug": null
+                    "slug": "mandoline"
                 }
             ],
             // "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
@@ -166,10 +165,10 @@ export const content = {
                 },
                 {
                     "label": "Posaune",
-                    "slug": null
+                    "slug": "posaune"
                 },
                 {
-                    "label": "Tenor- und Baritonhorn",
+                    "label": "Waldhorn, Tenor- und Baritonhorn",
                     "slug": "horn"
                 }
             ],
@@ -221,12 +220,8 @@ export const content = {
                     "slug": "gesangunterricht"
                 },
                 {
-                    "label": "Gesang für Kinder ab 5 Jahre",
-                    "slug": null
-                },
-                {
                     "label": "Dirigentenunterricht (Chor- und Orchesterdirigieren)",
-                    "slug": null
+                    "slug": "dirigieren"
                 }
             ],
             // "image": "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp"
@@ -271,6 +266,7 @@ export const content = {
                 { "type": "h2", "text": "Viel Spaß beim Stöbern!" }
             ],
             "videoEmbedId": "fmzshAW74VY",
+            "videoTitle": "Gemeinsames Konzert der JeKiTS-Kurse in der Grundschule der GMS-Bielefeld",
             "videoLink": "https://youtu.be/wnDXq6KOiPM"
         },
         "about": {
@@ -684,6 +680,69 @@ Telefon: 0521/3367416
 info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de`,
             "image": "/images/Trompete.webp"
+        },
+        "posaune": {
+            "title": "Posaune",
+            "description": `Posaunenunterricht an unserer Musikschule
+
+Die Posaune ist ein tiefes Blechblasinstrument mit kraftvollem, warmem Klang. Sie wird als Soloinstrument, im Ensemble, im Orchester sowie in Bläser- und Posaunenchören eingesetzt.
+
+Wie die Trompete gehört die Posaune zur Gruppe der Blechblasinstrumente. Das Spiel auf der Posaune fördert Atemtechnik, Gehör und Zusammenspiel.
+
+Unsere Musikschule erteilt Musikunterricht, Gesangunterricht, Kunstunterricht (Malunterricht) an unseren Unterrichtsorten:
+
+Kleebrink 3, 33719 Bielefeld-Heepen;
+Lagesche Str. 109, 32108 Bad Salzuflen
+Glockenweg 9, 33647 Bielefeld-Brackwede;
+Krentruper Str. 20, 33818 Leopoldshöhe
+
+Telefon: 0521/3367416
+
+info@cms-bielefeld.de
+www.musikschule-cms-bielefeld.de`,
+            "image": "/images/blechblasinstrumente_1767156191476.png"
+        },
+        "mandoline": {
+            "title": "Mandoline",
+            "description": `Mandolinenunterricht an unserer Musikschule
+
+Die Mandoline ist ein Zupfinstrument mit hellem, singendem Klang. Sie wird solistisch, in Ensembles sowie in Zupforchestern eingesetzt und eignet sich sowohl für Anfänger als auch Fortgeschrittene.
+
+Der Unterricht vermittelt Spieltechnik, Rhythmus, Gehörbildung und gemeinsames Musizieren.
+
+Unsere Musikschule erteilt Musikunterricht, Gesangunterricht, Kunstunterricht (Malunterricht) an unseren Unterrichtsorten:
+
+Kleebrink 3, 33719 Bielefeld-Heepen;
+Lagesche Str. 109, 32108 Bad Salzuflen
+Glockenweg 9, 33647 Bielefeld-Brackwede;
+Krentruper Str. 20, 33818 Leopoldshöhe
+
+Telefon: 0521/3367416
+
+info@cms-bielefeld.de
+www.musikschule-cms-bielefeld.de`,
+            "image": "/images/header_gitarre_1767157500546.png"
+        },
+        "dirigieren": {
+            "title": "Dirigentenunterricht (Chor- und Orchesterdirigieren)",
+            "description": `Dirigentenunterricht an unserer Musikschule
+
+Der Dirigentenunterricht richtet sich an Interessierte, die Chor- oder Orchesterdirigieren erlernen möchten. Im Fokus stehen Schlagtechnik, Partiturlesen, Probenmethodik und musikalische Gestaltung.
+
+Der Unterricht kann individuell auf Vorkenntnisse abgestimmt werden.
+
+Unsere Musikschule erteilt Musikunterricht, Gesangunterricht, Kunstunterricht (Malunterricht) an unseren Unterrichtsorten:
+
+Kleebrink 3, 33719 Bielefeld-Heepen;
+Lagesche Str. 109, 32108 Bad Salzuflen
+Glockenweg 9, 33647 Bielefeld-Brackwede;
+Krentruper Str. 20, 33818 Leopoldshöhe
+
+Telefon: 0521/3367416
+
+info@cms-bielefeld.de
+www.musikschule-cms-bielefeld.de`,
+            "image": "/images/gesang_1767156238520.png"
         },
         "horn": {
             "title": "Horn (Waldhorn, Tenorhorn, Baritonhorn)",
