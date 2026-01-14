@@ -179,6 +179,21 @@ cat <<EOF > nginx.conf
 server {
     listen 80;
     server_name ${SERVER_NAMES};
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_vary on;
+    gzip_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
+
+    location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files \$uri =404;
+    }
+    location /images/ {
+        add_header Cache-Control "public, max-age=2592000";
+        try_files \$uri =404;
+    }
+
     return 301 https://\$host\$request_uri;
 }
 
@@ -190,6 +205,21 @@ server {
     ssl_certificate_key ${SSL_KEY};
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_prefer_server_ciphers on;
+
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_vary on;
+    gzip_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
+
+    location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files \$uri =404;
+    }
+    location /images/ {
+        add_header Cache-Control "public, max-age=2592000";
+        try_files \$uri =404;
+    }
 
     root /usr/share/nginx/html;
     index index.html;
@@ -203,6 +233,21 @@ cat <<EOF > nginx.conf
 server {
     listen 80;
     server_name _;
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_vary on;
+    gzip_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
+
+    location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files \$uri =404;
+    }
+    location /images/ {
+        add_header Cache-Control "public, max-age=2592000";
+        try_files \$uri =404;
+    }
+
     root /usr/share/nginx/html;
     index index.html;
     location / {

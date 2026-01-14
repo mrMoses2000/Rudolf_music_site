@@ -58,12 +58,14 @@
     - Added `SSL_OS_DEEP_DIVE.md` with OS/kernel/network stack details for TLS/HTTPS.
     - Fixed `run.sh` to check cert files with `sudo test`/`sudo openssl` (avoid false negatives due to permissions).
     - `run.sh` now disables `certbot.timer` when cron renewal is configured.
+    - Added gzip + cache headers for `/assets` and `/images` in generated nginx.conf to improve load speed.
   - Now:
     - Verify Über uns and Impressum rendering on the server after recent fixes.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
     - Decide HTTPS approach details (musikschule-cms-bielefeld.de DNS + certificate provisioning) and enable on server.
     - Ports check shows only 80 listening; need to open/listen on 443 after HTTPS enablement.
     - User confirms EC2 SG allows 443; listener will appear after HTTPS container runs.
+    - Investigate slow first-load performance (initial JS/CSS, fonts, hero image); consider route-based code splitting and font hosting/preload.
   - Next:
     - Propose/iterate additional lightweight animations only if desired after reviewing performance.
 - Open questions (UNCONFIRMED if needed):
@@ -72,6 +74,7 @@
   - UNCONFIRMED: Restore legacy header phone/psalm strip on desktop, or keep current cleaner header?
   - UNCONFIRMED: Подтверждаем домен `musikschule-cms-bielefeld.de` и путь к сертификатам `/etc/letsencrypt/live/...`?
   - UNCONFIRMED: DNS сейчас настроен как URL-forwarding; можно ли заменить на A/CNAME записи?
+  - UNCONFIRMED: What is the main first-load bottleneck (JS bundle vs hero images vs fonts)? Need waterfall data.
 - Working set (files/ids/commands):
   - Files: `site/src/data/content.js`, `site/src/pages/About.jsx`, `site/src/pages/Offer.jsx`, `site/src/pages/JeKits.jsx`, `site/src/pages/Musikkurse.jsx`, `site/src/components/Blocks.jsx`, `site/src/App.jsx`.
   - Commands: `rg --files`, image conversion scripts (`cwebp`).
