@@ -12,7 +12,7 @@ const About = () => {
             <section className="relative h-[50vh] sm:h-[65vh] md:h-[70vh] flex items-end pb-12 sm:pb-20 px-6 md:px-12 overflow-hidden pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
-                        src="/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"
+                        src="/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp"
                         alt="About Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-65 saturate-110 transition-all duration-1000"

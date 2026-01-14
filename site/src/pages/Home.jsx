@@ -40,7 +40,7 @@ const Home = () => {
             <section ref={heroRef} className="relative min-h-[100vh] flex items-end pb-20 sm:pb-32 pt-28 md:pt-32 px-6 md:px-12 overflow-hidden">
                 <motion.div style={{ y, scale: scaleHero }} className="absolute inset-0 z-0">
                     <SmartImage
-                        src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
+                        src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
                         alt="Musikschule Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-75"
@@ -203,7 +203,7 @@ const Home = () => {
                                     />
 
                                     <SmartImage
-                                        src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"}
+                                        src={cat.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"}
                                         alt={cat.title}
                                         className="absolute inset-0"
                                         imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"

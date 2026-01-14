@@ -29,6 +29,56 @@ npm run dev
 
 ---
 
+## 🔐 HTTPS (443) и сертификаты Let's Encrypt
+
+### DNS (у провайдера домена)
+Нужны прямые DNS-записи, без URL-перенаправления:
+- A: `musikschule-cms-bielefeld.de` → `3.79.24.73`
+- CNAME: `www` → `musikschule-cms-bielefeld.de`  
+  (или второй A на тот же IP)
+
+Рекомендуется отключить "Weiterleitung/URL-Forwarding", чтобы избежать конфликтов и лишних редиректов.
+
+### Порты
+Откройте входящие 80 и 443 в firewall / security group.
+
+### Получение сертификатов
+Скрипт `run.sh` автоматически получит/обновит сертификаты, если:
+- Установлен `certbot`
+- Передан домен в переменной `DOMAIN`
+
+Пример запуска:
+```bash
+DOMAIN=musikschule-cms-bielefeld.de CERTBOT_EMAIL=admin@musikschule-cms-bielefeld.de ./run.sh
+```
+
+Можно хранить переменные в файле и не передавать их каждый раз:
+- `/etc/music_school.env` (предпочтительно, вне репозитория)
+- `.env` рядом с `run.sh`
+
+Пример `/etc/music_school.env`:
+```bash
+DOMAIN=musikschule-cms-bielefeld.de
+CERTBOT_EMAIL=admin@musikschule-cms-bielefeld.de
+CERT_CHECK_DAYS=30
+```
+
+По умолчанию сертификаты размещаются в:
+```
+/etc/letsencrypt/live/musikschule-cms-bielefeld.de/
+```
+
+### Автопродление
+`run.sh` создаёт скрипт и cron-задачу:
+- Скрипт: `/usr/local/bin/renew_music_school_ssl.sh`
+- Cron: `/etc/cron.d/music_school_ssl_renew` (ежедневно в 04:00)
+
+Логика: если сертификат истекает менее чем через 30 дней — контейнер
+останавливается, выполняется `certbot certonly --standalone`, затем
+контейнер запускается заново.
+
+---
+
 ## 🏗 Архитектура
 
 Проект является **Single Page Application (SPA)**.

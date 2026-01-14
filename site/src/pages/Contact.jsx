@@ -121,7 +121,7 @@ const Contact = () => {
             <section className="relative h-[35vh] sm:h-[45vh] flex items-end pb-10 sm:pb-12 px-6 md:px-12 border-b border-black/10 overflow-hidden pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
-                        src="/images/attachments-Image-IMG_11926eb1.jpg"
+                        src="/images/attachments-Image-IMG_11926eb1.webp"
                         alt="Contact Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-30 scale-110"

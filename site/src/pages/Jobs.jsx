@@ -9,7 +9,7 @@ const Jobs = () => {
     const blocks = data.blocks || [];
     const titleBlockIndex = blocks.findIndex((block) => block.type === "h1");
     const title = titleBlockIndex >= 0 ? blocks[titleBlockIndex].text : data.title || "Stellenangebote";
-    const headerImage = data.headerImage || "/images/Stellenangebote.png";
+    const headerImage = data.headerImage || "/images/Stellenangebote.webp";
     const bodyBlocks = blocks.filter((_, index) => index !== titleBlockIndex);
 
     return (

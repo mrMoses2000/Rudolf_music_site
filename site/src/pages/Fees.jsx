@@ -10,7 +10,7 @@ const Fees = () => {
             <section className="relative h-[40vh] sm:h-[50vh] flex items-end pb-12 sm:pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
-                        src={content.fees.headerImage || "/images/Gebuehren.png"}
+                        src={content.fees.headerImage || "/images/Gebuehren.webp"}
                         alt="Fees Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-50 saturate-110"

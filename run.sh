@@ -1,11 +1,81 @@
 #!/bin/bash
 
-# VERSION: 2025-12-26-V3 (Robust Direct Docker)
+# VERSION: 2025-12-26-V4 (Robust Direct Docker + HTTPS)
 # Скрипт автоматического развертывания Music School (Production Ready)
 
 set -e
 
-echo "🚀 Запуск скрипта развертывания (Версия V3)..."
+echo "🚀 Запуск скрипта развертывания (Версия V4)..."
+
+# Загрузка переменных окружения (если есть)
+ENV_FILE="${ENV_FILE:-/etc/music_school.env}"
+if [ -f "$ENV_FILE" ]; then
+    # shellcheck disable=SC1090
+    source "$ENV_FILE"
+fi
+if [ -f ".env" ]; then
+    set -a
+    # shellcheck disable=SC1091
+    source ".env"
+    set +a
+fi
+
+# HTTPS настройки (опционально)
+DOMAIN="${DOMAIN:-}"
+PRIMARY_DOMAIN="${DOMAIN#www.}"
+WWW_DOMAIN="www.${PRIMARY_DOMAIN}"
+SERVER_NAMES=""
+SSL_CERT="${SSL_CERT:-}"
+SSL_KEY="${SSL_KEY:-}"
+CERTBOT_EMAIL="${CERTBOT_EMAIL:-}"
+CERT_CHECK_DAYS="${CERT_CHECK_DAYS:-30}"
+ENABLE_HTTPS=0
+
+if [ -n "$PRIMARY_DOMAIN" ] && [ "$PRIMARY_DOMAIN" != "$DOMAIN" ]; then
+    DOMAIN="$PRIMARY_DOMAIN"
+fi
+
+if [ -n "$DOMAIN" ]; then
+    SERVER_NAMES="${PRIMARY_DOMAIN} ${WWW_DOMAIN}"
+    SSL_CERT="${SSL_CERT:-/etc/letsencrypt/live/$PRIMARY_DOMAIN/fullchain.pem}"
+    SSL_KEY="${SSL_KEY:-/etc/letsencrypt/live/$PRIMARY_DOMAIN/privkey.pem}"
+fi
+
+ensure_certificates() {
+    if [ -z "$DOMAIN" ]; then
+        return 0
+    fi
+
+    if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
+        if openssl x509 -checkend "$((CERT_CHECK_DAYS * 24 * 3600))" -noout -in "$SSL_CERT" >/dev/null 2>&1; then
+            ENABLE_HTTPS=1
+            return 0
+        fi
+    fi
+
+    if ! command -v certbot >/dev/null 2>&1; then
+        echo "📦 Устанавливаю certbot..."
+        sudo apt-get update -y
+        sudo apt-get install -y certbot
+    fi
+
+    echo "🔐 Получаю/обновляю сертификат Let's Encrypt для $PRIMARY_DOMAIN и $WWW_DOMAIN..."
+    if [ -n "$CERTBOT_EMAIL" ]; then
+        sudo certbot certonly --standalone --non-interactive --agree-tos -m "$CERTBOT_EMAIL" \
+            -d "$PRIMARY_DOMAIN" -d "$WWW_DOMAIN" --keep-until-expiring
+    else
+        echo "⚠️ CERTBOT_EMAIL не задан. Использую регистрацию без email (не рекомендуется)."
+        sudo certbot certonly --standalone --non-interactive --agree-tos --register-unsafely-without-email \
+            -d "$PRIMARY_DOMAIN" -d "$WWW_DOMAIN" --keep-until-expiring
+    fi
+
+    if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
+        ENABLE_HTTPS=1
+    else
+        echo "❌ Не удалось получить сертификат. Останавливаю скрипт."
+        exit 1
+    fi
+}
 
 # 1. Проверка системных ресурсов
 echo "📊 Проверка ресурсов..."
@@ -27,6 +97,46 @@ rm -f docker-compose.yml site/docker-compose.yml 2>/dev/null || true
 # Останавливаем вообще всё, что может занять 80 порт или иметь имя 'site'
 sudo docker stop music_school_app site_site_1 2>/dev/null || true
 sudo docker rm -f music_school_app site_site_1 2>/dev/null || true
+
+# Получение сертификатов (если настроен DOMAIN)
+ensure_certificates
+
+# Подготовка авто-обновления сертификатов (cron)
+if [ "$ENABLE_HTTPS" -eq 1 ]; then
+    RENEW_SCRIPT="/usr/local/bin/renew_music_school_ssl.sh"
+    sudo tee "$RENEW_SCRIPT" >/dev/null <<EOF
+#!/bin/bash
+set -e
+DOMAIN="$PRIMARY_DOMAIN"
+WWW_DOMAIN="$WWW_DOMAIN"
+SSL_CERT="$SSL_CERT"
+CERT_CHECK_DAYS="$CERT_CHECK_DAYS"
+CERTBOT_EMAIL="$CERTBOT_EMAIL"
+
+if [ -f "\$SSL_CERT" ] && openssl x509 -checkend "\$((CERT_CHECK_DAYS * 24 * 3600))" -noout -in "\$SSL_CERT" >/dev/null 2>&1; then
+    exit 0
+fi
+
+docker stop music_school_app 2>/dev/null || true
+
+if [ -n "\$CERTBOT_EMAIL" ]; then
+    certbot certonly --standalone --non-interactive --agree-tos -m "\$CERTBOT_EMAIL" \\
+        -d "\$DOMAIN" -d "\$WWW_DOMAIN" --keep-until-expiring
+else
+    certbot certonly --standalone --non-interactive --agree-tos --register-unsafely-without-email \\
+        -d "\$DOMAIN" -d "\$WWW_DOMAIN" --keep-until-expiring
+fi
+
+docker start music_school_app 2>/dev/null || true
+EOF
+
+    sudo chmod +x "$RENEW_SCRIPT"
+    sudo tee /etc/cron.d/music_school_ssl_renew >/dev/null <<EOF
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+0 4 * * * root $RENEW_SCRIPT
+EOF
+fi
 
 # 3. Определяем путь к исходникам
 if [ -d "site" ]; then
@@ -54,10 +164,35 @@ RUN npm run build
 FROM nginx:stable-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]
 EOF
 
+if [ "$ENABLE_HTTPS" -eq 1 ]; then
+cat <<EOF > nginx.conf
+server {
+    listen 80;
+    server_name ${SERVER_NAMES};
+    return 301 https://\$host\$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ${SERVER_NAMES};
+
+    ssl_certificate ${SSL_CERT};
+    ssl_certificate_key ${SSL_KEY};
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    root /usr/share/nginx/html;
+    index index.html;
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+}
+EOF
+else
 cat <<EOF > nginx.conf
 server {
     listen 80;
@@ -69,19 +204,27 @@ server {
     }
 }
 EOF
+fi
 
 # 5. Прямой запуск через Docker (без Compose!)
 echo "🏗️ Сборка образа (direct build)..."
 sudo docker build -t music_school_site .
 
 echo "🚀 Запуск нового контейнера (direct run)..."
+DOCKER_PORTS="-p 80:80"
+DOCKER_VOLUMES=""
+if [ "$ENABLE_HTTPS" -eq 1 ]; then
+    DOCKER_PORTS="$DOCKER_PORTS -p 443:443"
+    DOCKER_VOLUMES="-v /etc/letsencrypt:/etc/letsencrypt:ro"
+fi
+
 sudo docker run -d \
     --name music_school_app \
     --restart always \
-    -p 80:80 \
+    $DOCKER_PORTS \
+    $DOCKER_VOLUMES \
     music_school_site
 
 echo "✨ Готово! Сайт запущен напрямую через Docker."
 echo "🔗 Проверь статус: sudo docker ps"
 echo "📝 Логи: sudo docker logs -f music_school_app"
-

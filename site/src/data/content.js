@@ -14,7 +14,7 @@ export const content = {
     },
     "fees": {
         "title": "Gebühren & Anmeldung",
-        "headerImage": "/images/Gebuehren.png",
+        "headerImage": "/images/Gebuehren.webp",
         "tableTitle": "Unterrichtsentgelte",
         "tableHeader": [
             "Instrumentalunterricht / Gesangunterricht / Kunstunterricht",
@@ -101,8 +101,8 @@ export const content = {
                     "slug": "cello"
                 }
             ],
-            // "image": "/images/attachments-Image-IMG_11926eb1.jpg"
-            "image": "/images/streichinstrumente_1767156138943.png"
+            // "image": "/images/attachments-Image-IMG_11926eb1.webp"
+            "image": "/images/streichinstrumente_1767156138943.webp"
         },
         {
             "id": "zupfinstrumente",
@@ -125,8 +125,8 @@ export const content = {
                     "slug": null
                 }
             ],
-            // "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
-            "image": "/images/zupfinstrumente_1767156152934.png"
+            // "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
+            "image": "/images/zupfinstrumente_1767156152934.webp"
         },
         {
             "id": "holzblasinstrumente",
@@ -153,8 +153,8 @@ export const content = {
                     "slug": "saxophon"
                 }
             ],
-            // "image": "/images/755c30e08eb94f1c1ba10fa6fd1f80ca_fit.png"
-            "image": "/images/holzblasinstrumente_1767156168170.png"
+            // "image": "/images/755c30e08eb94f1c1ba10fa6fd1f80ca_fit.webp"
+            "image": "/images/holzblasinstrumente_1767156168170.webp"
         },
         {
             "id": "blechblasinstrumente",
@@ -173,8 +173,8 @@ export const content = {
                     "slug": "horn"
                 }
             ],
-            // "image": "/images/51f017f043c1af3875a6d6372e450d90_fit6eb1.png"
-            "image": "/images/blechblasinstrumente_1767156191476.png"
+            // "image": "/images/51f017f043c1af3875a6d6372e450d90_fit6eb1.webp"
+            "image": "/images/blechblasinstrumente_1767156191476.webp"
         },
         {
             "id": "tasteninstrumente",
@@ -193,8 +193,8 @@ export const content = {
                     "slug": "keyboard"
                 }
             ],
-            // "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
-            "image": "/images/tasteninstrumente_1767156206992.png"
+            // "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
+            "image": "/images/tasteninstrumente_1767156206992.webp"
         },
         {
             "id": "schlaginstrumente",
@@ -209,8 +209,8 @@ export const content = {
                     "slug": "cajon"
                 }
             ],
-            // "image": "/images/attachments-Image-IMG_11926eb1.jpg"
-            "image": "/images/schlaginstrumente_1767156223197.png"
+            // "image": "/images/attachments-Image-IMG_11926eb1.webp"
+            "image": "/images/schlaginstrumente_1767156223197.webp"
         },
         {
             "id": "gesang",
@@ -229,8 +229,8 @@ export const content = {
                     "slug": null
                 }
             ],
-            // "image": "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"
-            "image": "/images/gesang_1767156238520.png"
+            // "image": "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp"
+            "image": "/images/gesang_1767156238520.webp"
         }
     ],
     "footer": {
@@ -307,10 +307,10 @@ export const content = {
         },
         "jekits": {
             "title": "JeKits",
-            "headerImage": "/images/JeKits.png",
+            "headerImage": "/images/JeKits.webp",
             "logos": [
-                { "src": "/images/f46f616520f38e9455117294cd1cc70a_400x82_fit6eb1.jpg", "alt": "JeKits Logo" },
-                { "src": "/images/404fa268285de53f268209f2e6bf2806_400x198_fit6eb1.jpg", "alt": "JeKits NRW Logo" }
+                { "src": "/images/f46f616520f38e9455117294cd1cc70a_400x82_fit6eb1.webp", "alt": "JeKits Logo" },
+                { "src": "/images/404fa268285de53f268209f2e6bf2806_400x198_fit6eb1.webp", "alt": "JeKits NRW Logo" }
             ],
             "blocks": [
                 { "type": "p", "text": "Kulturelles Bildungsprogramm des Landes NRW" },
@@ -330,12 +330,12 @@ export const content = {
                 { "type": "p", "text": "www.jekits.de" }
             ],
             "images": [
-                { "src": "/images/Jekitz-ts16957280966eb1.jpg", "alt": "JeKits Unterricht" }
+                { "src": "/images/Jekitz-ts16957280966eb1.webp", "alt": "JeKits Unterricht" }
             ]
         },
         "jobs": {
             "title": "Stellenangebote",
-            "headerImage": "/images/Stellenangebote.png",
+            "headerImage": "/images/Stellenangebote.webp",
             "blocks": [
                 { "type": "h1", "text": "Stellenangebote für Musiklehrer" },
                 { "type": "h4", "text": "Der Musik- oder Kunstunterricht ist nicht nur Entwicklung von entsprechenden Fähigkeiten, sondern auch Erziehung. Wir haben qualifizierte Lehrkräfte in allen Fächern. Die Lehrerinnen und Lehrer der Musikschule vertreten selber und vermitteln bewusst den Schülern christliche Werte." },
@@ -347,7 +347,7 @@ export const content = {
         },
         "aktuelles": {
             "title": "Aktuelles",
-            "headerImage": "/images/Aktuelles.png",
+            "headerImage": "/images/Aktuelles.webp",
             "blocks": [
                 { "type": "p", "text": "Abschlussprüfungen 2024-2025 in Leopoldshöhe" },
                 { "type": "p", "text": "Liebe Schüler, liebe Eltern," },
@@ -380,7 +380,7 @@ export const content = {
         },
         "musikkurse": {
             "title": "Musikkurse MK 5,6",
-            "headerImage": "/images/Musikkurse.png",
+            "headerImage": "/images/Musikkurse.webp",
             "blocks": [
                 { "type": "p", "text": "Die Musikkurse „MK 5,6“ ist ein musikalisches Angebot der Christlichen Musikschule Bielefeld für die Fünft- und Sechstklässler in der Gesamtschule und dem Gymnasium der Georg-Müller-Schule." },
                 { "type": "p", "text": "Jeder Mensch kann im Prinzip allein Musik machen. Allerdings macht es sehr viel Spaß, zusammen zu musizieren mit vielen Menschen, die auf vielen verschiedenen Instrumenten spielen." },
@@ -393,14 +393,14 @@ export const content = {
                 { "type": "p", "text": "Das Gelernte wird bei den Vorspielen vor vielen Schülern und Eltern präsentiert." }
             ],
             "images": [
-                "/images/attachments-Image-IMG_11926eb1.jpg",
-                "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg",
-                "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg"
+                "/images/attachments-Image-IMG_11926eb1.webp",
+                "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp",
+                "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp"
             ]
         },
         "kunst": {
             "title": "Kunstunterricht",
-            "headerImage": "/images/Kunstunterricht.png",
+            "headerImage": "/images/Kunstunterricht.webp",
             "blocks": [
                 { "type": "p", "text": "Christliche Musikschule Bielefeld e. V." },
                 { "type": "p", "text": "Im Kunstunterricht wird Freude und Interesse an ästhetischen Ausdrucksformen geweckt und gefördert. Das Vorstellungsvermögen der Schüler, ihre Kreativität und Fantasie werden entfaltet und entwickelt.\nZiel des Kunstunterrichts ist Bildung praktischer Fähigkeiten in verschiedenen Arten der künstlerischen Tätigkeit: Zeichnen; Öl-, Aquarellmalerei; Komposition, plastisches Gestalten." },
@@ -416,13 +416,13 @@ export const content = {
                 { "type": "h2", "text": "Bildergalerie" }
             ],
             "gallery": [
-                { "title": "Dyck Jana Landschaft Afrika 2018", "src": "/images/42189ee51904f4cfac9dd78268430f01_fit.jpg" },
-                { "title": "Lorenz Anna Sophie 2016", "src": "/images/4b091b29c8d513583704bf772ff526e2_fit.jpg" },
-                { "title": "Lorenz Anna Sophie 2018", "src": "/images/a5ec80309870f8e02ecee1673f45dc32_fit.jpg" },
-                { "title": "Nicole Reger Portrait Aquarell 2018", "src": "/images/dcdade3ee948f10294535505b95fc5b7_fit.jpg" },
-                { "title": "Schelling Amelie Brennen 2018", "src": "/images/6f8e937184f590ec3bae64094cf13f0d_fit.jpg" },
-                { "title": "Unruh Lea  Stilleben 2018", "src": "/images/8456442b2aa8f5b22c877a3fb7612916_fit.jpg" },
-                { "title": "Unruh Lea Kohle-Portrait 2018", "src": "/images/823d64ce71e48517301eab8d134ca26a_fit.jpg" }
+                { "title": "Dyck Jana Landschaft Afrika 2018", "src": "/images/42189ee51904f4cfac9dd78268430f01_fit.webp" },
+                { "title": "Lorenz Anna Sophie 2016", "src": "/images/4b091b29c8d513583704bf772ff526e2_fit.webp" },
+                { "title": "Lorenz Anna Sophie 2018", "src": "/images/a5ec80309870f8e02ecee1673f45dc32_fit.webp" },
+                { "title": "Nicole Reger Portrait Aquarell 2018", "src": "/images/dcdade3ee948f10294535505b95fc5b7_fit.webp" },
+                { "title": "Schelling Amelie Brennen 2018", "src": "/images/6f8e937184f590ec3bae64094cf13f0d_fit.webp" },
+                { "title": "Unruh Lea  Stilleben 2018", "src": "/images/8456442b2aa8f5b22c877a3fb7612916_fit.webp" },
+                { "title": "Unruh Lea Kohle-Portrait 2018", "src": "/images/823d64ce71e48517301eab8d134ca26a_fit.webp" }
             ]
         },
 
@@ -463,7 +463,7 @@ info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de
 
 Christliche Musikschule Bielefeld`,
-            "image": "/images/header_violine_1767157486934.png"
+            "image": "/images/header_violine_1767157486934.webp"
         },
         "bratsche": {
             "title": "Bratsche",
@@ -491,7 +491,7 @@ Tel.: 0521/3367416
 info@cms-bielefeld.de
 
 https://www.musikschule-cms-bielefeld.de/`,
-            "image": "/images/Bratsche.png"
+            "image": "/images/Bratsche.webp"
         },
         "cello": {
             "title": "Cello",
@@ -517,7 +517,7 @@ info@cms-bielefeld.de
 
 besuchen Sie uns im Internet:
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/header_cello_1767158494629.png"
+            "image": "/images/header_cello_1767158494629.webp"
         },
         "gitarre": {
             "title": "Gitarre (Akkustisch, Elektrisch, E-Bass)",
@@ -546,7 +546,7 @@ Anmeldung unter:
 0521/3367416 und
 
 info@cms-bielefeld.de`,
-            "image": "/images/header_gitarre_1767157500546.png"
+            "image": "/images/header_gitarre_1767157500546.webp"
         },
         "blockfloete": {
             "title": "Blockflöte",
@@ -568,7 +568,7 @@ Anmeldung telefonisch: 0521/3347416
 Online: info@cms-bielefeld.de
 
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/header_blockfloete_1767158508450.png"
+            "image": "/images/header_blockfloete_1767158508450.webp"
         },
         "querfloete": {
             "title": "Queerflöte",
@@ -585,7 +585,7 @@ Am Flötenunterricht kann man an unseren Unterrichtsorten in:
 32108 Bad Salzuflen, Lagesche Str. 109
 
 teilnehmen`,
-            "image": "/images/header_querfloete_1767158524080.png"
+            "image": "/images/header_querfloete_1767158524080.webp"
         },
         "oboe": {
             "title": "Oboe",
@@ -606,7 +606,7 @@ Wir erteilen Musikunterricht, Kunstunterricht, Gesangunterricht an unseren Unter
 33719 Bielefeld-Heepen, Kleebrink 3,
 33818 Leopoldshöhe, Krentruper Str. 20,
 32108 Bad Salzuflen, Lagesche Str. 109`,
-            "image": "/images/header_oboe_1767158542257.png"
+            "image": "/images/header_oboe_1767158542257.webp"
         },
         "klarinette": {
             "title": "Klarinete",
@@ -637,7 +637,7 @@ Anmeldung unter: 0521/3367416
 www.musikschule-cms-bielefeld.de
 
 Christliche Musikschule Bielefeld`,
-            "image": "/images/Clarinet.png"
+            "image": "/images/Clarinet.webp"
         },
         "saxophon": {
             "title": "Saxophon",
@@ -662,7 +662,7 @@ Anmeldung unter: 0521/3367416
 www.musikschule-cms-bielefeld.de
 
 Christliche Musikschule Bielefeld`,
-            "image": "/images/Saxophon.png"
+            "image": "/images/Saxophon.webp"
         },
         "trompete": {
             "title": "Trompete",
@@ -683,7 +683,7 @@ Telefon: 0521/3367416
 
 info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/Trompete.png"
+            "image": "/images/Trompete.webp"
         },
         "horn": {
             "title": "Horn (Waldhorn, Tenorhorn, Baritonhorn)",
@@ -709,7 +709,7 @@ www.musikschule-cms-bielefeld.de
 Unsere Musikschule erteilt Musikunterricht, Gesangunterricht und Kunstunterricht an verschiedenen Unterrichtsorten.
 
 Informieren Sie sich auf unserer Website über uns und unser Angebot.`,
-            "image": "/images/Horn.png"
+            "image": "/images/Horn.webp"
         },
         "klavier": {
             "title": "Klavier",
@@ -738,7 +738,7 @@ Anmeldung unter:
 0521/3367416 und
 
 info@cms-bielefeld.de`,
-            "image": "/images/header_klavier_1767157516215.png"
+            "image": "/images/header_klavier_1767157516215.webp"
         },
         "akkordeon": {
             "title": "Akkordeon",
@@ -771,7 +771,7 @@ www.musikschule-cms-bielefeld.de
 Unsere Musikschule erteilt Musikunterricht, Gesangunterricht und Kunstunterricht an verschiedenen Unterrichtsorten.
 
 Informieren Sie sich auf unserer Website über uns und unser Angebot.`,
-            "image": "/images/Akkordeon.png"
+            "image": "/images/Akkordeon.webp"
         },
         "keyboard": {
             "title": "Keyboard",
@@ -795,14 +795,14 @@ info@cms-bielefeld.de
 
 besuchen Sie uns im Internet:
 www.musikschule-cms-bielefeld.de`,
-            "image": "/images/Keyboard.png"
+            "image": "/images/Keyboard.webp"
         },
         "schlagzeug": {
             "title": "Schlagzeug",
             "description": `Schlagzeuger sind oftmals wichtige Mitglieder von Bands und sorgen als Taktgeber für den grundlegenden Rhythmus.
 
 Das Instrument setzt gewissermaßen die Tradition des Trommelns um, die die Menschheit bereits seit jeher begleitet und eine der essentiellen Grundformen des Musizierens darstellt. Obgleich sich die Musik im Laufe der Zeit gewandelt hat, sind Schlaginstrumente nach wie vor von großer Bedeutung.`,
-            "image": "/images/header_schlagzeug_1767157529915.png"
+            "image": "/images/header_schlagzeug_1767157529915.webp"
         },
         "cajon": {
             "title": "Cajon",
@@ -827,7 +827,7 @@ info@cms-bielefeld.de
 www.musikschule-cms-bielefeld.de
 
 Christliche Musikschule Bielefeld`,
-            "image": "/images/Cajon.png"
+            "image": "/images/Cajon.webp"
         },
         "gesang": {
             "title": "Gesang (Stimmbildung)",
@@ -846,7 +846,7 @@ Unsere Musikschule erteilt Gesangunterricht, Musikunterricht und Kunstunterricht
 Anmeldung: telefonisch - 0521/3367416
 
 Und online – info@cms-bielefeld.de`,
-            "image": "/images/header_gesang_1767157543115.png"
+            "image": "/images/header_gesang_1767157543115.webp"
         }
     },
     "legal": {

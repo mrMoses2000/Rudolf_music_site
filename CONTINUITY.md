@@ -49,15 +49,25 @@
     - Mobile responsiveness pass across Home/Offer/Fees/About/Contact/JeKits/Musikkurse/Kunst/Jobs/Aktuelles/InstrumentPage (hero sizing, spacing, buttons, table padding).
     - Fees mobile table header now visible (mobile-only header) with price column header hidden on small screens.
     - Mobile hamburger menu now matches desktop nav items/order.
+    - Switched all `/images/*.png|*.jpg` references to `.webp` across pages/content and updated `imageVariants` to accept `.webp`.
+    - Removed duplicate `.png/.jpg` files from `site/public/images` after verifying `.webp` coverage.
+    - Added HTTPS (443) automation in `run.sh`: certbot install/check, auto-issue/renew, 80→443 redirect, 443 mount, cron renewal script.
+    - Documented DNS/HTTPS setup in `README.md`.
+    - `run.sh` now auto-sources `/etc/music_school.env` or local `.env` for DOMAIN/CERTBOT_EMAIL.
   - Now:
     - Verify Über uns and Impressum rendering on the server after recent fixes.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
+    - Decide HTTPS approach details (musikschule-cms-bielefeld.de DNS + certificate provisioning) and enable on server.
+    - Ports check shows only 80 listening; need to open/listen on 443 after HTTPS enablement.
+    - User confirms EC2 SG allows 443; listener will appear after HTTPS container runs.
   - Next:
     - Propose/iterate additional lightweight animations only if desired after reviewing performance.
 - Open questions (UNCONFIRMED if needed):
   - UNCONFIRMED: Какие именно данные для Impressum должны быть «нынешними» (адрес/телефон/email/ответственные)?
   - UNCONFIRMED: Which page/which “оглавление” image loads slowly (hero/offer cards/etc.) and is it network delay or motion fade?
   - UNCONFIRMED: Restore legacy header phone/psalm strip on desktop, or keep current cleaner header?
+  - UNCONFIRMED: Подтверждаем домен `musikschule-cms-bielefeld.de` и путь к сертификатам `/etc/letsencrypt/live/...`?
+  - UNCONFIRMED: DNS сейчас настроен как URL-forwarding; можно ли заменить на A/CNAME записи?
 - Working set (files/ids/commands):
   - Files: `site/src/data/content.js`, `site/src/pages/About.jsx`, `site/src/pages/Offer.jsx`, `site/src/pages/JeKits.jsx`, `site/src/pages/Musikkurse.jsx`, `site/src/components/Blocks.jsx`, `site/src/App.jsx`.
   - Commands: `rg --files`, image conversion scripts (`cwebp`).

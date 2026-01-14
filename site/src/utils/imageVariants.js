@@ -1,6 +1,6 @@
 const buildWebpSrcSet = (src, widths) => {
     if (!src || !Array.isArray(widths) || widths.length === 0) return undefined;
-    const base = src.replace(/\.(png|jpe?g)$/i, "");
+    const base = src.replace(/\.(png|jpe?g|webp)$/i, "");
     return widths
         .map((width, index) => {
             const suffix = index === widths.length - 1 ? ".webp" : `-${width}.webp`;
@@ -10,23 +10,25 @@ const buildWebpSrcSet = (src, widths) => {
 };
 
 const webpSrcSets = {
-    "/images/Trompete.png": buildWebpSrcSet("/images/Trompete.png", [1280, 1920, 4800]),
-    "/images/Stellenangebote.png": buildWebpSrcSet("/images/Stellenangebote.png", [1280, 1920, 4800]),
-    "/images/Saxophon.png": buildWebpSrcSet("/images/Saxophon.png", [1280, 1920, 4800]),
-    "/images/Musikkurse.png": buildWebpSrcSet("/images/Musikkurse.png", [1280, 1920, 4800]),
-    "/images/Kunstunterricht.png": buildWebpSrcSet("/images/Kunstunterricht.png", [1280, 1920, 4800]),
-    "/images/Keyboard.png": buildWebpSrcSet("/images/Keyboard.png", [1280, 1920, 4800]),
-    "/images/JeKits.png": buildWebpSrcSet("/images/JeKits.png", [1280, 1920, 4800]),
-    "/images/Horn.png": buildWebpSrcSet("/images/Horn.png", [1280, 1920, 4800]),
-    "/images/Clarinet.png": buildWebpSrcSet("/images/Clarinet.png", [1280, 1920, 4800]),
-    "/images/Cajon.png": buildWebpSrcSet("/images/Cajon.png", [1280, 1920, 4800]),
-    "/images/Bratsche.png": buildWebpSrcSet("/images/Bratsche.png", [1280, 1920, 4800]),
-    "/images/Akkordeon.png": buildWebpSrcSet("/images/Akkordeon.png", [1280, 1920, 4800]),
-    "/images/attachments-Image-IMG_11926eb1.jpg": buildWebpSrcSet("/images/attachments-Image-IMG_11926eb1.jpg", [1280, 1920, 4032]),
-    "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg": buildWebpSrcSet("/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg", [1280, 1560]),
-    "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg": buildWebpSrcSet("/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.jpg", [1280, 1560]),
-    "/images/Aktuelles.png": buildWebpSrcSet("/images/Aktuelles.png", [1280, 1920, 3120]),
-    "/images/Gebuehren.png": buildWebpSrcSet("/images/Gebuehren.png", [1280, 1920, 2640])
+    "/images/Trompete.webp": buildWebpSrcSet("/images/Trompete.webp", [1280, 1920, 4800]),
+    "/images/Stellenangebote.webp": buildWebpSrcSet("/images/Stellenangebote.webp", [1280, 1920, 4800]),
+    "/images/Saxophon.webp": buildWebpSrcSet("/images/Saxophon.webp", [1280, 1920, 4800]),
+    "/images/Musikkurse.webp": buildWebpSrcSet("/images/Musikkurse.webp", [1280, 1920, 4800]),
+    "/images/Kunstunterricht.webp": buildWebpSrcSet("/images/Kunstunterricht.webp", [1280, 1920, 4800]),
+    "/images/Keyboard.webp": buildWebpSrcSet("/images/Keyboard.webp", [1280, 1920, 4800]),
+    "/images/JeKits.webp": buildWebpSrcSet("/images/JeKits.webp", [1280, 1920, 4800]),
+    "/images/Horn.webp": buildWebpSrcSet("/images/Horn.webp", [1280, 1920, 4800]),
+    "/images/Clarinet.webp": buildWebpSrcSet("/images/Clarinet.webp", [1280, 1920, 4800]),
+    "/images/Cajon.webp": buildWebpSrcSet("/images/Cajon.webp", [1280, 1920, 4800]),
+    "/images/Bratsche.webp": buildWebpSrcSet("/images/Bratsche.webp", [1280, 1920, 4800]),
+    "/images/Akkordeon.webp": buildWebpSrcSet("/images/Akkordeon.webp", [1280, 1920, 4800]),
+    "/images/attachments-Image-IMG_11926eb1.webp": buildWebpSrcSet("/images/attachments-Image-IMG_11926eb1.webp", [1280, 1920, 4032]),
+    "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp": buildWebpSrcSet("/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp", [1280, 1560]),
+    "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp": buildWebpSrcSet("/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp", [1280, 1560]),
+    "/images/Aktuelles.webp": buildWebpSrcSet("/images/Aktuelles.webp", [1280, 1920, 3120]),
+    "/images/Gebuehren.webp": buildWebpSrcSet("/images/Gebuehren.webp", [1280, 1920, 2640])
 };
 
-export const getWebpSrcSet = (src) => webpSrcSets[src];
+const normalizeWebpKey = (src) => src?.replace(/\.(png|jpe?g)$/i, ".webp");
+
+export const getWebpSrcSet = (src) => webpSrcSets[src] || webpSrcSets[normalizeWebpKey(src)];

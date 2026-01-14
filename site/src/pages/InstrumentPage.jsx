@@ -44,7 +44,7 @@ const InstrumentPage = () => {
             <section className="relative h-[50vh] sm:h-[65vh] md:h-[70vh] flex items-end pb-12 sm:pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
                 <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
                     <SmartImage
-                        src={instrumentData.image || "/images/attachments-Image-IMG_11926eb1.jpg"}
+                        src={instrumentData.image || "/images/attachments-Image-IMG_11926eb1.webp"}
                         alt={instrumentData.title}
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-55 saturate-110"

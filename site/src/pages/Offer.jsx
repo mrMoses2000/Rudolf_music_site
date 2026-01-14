@@ -31,29 +31,29 @@ const Offer = () => {
     const offerMainButtons = [
         {
             label: "Instrumente & Gesang",
-            image: "/images/streichinstrumente_1767156138943.png", // Use one of the good ones
+            image: "/images/streichinstrumente_1767156138943.webp", // Use one of the good ones
             action: toggleInstruments,
             isToggle: true
         },
         {
             label: "JeKits",
             to: "/jekits",
-            image: "/images/jekits_unique_1767157360834.png"
+            image: "/images/jekits_unique_1767157360834.webp"
         },
         {
             label: "Musikkurse 5 & 6",
             to: "/musikkurse",
-            image: "/images/offer_button_musikkurse_1767157375538.png"
+            image: "/images/offer_button_musikkurse_1767157375538.webp"
         },
         {
             label: "Kunstunterricht",
             to: "/kunst",
-            image: "/images/offer_button_kunst_1767157402302.png"
+            image: "/images/offer_button_kunst_1767157402302.webp"
         },
         {
             label: "Stellenangebote",
             to: "/jobs",
-            image: "/images/offer_button_jobs_1767157417216.png"
+            image: "/images/offer_button_jobs_1767157417216.webp"
         }
     ];
 
@@ -63,7 +63,7 @@ const Offer = () => {
             <section className="relative h-[40vh] sm:h-[50vh] flex items-end pb-12 sm:pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32">
                 <div className="absolute inset-0 z-0 text-center">
                     <SmartImage
-                        src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.jpg"
+                        src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
                         alt="Offer Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-30 saturate-0 scale-105"

@@ -10,7 +10,7 @@ const Aktuelles = () => {
             <section className="relative h-[45vh] sm:h-[55vh] md:h-[60vh] flex items-end pb-12 sm:pb-16 px-6 md:px-12 overflow-hidden border-b border-black/10 pt-32 mb-12 sm:mb-20">
                 <div className="absolute inset-0 z-0">
                     <SmartImage
-                        src={data.headerImage || "/images/Aktuelles.png"}
+                        src={data.headerImage || "/images/Aktuelles.webp"}
                         alt="Aktuelles"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-90"
