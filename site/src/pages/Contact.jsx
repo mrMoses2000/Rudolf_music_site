@@ -13,6 +13,8 @@ const Contact = () => {
         subject: "",
         message: ""
     });
+    const web3formsKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    const web3formsToEmail = import.meta.env.VITE_WEB3FORMS_TO_EMAIL || content.contact.email;
 
     useEffect(() => {
         // Check for subject in location state (nav state) OR query params
@@ -46,6 +48,11 @@ const Contact = () => {
         // 2. n8n Webhook (for the planned CMS integration)
 
         try {
+            if (!web3formsKey) {
+                console.error("Missing VITE_WEB3FORMS_KEY");
+                setStatus("error");
+                return;
+            }
             // For now, let's use Web3Forms as a solid bridge
             // USER: Replace YOUR_ACCESS_KEY_HERE with your key from web3forms.com
             // Or replace this URL with your n8n webhook once ready!
@@ -56,10 +63,10 @@ const Contact = () => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                    access_key: "e6f51cb3-ae9e-4deb-9989-5cf892fbc8a4", // Actual Key
+                    access_key: web3formsKey,
                     from_name: "Musikschule Website",
                     ...formData,
-                    to_email: "mosesvasilenko0002@gmail.com"
+                    to_email: web3formsToEmail
                 })
             });
 
