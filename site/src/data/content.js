@@ -374,26 +374,6 @@ export const content = {
             ]
 
         },
-        "musikkurse": {
-            "title": "Musikkurse MK 5,6",
-            "headerImage": "/images/Musikkurse.webp",
-            "blocks": [
-                { "type": "p", "text": "Die Musikkurse „MK 5,6“ ist ein musikalisches Angebot der Christlichen Musikschule Bielefeld für die Fünft- und Sechstklässler in der Gesamtschule und dem Gymnasium der Georg-Müller-Schule." },
-                { "type": "p", "text": "Jeder Mensch kann im Prinzip allein Musik machen. Allerdings macht es sehr viel Spaß, zusammen zu musizieren mit vielen Menschen, die auf vielen verschiedenen Instrumenten spielen." },
-                { "type": "p", "text": "Es werden Lieder und Musikstücke gespielt, es wird improvisiert, die Grundlagen für die Ausbildung musikalischer Fähigkeiten werden gelegt und vertieft." },
-                { "type": "p", "text": "Gemeinsames Musizieren fördert Teamfähigkeit und Rücksichtnahme, die Kinder lernen sich und andere wahrzunehmen." },
-                { "type": "p", "text": "Der Instrumentalunterricht findet in Gruppen statt. Angeboten werden: Flöte, Klarinette, Saxophon, Trompete, Posaune, Geige, Cello." },
-                { "type": "p", "text": "Nach dem Gruppenunterricht kommt noch eine weitere Unterrichtseinheit, in der die Instrumentalgruppen in einem MK-Orchester zusammen musizieren." },
-                { "type": "p", "text": "Musikinstrumente können für die Dauer des Kurses ausgeliehen werden." },
-                { "type": "p", "text": "Die Kursdauer – ein Jahr. Sowohl die Fünftklässler als auch die Sechstklässler können sich zum Kurs anmelden." },
-                { "type": "p", "text": "Das Gelernte wird bei den Vorspielen vor vielen Schülern und Eltern präsentiert." }
-            ],
-            "images": [
-                "/images/attachments-Image-IMG_11926eb1.webp",
-                "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp",
-                "/images/51b6bc79bee489416ea4c75cdcae2bf3_1560x1040_fit6eb1.webp"
-            ]
-        },
         "kunst": {
             "title": "Kunstunterricht",
             "headerImage": "/images/Kunstunterricht.webp",
