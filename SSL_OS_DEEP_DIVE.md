@@ -1,227 +1,209 @@
-# SSL_OS_DEEP_DIVE.md
+# SSL_OS_DEEP_DIVE.md — TLS/HTTPS «под капотом» ОС (Ubuntu + Docker + Nginx)
 
-## Назначение
-Максимально детальное пособие: как HTTPS/сертификаты/TLS работают «под капотом» на Ubuntu с Docker + Nginx, вплоть до сетевого стека ядра и системных вызовов.
-
----
-
-## 0) Карта компонентов (на сервере)
-
-**User space**
-- `run.sh` — orchestration скрипт
-- `certbot` — ACME‑клиент (получает/обновляет сертификаты)
-- `docker`/`containerd` — управление контейнером
-- `nginx` — HTTP/TLS сервер в контейнере
-- `cron` — периодический запуск обновления сертификатов
-
-**Kernel space**
-- Сетевой стек Linux (TCP/IP)
-- Netfilter (iptables/nftables)
-- VFS/FS (ext4/xfs) и page cache
-- Namespace/CGroups для контейнеров
+Цель: объяснить, какие процессы, системные вызовы и структуры ядра задействованы при HTTPS, и как это связано с криптографией.
 
 ---
 
-## 1) Файлы сертификатов: как ОС их видит
+## 0) Уровни и границы ответственности
 
-Путь:
+**User space:** nginx, OpenSSL, certbot, docker, cron.  
+**Kernel space:** TCP/IP стек, netfilter, файловые системы, планировщик, драйверы NIC.
+
+**Причина‑следствие:**
+- TLS реализован в user space (OpenSSL).  
+- Передача пакетов, буферы, очереди, retransmit — ядро.  
+- Сертификаты — файлы на FS → читаются OpenSSL.  
+
+---
+
+## 1) От пакета до HTTP (TCP + TLS)
+
+### 1.1 Сетевой путь
+1) **NIC** принимает фрейм (DMA) → драйвер.
+2) **NAPI** формирует `struct sk_buff`.
+3) L2/L3/L4 в ядре обрабатывают пакет.
+4) netfilter (PREROUTING → DNAT → FORWARD).
+5) Сегменты попадают в TCP reassembly queue.
+6) TCP отдаёт байты сокету (receive queue).
+
+### 1.2 Ключевые структуры ядра
+- `struct sk_buff` — контейнер для пакета в Linux (метаданные + payload).
+- `struct sock` / `struct tcp_sock` — состояние TCP‑сокета (окна, очереди, таймеры).
+- `struct net_device` — интерфейс (eth0), таблицы адресов, MTU.
+- RX/TX ring buffers — кольцевые буферы у драйвера NIC.
+
+**Следствие:** даже «один пакет» проходит несколько очередей и структур, прежде чем окажется в user space.
+
+### 1.3 RX‑путь (подробно)
+1) NIC пишет данные в RX ring через DMA.
+2) Драйвер вызывает softirq → NAPI poll.
+3) Создаётся `sk_buff`, заполняются указатели на L2/L3/L4.
+4) GRO (Generic Receive Offload) может объединить сегменты.
+5) `ip_rcv()` → `tcp_v4_rcv()`.
+6) TCP проверяет sequence/ACK, кладёт байты в receive queue.
+7) Сокет становится «readable» → `epoll` будит процесс.
+
+### 1.4 TX‑путь (подробно)
+1) `nginx` вызывает `write()`/`sendfile()`.
+2) Ядро создаёт `sk_buff` и помещает данные в send queue.
+3) TCP сегментирует, ставит sequence/ACK.
+4) Qdisc (fq_codel и т.п.) решает порядок отправки.
+5) Драйвер помещает пакеты в TX ring → NIC отправляет.
+
+### 1.5 Передача в user space
+- `nginx` ждёт через `epoll_wait()`.
+- `accept4()` возвращает новый сокет.
+- `read()` даёт TLS‑записи (байты), которые OpenSSL парсит.
+
+**Следствие:** всё шифрование/проверка подписи — в user space, не в ядре.
+
+---
+
+## 2) TLS‑рукопожатие на уровне системных вызовов
+
+1) `socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)`
+2) `bind()` + `listen()`
+3) `accept4()`
+4) `SSL_accept()` (OpenSSL)
+   - `read()` → ClientHello
+   - вычисления (ECDHE, HKDF)
+   - `write()` → ServerHello/Certificate/Finished
+
+**Причина:** TLS — протокол поверх TCP, поэтому всё идёт через сокеты и системные вызовы.
+
+### 2.1 Где CPU и память
+- **ECDHE/подписи** выполняются в user space (OpenSSL) и нагружают CPU.
+- **Копирование буферов**: kernel → user (`copy_to_user`).
+- **Page cache** ускоряет чтение файлов сертификата.
+
+**Следствие:** узким местом может быть CPU (криптография) или память (копирование), а не сеть.
+
+---
+
+## 3) Файлы сертификатов и чтение из ФС
+
+Файлы:
 ```
 /etc/letsencrypt/live/<domain>/fullchain.pem
 /etc/letsencrypt/live/<domain>/privkey.pem
 ```
 
-Что происходит:
-1) Nginx стартует и вызывает `open()` на эти файлы.
-2) VFS ищет inode, читает блоки с диска (или из page cache).
-3) OpenSSL парсит PEM → строит внутренние структуры `X509`, `EVP_PKEY`.
+Как читает OpenSSL:
+1) `open()` → fd
+2) `read()` → байты
+3) парсинг PEM → ASN.1 DER → структуры X509/EVP
 
-**Проблемы здесь:**
-- неверные права на файлы
-- файлов нет
-- контейнер не видит `/etc/letsencrypt` (нет mount)
+**Причина:** без корректного чтения этих файлов сервер не может завершить TLS handshake.
 
----
-
-## 2) ACME / certbot: процесс получения сертификата
-
-### 2.1 Основной поток
-1) certbot создаёт ACME‑аккаунт (ключи клиента).
-2) Запрашивает сертификат для домена.
-3) Получает challenge HTTP‑01.
-4) Поднимает **временный HTTP‑сервер** на 80 порту.
-5) Let’s Encrypt делает HTTP‑запрос на:
-   `http://<domain>/.well-known/acme-challenge/<token>`
-6) Если ответ совпал — выдаёт сертификат.
-
-### 2.2 На уровне ОС
-certbot вызывает:
-- `socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)`
-- `bind(fd, 0.0.0.0:80)`
-- `listen(fd, backlog)`
-- `accept4()` для каждого запроса
-- `send()` токен и закрывает соединение
-
-**Важно:** 80 порт должен быть свободен (поэтому контейнер останавливается).
+### 3.1 Page cache и sendfile
+`sendfile()` позволяет читать из page cache и отправлять в сокет без лишнего копирования.
+Для статических файлов это ускоряет отдачу и снижает нагрузку CPU.
 
 ---
 
-## 3) Docker port mapping (как 80/443 попадают в контейнер)
+## 4) Docker и проброс портов
 
-При `docker run -p 80:80 -p 443:443` Docker:
-- создаёт **veth‑пару**
-- создаёт сетевой namespace для контейнера
-- добавляет **iptables DNAT** (или nftables ruleset)
+`docker run -p 80:80 -p 443:443`:
+- создаёт veth‑пару
+- добавляет DNAT‑правила
+- иногда запускает `docker-proxy`
 
 Схема:
 ```
-Интернет -> eth0(host) -> netfilter PREROUTING (DNAT) -> veth -> container -> nginx
+Интернет -> host eth0 -> netfilter (DNAT) -> veth -> container -> nginx
 ```
 
-Инструменты проверки:
-```
-sudo ip a
-sudo ip link
-sudo iptables -t nat -S | rg 80
-sudo nft list ruleset
-```
+**Следствие:** если DNAT не работает — пакеты не доходят до nginx.
 
-**docker-proxy**:
-В некоторых конфигурациях Docker запускает `docker-proxy`, который слушает порт и пересылает в контейнер. Это видно в `lsof`.
+### 4.1 Где могут быть проблемы
+- Правила nftables/iptables отсутствуют.
+- `docker-proxy` не запущен.
+- Контейнер слушает 443, но проброс только 80.
 
 ---
 
-## 4) Путь входящего пакета (Linux kernel)
+## 5) TLS записи, AEAD и ядро
 
-1) NIC получает кадр (DMA).
-2) Драйвер поднимает NAPI → создаёт `struct sk_buff`.
-3) Пакет идёт в сетевой стек:
-   - L2 → L3 → L4
-4) netfilter hooks:
-   - PREROUTING
-   - CONNTRACK
-   - DNAT
-5) Маршрутизация → FORWARD
-6) Выход в veth контейнера
-
-**Ключевые структуры ядра:**
-- `struct sk_buff` — буфер пакета
-- `struct net_device` — интерфейс
-- `struct sock` / `struct tcp_sock` — сокет и TCP‑состояние
-- conntrack table
-
----
-
-## 5) Принятие соединения nginx (epoll)
-
-1) `nginx` создаёт слушающий сокет (`socket`, `bind`, `listen`).
-2) Рабочий процесс регистрирует FD в `epoll`.
-3) При новом соединении `epoll_wait` возвращает событие.
-4) `accept4()` → новый socket FD.
-5) Nginx вызывает OpenSSL TLS‑handshake на этом сокете.
-
-**Событийная модель:** epoll + неблокирующие сокеты.
-
----
-
-## 6) TLS 1.3 — внутренняя механика в OpenSSL
-
-### 6.1 Ключевые шаги
-1) `ClientHello` (открыто)
-2) `ServerHello` (открыто)
-3) Дальше — зашифровано:
-   - EncryptedExtensions
-   - Certificate
-   - CertificateVerify
-   - Finished
-
-### 6.2 ECDHE
-Сервер и клиент обмениваются ключами:
+TLS‑record шифруется в user space и передаётся в TCP:
 ```
-S = g^(ab)
-K = HKDF(S || transcript)
-```
-После этого все HTTP данные шифруются симметрично.
-
-### 6.3 OpenSSL внутри nginx
-Nginx вызывает:
-- `SSL_accept()`
-  - читает ClientHello
-  - выбирает cipher suite
-  - формирует ServerHello
-  - отправляет Certificate/Finished
-- затем `SSL_read()` / `SSL_write()`
-
----
-
-## 7) Формирование TLS‑пакета (микро‑уровень)
-
-Каждое сообщение TLS упаковывается в **TLS record**:
-```
-struct tls_record {
-  uint8_t  content_type;   // 0x17 (application data)
-  uint16_t legacy_version; // 0x0303
-  uint16_t length;
-  uint8_t  encrypted_payload[length];
-}
+TLS record -> write() -> TCP -> IP -> NIC
 ```
 
-Далее TLS‑record идёт в TCP сегмент, который идёт в IP пакет.
+**Причина‑следствие:**
+- TCP не знает о TLS.
+- Ядро не видит HTTP, оно видит байты TLS.
+
+### 5.1 AEAD на уровне данных
+Современные шифры TLS 1.3 — это AEAD (например, AES‑GCM).
+Каждая запись имеет **тег аутентичности**, ядро его не проверяет — это делает OpenSSL.
 
 ---
 
-## 8) Где шифруются данные
+## 6) HTTP/2 и HTTP/3
 
-Все HTTP данные (запросы/ответы) становятся `TLS Application Data` и шифруются:
-- AES‑GCM или ChaCha20‑Poly1305
-- Включают MAC/AEAD‑тег
+### HTTP/2
+- Работает поверх TLS/TCP.
+- Мультиплексирование запросов по одному соединению.
 
----
+### HTTP/3 (QUIC)
+- TLS 1.3 встроен в QUIC.
+- Поверх UDP, своя retransmit‑логика.
 
-## 9) Что делает cron‑обновление
-
-`/etc/cron.d/music_school_ssl_renew` запускает:
-`/usr/local/bin/renew_music_school_ssl.sh`
-
-Скрипт:
-1) Проверяет дату истечения сертификата (`openssl x509 -checkend`)
-2) Если скоро истекает → останавливает контейнер
-3) Запускает certbot → получает новый сертификат
-4) Запускает контейнер снова
+**Следствие:** для HTTP/3 нужен иной сетевой стек (обычно через CDN).
 
 ---
 
-## 10) Диагностика на уровне ОС
+## 7) certbot и ACME — на уровне процессов
 
-Сокеты:
+1) cron запускает `/usr/local/bin/renew_music_school_ssl.sh`
+2) certbot поднимает временный HTTP‑сервер:
+   - `socket()` → `bind()` на 80 → `listen()`
+3) CA делает запрос → certbot отдаёт challenge
+4) certbot пишет новые файлы сертификата
+
+### 7.1 Что видит ядро
+Для ядра certbot — это просто процесс, который:
+- `listen()` на 80
+- `accept()` соединение
+- `read()` запрос
+- `write()` ответ
+Вся «магия» ACME для ядра — обычные HTTP‑запросы.
+
+---
+
+## 8) Диагностика (причинно‑следственные проверки)
+
+- Проверка слушающих портов:
 ```
 sudo ss -tulpn
 ```
-
-Таблица NAT:
+- Проверка DNAT:
 ```
 sudo iptables -t nat -S
 ```
-
-Живой TCP трафик:
+- Проверка сертификата:
 ```
-sudo tcpdump -i eth0 port 443
+openssl x509 -in /etc/letsencrypt/live/<domain>/fullchain.pem -noout -enddate
 ```
-
-Проверка TLS:
+- Проверка TLS:
 ```
 openssl s_client -connect <domain>:443 -servername <domain>
 ```
 
 ---
 
-## 11) Где ломается чаще всего
+## 9) Cloudflare как промежуточный TLS‑узел
 
-1) DNS не указывает на сервер → certbot не проходит HTTP‑01  
-2) 80 закрыт → certbot не работает  
-3) Nginx не видит сертификат (mount нет)  
-4) Истёк сертификат → браузер ругается  
-5) Ошибка цепочки → неправильный `fullchain.pem`
+Когда включён Cloudflare:
+```
+Клиент <—TLS—> Cloudflare <—TLS—> Origin
+```
+
+**Причина‑следствие:**
+- Клиент получает сертификат Cloudflare.
+- Cloudflare открывает свою TLS‑сессию к вашему серверу.
+- Ваш сервер всё ещё обязан иметь валидный сертификат (Full strict).
 
 ---
 
-Если хотите, добавлю **байтовый разбор ClientHello/ServerHello** и трассу `tcpdump` с декодированием каждого поля.
+Это системная картина. Для строгой математики см. `SSL_GUIDE.md`.

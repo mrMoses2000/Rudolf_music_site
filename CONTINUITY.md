@@ -37,6 +37,12 @@
     - Ещё повышено качество hero‑изображений (WebP 75 / AVIF 60) и улучшено превью YouTube (srcset).
     - Апскейл JeKits‑фото до 1400px и обновление его srcset‑вариантов.
     - Переведён Web3Forms ключ и адрес получателя в переменные окружения (VITE_WEB3FORMS_KEY, VITE_WEB3FORMS_TO_EMAIL).
+    - Обновлены все .md документы проекта под текущее состояние (AGENTS/README/Info/SSL).
+    - Переписаны гайды по TLS/криптографии с математикой и ОС (SSL_GUIDE/SSL_OS_DEEP_DIVE/TLS_CERT_UNDER_THE_HOOD).
+    - Добавлен раздел Cloudflare (шаг‑за‑шагом) в README.
+    - В `TLS_CERT_UNDER_THE_HOOD.md` добавлено краткое введение в теорию групп и полей.
+    - Добавлены гайды: `DNS_TLS_CERTS_DEEP_DIVE.md`, `BROWSER_UNDER_THE_HOOD.md`, `NGINX_UNDER_THE_HOOD.md`.
+    - Расширен `SSL_OS_DEEP_DIVE.md` (структуры ядра, RX/TX путь, AEAD, page cache).
   - Now:
     - Завершить merge‑коммит после разрешения конфликтов.
     - Проверить, что `run.sh` и HTTPS работают после мерджа.
