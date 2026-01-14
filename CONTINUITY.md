@@ -54,6 +54,8 @@
     - Added HTTPS (443) automation in `run.sh`: certbot install/check, auto-issue/renew, 80→443 redirect, 443 mount, cron renewal script.
     - Documented DNS/HTTPS setup in `README.md`.
     - `run.sh` now auto-sources `/etc/music_school.env` or local `.env` for DOMAIN/CERTBOT_EMAIL.
+    - Added `SSL_GUIDE.md` with formal, visual TLS/certificate explanation.
+    - Added `SSL_OS_DEEP_DIVE.md` with OS/kernel/network stack details for TLS/HTTPS.
   - Now:
     - Verify Über uns and Impressum rendering on the server after recent fixes.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.
