@@ -70,7 +70,7 @@ const Layout = () => {
                     </nav>
 
                     {/* Kontakt Button */}
-                    <Link to="/contact" className="hidden sm:block bg-ink text-paper px-6 py-2.5 rounded-full font-black text-xs uppercase tracking-widest hover:bg-gold hover:text-ink hover:scale-105 transition-all active:scale-95 shadow-[0_12px_30px_rgba(43,36,29,0.15)]">
+                    <Link to="/contact" className="hidden lg:block bg-ink text-paper px-6 py-2.5 rounded-full font-black text-xs uppercase tracking-widest hover:bg-gold hover:text-ink hover:scale-105 transition-all active:scale-95 shadow-[0_12px_30px_rgba(43,36,29,0.15)]">
                         {content.header.cta}
                     </Link>
 
@@ -113,6 +113,14 @@ const Layout = () => {
                             <Link to="/agb" className="hover:text-gold">AGB</Link>
                             <Link to="/impressum" className="hover:text-gold">Impressum</Link>
                         </nav>
+                        
+                        {/* Kontakt Button for Mobile Menu */}
+                        <Link 
+                            to="/contact" 
+                            className="mt-12 bg-ink text-paper px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:bg-gold hover:text-ink transition-all active:scale-95 shadow-[0_12px_30px_rgba(43,36,29,0.15)] text-center"
+                        >
+                            {content.header.cta}
+                        </Link>
                     </motion.div>
                 )}
             </AnimatePresence>
