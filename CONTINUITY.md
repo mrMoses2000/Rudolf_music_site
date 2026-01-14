@@ -56,6 +56,8 @@
     - `run.sh` now auto-sources `/etc/music_school.env` or local `.env` for DOMAIN/CERTBOT_EMAIL.
     - Added `SSL_GUIDE.md` with formal, visual TLS/certificate explanation.
     - Added `SSL_OS_DEEP_DIVE.md` with OS/kernel/network stack details for TLS/HTTPS.
+    - Fixed `run.sh` to check cert files with `sudo test`/`sudo openssl` (avoid false negatives due to permissions).
+    - `run.sh` now disables `certbot.timer` when cron renewal is configured.
   - Now:
     - Verify Über uns and Impressum rendering on the server after recent fixes.
     - Verify image-load latency after WebP/srcset additions; consider further preloads if still slow.

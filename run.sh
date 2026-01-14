@@ -46,8 +46,8 @@ ensure_certificates() {
         return 0
     fi
 
-    if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
-        if openssl x509 -checkend "$((CERT_CHECK_DAYS * 24 * 3600))" -noout -in "$SSL_CERT" >/dev/null 2>&1; then
+    if sudo test -f "$SSL_CERT" && sudo test -f "$SSL_KEY"; then
+        if sudo openssl x509 -checkend "$((CERT_CHECK_DAYS * 24 * 3600))" -noout -in "$SSL_CERT" >/dev/null 2>&1; then
             ENABLE_HTTPS=1
             return 0
         fi
@@ -69,10 +69,11 @@ ensure_certificates() {
             -d "$PRIMARY_DOMAIN" -d "$WWW_DOMAIN" --keep-until-expiring
     fi
 
-    if [ -f "$SSL_CERT" ] && [ -f "$SSL_KEY" ]; then
+    if sudo test -f "$SSL_CERT" && sudo test -f "$SSL_KEY"; then
         ENABLE_HTTPS=1
     else
-        echo "❌ Не удалось получить сертификат. Останавливаю скрипт."
+        echo "❌ Не удалось найти файлы сертификата после успешного запроса."
+        echo "   Проверьте путь: $SSL_CERT и $SSL_KEY"
         exit 1
     fi
 }
@@ -136,6 +137,11 @@ SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 0 4 * * * root $RENEW_SCRIPT
 EOF
+
+    if systemctl list-unit-files 2>/dev/null | grep -q '^certbot.timer'; then
+        echo "🧯 Отключаю certbot.timer, чтобы избежать дублирования продления."
+        sudo systemctl disable --now certbot.timer 2>/dev/null || true
+    fi
 fi
 
 # 3. Определяем путь к исходникам
