@@ -39,7 +39,7 @@ const About = () => {
             </section>
 
             {/* About Content */}
-            <section className="px-6 md:px-12 max-w-7xl mx-auto py-16 sm:py-24 md:py-32 grid grid-cols-1 font-bold text-ink-muted text-base sm:text-lg md:text-xl leading-relaxed">
+            <section className="px-6 md:px-12 max-w-7xl mx-auto py-16 sm:py-24 md:py-32 grid grid-cols-1 font-bold text-ink-muted text-base sm:text-lg md:text-xl leading-relaxed cv-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}

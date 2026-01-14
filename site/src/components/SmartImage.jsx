@@ -1,4 +1,4 @@
-import { getWebpSrcSet } from "../utils/imageVariants";
+import { getAvifSrcSet, getWebpSrcSet } from "../utils/imageVariants";
 
 const getDerivedWebp = (src) => {
     if (!src) return undefined;
@@ -11,6 +11,7 @@ const SmartImage = ({
     alt = "",
     className,
     imgClassName,
+    avifSrcSet,
     webpSrc,
     webpSrcSet,
     srcSet,
@@ -20,12 +21,20 @@ const SmartImage = ({
     fetchPriority,
     useSrcSet = false
 }) => {
+    const resolvedAvifSrcSet = avifSrcSet || (useSrcSet ? getAvifSrcSet(src) : undefined);
     const resolvedWebpSrcSet = webpSrcSet || (useSrcSet ? getWebpSrcSet(src) : undefined);
     const resolvedWebpSrc = webpSrc || getDerivedWebp(src);
     const webpSource = resolvedWebpSrcSet || resolvedWebpSrc;
 
     return (
         <picture className={className}>
+            {resolvedAvifSrcSet && (
+                <source
+                    type="image/avif"
+                    srcSet={resolvedAvifSrcSet}
+                    sizes={sizes}
+                />
+            )}
             {webpSource && (
                 <source
                     type="image/webp"

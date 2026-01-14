@@ -57,7 +57,7 @@ const Kunst = () => {
             </section>
 
             {/* Content */}
-            <div className="px-6 md:px-12 max-w-6xl mx-auto pt-16 sm:pt-24 space-y-16">
+            <div className="px-6 md:px-12 max-w-6xl mx-auto pt-16 sm:pt-24 space-y-16 cv-auto">
                 <Blocks blocks={data.blocks} />
 
                 {gallery.length > 0 && (

@@ -39,7 +39,7 @@ const JeKits = () => {
             </section>
 
             {/* Content */}
-            <div className="px-6 md:px-12 max-w-5xl mx-auto pt-16 sm:pt-24 space-y-16">
+            <div className="px-6 md:px-12 max-w-5xl mx-auto pt-16 sm:pt-24 space-y-16 cv-auto">
                 {logos.length > 0 && (
                     <div className="flex flex-wrap items-center justify-center gap-6">
                         {logos.map((logo, index) => (

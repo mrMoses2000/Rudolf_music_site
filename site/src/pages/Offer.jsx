@@ -88,7 +88,7 @@ const Offer = () => {
                 </div>
             </section>
 
-            <div className="px-6 md:px-12 max-w-7xl mx-auto py-20 sm:py-24">
+            <div className="px-6 md:px-12 max-w-7xl mx-auto py-20 sm:py-24 cv-auto">
                 {filteredOfferBlocks.length > 0 && (
                     <div className="max-w-4xl mx-auto mb-16">
                         <Blocks blocks={filteredOfferBlocks} />
@@ -117,7 +117,7 @@ const Offer = () => {
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
                                                 loading="eager"
                                                 decoding="async"
-                                                fetchPriority={i === 0 ? "high" : "auto"}
+                                                fetchPriority={i < 2 ? "high" : "auto"}
                                                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                                 useSrcSet
                                             />
@@ -140,7 +140,7 @@ const Offer = () => {
                                                 imgClassName="w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-700"
                                                 loading="eager"
                                                 decoding="async"
-                                                fetchPriority={i === 0 ? "high" : "auto"}
+                                                fetchPriority={i < 2 ? "high" : "auto"}
                                                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                                 useSrcSet
                                             />

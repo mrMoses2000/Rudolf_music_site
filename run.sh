@@ -189,6 +189,10 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable";
         try_files \$uri =404;
     }
+    location /fonts/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files \$uri =404;
+    }
     location /images/ {
         add_header Cache-Control "public, max-age=2592000";
         try_files \$uri =404;
@@ -216,6 +220,10 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable";
         try_files \$uri =404;
     }
+    location /fonts/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files \$uri =404;
+    }
     location /images/ {
         add_header Cache-Control "public, max-age=2592000";
         try_files \$uri =404;
@@ -240,6 +248,10 @@ server {
     gzip_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
 
     location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files \$uri =404;
+    }
+    location /fonts/ {
         add_header Cache-Control "public, max-age=31536000, immutable";
         try_files \$uri =404;
     }

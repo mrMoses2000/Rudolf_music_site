@@ -198,7 +198,7 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className="py-24 px-6 md:px-12 bg-paper/60">
+            <section className="py-24 px-6 md:px-12 bg-paper/60 cv-auto">
                 <div className="max-w-5xl mx-auto space-y-12">
                     <Blocks blocks={startMainBlocks} />
 
@@ -223,7 +223,7 @@ const Home = () => {
             </section>
 
             {/* Categories Preview - Spotlight Grid */}
-            <section className="py-24 sm:py-32 lg:py-40 px-6 md:px-12 relative z-20">
+            <section className="py-24 sm:py-32 lg:py-40 px-6 md:px-12 relative z-20 cv-auto">
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
@@ -269,7 +269,7 @@ const Home = () => {
                                         imgClassName="w-full h-full object-cover opacity-55 saturate-110 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000"
                                         loading={index < 4 ? "eager" : "lazy"}
                                         decoding="async"
-                                        fetchPriority={index < 2 ? "high" : "auto"}
+                                        fetchPriority={index < 4 ? "high" : "auto"}
                                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                                         useSrcSet
                                     />
