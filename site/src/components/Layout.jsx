@@ -1,10 +1,12 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { content } from "../data/content";
 
 const Layout = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [headerHeight, setHeaderHeight] = useState(0);
+    const headerRef = useRef(null);
     const location = useLocation();
     const reduceMotion = useReducedMotion();
 
@@ -13,9 +15,33 @@ const Layout = () => {
         setIsMenuOpen(false);
     }, [location]);
 
+    useEffect(() => {
+        const header = headerRef.current;
+        if (!header) return;
+
+        const update = () => {
+            const height = header.getBoundingClientRect().height;
+            setHeaderHeight(Math.round(height));
+        };
+
+        update();
+
+        const observer = new ResizeObserver(update);
+        observer.observe(header);
+        window.addEventListener("resize", update);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener("resize", update);
+        };
+    }, []);
+
     return (
         <div className="min-h-screen bg-paper text-ink font-inter selection:bg-gold selection:text-paper">
-            <header className="fixed top-0 w-full z-50 bg-paper/80 backdrop-blur-md py-3 px-6 md:px-12 flex justify-between items-center border-b border-black/5">
+            <header
+                ref={headerRef}
+                className="fixed top-0 w-full z-50 bg-paper/80 backdrop-blur-md py-3 px-6 md:px-12 flex justify-between items-center border-b border-black/5"
+            >
                 {/* Left: Logo + Text */}
                 <Link to="/" className="flex items-center gap-2 group relative z-50">
                     <img
@@ -91,7 +117,7 @@ const Layout = () => {
                 )}
             </AnimatePresence>
 
-            <main className="">
+            <main style={{ paddingTop: headerHeight }}>
                 <motion.div
                     key={location.pathname}
                     initial={reduceMotion ? false : { opacity: 0, y: 8 }}

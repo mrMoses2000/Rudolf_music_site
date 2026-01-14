@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
 - Goal (incl. success criteria):
-  - Make Psalm 103 label/line appear after typewriter completes and set their color to black; keep hero animations stable; create a Russian git commit for the hero changes.
+  - Сделать git-коммит со всеми текущими правками (сообщение на русском).
 - Constraints/Assumptions:
   - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
   - Language rule: communicate in Russian.
@@ -70,12 +70,44 @@
     - Added root `.gitignore` to ignore `.DS_Store`.
     - Added `font-cinzel` to Tailwind config to match the new hero title font.
     - Ignored generated `site/Dockerfile` and `site/nginx.conf` in `site/.gitignore`.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 37932) after Tailwind config change.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 9782) for verification.
+    - Reduced hero paddings, spacing, and typography to fit content above the fold.
+    - Rebalanced hero spacing and increased line-height to avoid overlapping title lines.
+    - Rebuilt hero spacing using viewport clamp values and removed conflicting margins.
+    - Disabled hyphenation for hero title and category cards; reduced card title size to avoid word splitting.
+    - Disabled hyphenation for h4 blocks to keep compound instrument group names intact.
+    - Added the JeKiTS video title after “Viel Spaß beim Stöbern!” in start page blocks.
+    - Moved the JeKiTS video title into a dedicated `videoTitle` field and rendered it above the iframe.
+    - Removed Musikkurse from Offer cards and extras; removed Musikkurse page route/data and deleted the page component.
+    - Removed Musikkurse image variant entry.
+    - Updated Blechblasinstrumente list text and category item to “Waldhorn, Tenor- und Baritonhorn”.
+    - Reduced category card title size to prevent overflow.
+    - Nudged category card titles slightly left for alignment.
+    - Switched category titles from clamp sizing to responsive sizes to keep mobile readable and desktop fitting.
+    - Removed “Gesang für Kinder ab 5 Jahre” from offer text and Gesang category items.
+    - Added global header height measurement and top padding to main content to avoid header overlap.
+    - Reduced instrument hero height and title size; disabled hyphenation to prevent overlaps.
+    - Added top padding inside instrument hero content and reduced title size further for cleaner spacing.
+    - Added length-based title sizing with balanced wrapping for long instrument names.
+    - Adjusted long-title sizing/leading and max width to avoid squashed lines.
+    - Reworked instrument hero spacing and title sizes to avoid cramped layout while keeping long titles readable.
+    - Forced line breaks after commas in instrument titles and set a consistent heading style.
+    - Added Posaune instrument entry with description and image; linked it in Blechblasinstrumente list.
+    - Added Mandoline and Dirigentenunterricht instrument entries and linked them from their category lists.
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 2216).
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 55922).
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 10603).
+    - Restarted Vite dev server on `http://localhost:5173/` (PID 26695).
+    - Shifted home hero content upward via adjusted top padding and tighter section spacing.
+    - Switched hero layout to `items-start` and reduced bottom padding to push content upward.
+    - Repositioned hero content to slightly below center and added extra spacing under the psalm.
   - Now:
-    - Prepare a Russian commit; stage updated files.
+    - Подготовить git-коммит всех правок с русским сообщением.
   - Next:
-    - Fine-tune spacing if needed.
+    - Подтвердить результат коммита.
 - Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: Нужен ли перезапуск Vite после правки `tailwind.config.js`?
+  - UNCONFIRMED: Предпочтительный формат сообщения коммита (если нужен иной стиль).
 - Working set (files/ids/commands):
   - Files: `site/src/pages/Home.jsx`, `site/src/data/content.js`, `site/src/components/Blocks.jsx`.
   - Commands: `rg --files`, `npm run dev`.

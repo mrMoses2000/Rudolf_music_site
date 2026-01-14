@@ -4,7 +4,7 @@ const TAG_CLASSES = {
     h1: "text-3xl md:text-4xl font-outfit font-black text-ink leading-tight",
     h2: "text-2xl md:text-3xl font-outfit font-bold text-ink leading-tight",
     h3: "text-xl md:text-2xl font-outfit font-bold text-ink leading-tight",
-    h4: "text-lg md:text-xl font-outfit font-semibold text-ink/90 leading-relaxed whitespace-pre-line",
+    h4: "text-lg md:text-xl font-outfit font-semibold text-ink/90 leading-relaxed whitespace-pre-line break-normal hyphens-none",
     p: "text-base md:text-lg text-ink-muted leading-relaxed whitespace-pre-line",
     li: "text-base md:text-lg text-ink-muted leading-relaxed"
 };

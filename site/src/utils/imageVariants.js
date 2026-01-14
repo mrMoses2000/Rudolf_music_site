@@ -13,7 +13,6 @@ const webpSrcSets = {
     "/images/Trompete.png": buildWebpSrcSet("/images/Trompete.png", [1280, 1920, 4800]),
     "/images/Stellenangebote.png": buildWebpSrcSet("/images/Stellenangebote.png", [1280, 1920, 4800]),
     "/images/Saxophon.png": buildWebpSrcSet("/images/Saxophon.png", [1280, 1920, 4800]),
-    "/images/Musikkurse.png": buildWebpSrcSet("/images/Musikkurse.png", [1280, 1920, 4800]),
     "/images/Kunstunterricht.png": buildWebpSrcSet("/images/Kunstunterricht.png", [1280, 1920, 4800]),
     "/images/Keyboard.png": buildWebpSrcSet("/images/Keyboard.png", [1280, 1920, 4800]),
     "/images/JeKits.png": buildWebpSrcSet("/images/JeKits.png", [1280, 1920, 4800]),

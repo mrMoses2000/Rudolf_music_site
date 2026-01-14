@@ -41,11 +41,6 @@ const Offer = () => {
             image: "/images/jekits_unique_1767157360834.png"
         },
         {
-            label: "Musikkurse 5 & 6",
-            to: "/musikkurse",
-            image: "/images/offer_button_musikkurse_1767157375538.png"
-        },
-        {
             label: "Kunstunterricht",
             to: "/kunst",
             image: "/images/offer_button_kunst_1767157402302.png"

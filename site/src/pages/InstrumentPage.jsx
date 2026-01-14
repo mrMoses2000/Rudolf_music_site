@@ -14,6 +14,19 @@ const InstrumentPage = () => {
           : normalizedName;
     const instrumentData = content.instruments[resolvedKey] || content.instruments["klavier"];
     const containerRef = useRef(null);
+    const formatTitle = (rawTitle) => {
+        const title = String(rawTitle || "");
+        if (!title) return title;
+        if (title.includes(",")) {
+            return title
+                .split(",")
+                .map((part) => part.trim())
+                .filter(Boolean)
+                .join(",\n");
+        }
+        return title;
+    };
+    const titleText = formatTitle(instrumentData.title);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -41,7 +54,7 @@ const InstrumentPage = () => {
     return (
         <div ref={containerRef} className="min-h-screen">
             {/* Header Hero Area - Premium Reveal */}
-            <section className="relative h-[50vh] sm:h-[65vh] md:h-[70vh] flex items-end pb-12 sm:pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
+            <section className="relative h-[50vh] sm:h-[65vh] md:h-[68vh] flex items-end pb-12 sm:pb-20 px-6 md:px-12 border-b border-black/10 pt-32 overflow-hidden">
                 <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
                     <SmartImage
                         src={instrumentData.image || "/images/attachments-Image-IMG_11926eb1.jpg"}
@@ -62,14 +75,17 @@ const InstrumentPage = () => {
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="space-y-8"
+                        className="space-y-8 pt-6"
                     >
                         <Link to="/offer" className="group flex items-center gap-3 text-ink-muted font-black uppercase tracking-[0.4em] text-[10px] hover:text-gold transition-colors">
                             <span className="group-hover:-translate-x-2 transition-transform">←</span> {category?.title || "Angebot"}
                         </Link>
 
-                        <h1 className="text-3xl sm:text-5xl md:text-[8rem] lg:text-[10rem] font-outfit font-black text-ink leading-[0.8] tracking-tighter uppercase break-words hyphens-auto">
-                            {instrumentData.title}
+                        <h1
+                            className="font-outfit font-black text-ink uppercase break-normal hyphens-none text-3xl sm:text-5xl md:text-[5.6rem] lg:text-[7rem] leading-[1.02] tracking-tight whitespace-pre-line max-w-[24ch]"
+                            style={{ textWrap: "balance" }}
+                        >
+                            {titleText}
                         </h1>
 
                         <Link
