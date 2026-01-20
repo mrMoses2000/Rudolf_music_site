@@ -61,6 +61,10 @@ VITE_WEB3FORMS_TO_EMAIL=info@musikschule-cms-bielefeld.de
 - `meta description` в `site/index.html`
 
 ## Документация (глубокие гайды)
+- `AGENTS.md` — правила работы и протокол индексирования проекта для новых агентов.
+- `AGENT_LOG.md` — журнал входов агентов (модель/аккаунт/время).
+- `COMMIT_MESSAGE.md` — шаблон текста коммита от агента.
+- `INDEX_REPORT.md` — отчёт полного индексирования (полный список файлов).
 - `SSL_GUIDE.md` — базовая криптография и TLS.
 - `SSL_OS_DEEP_DIVE.md` — TLS/HTTPS на уровне ОС и ядра.
 - `TLS_CERT_UNDER_THE_HOOD.md` — структура сертификатов и математика.

@@ -1,5 +1,8 @@
 # CONTINUITY.md
 
+- Last Updated (UTC): 2026-01-20T07:53:27Z
+- Last Agent Stamp: 2026-01-20T07:53:27Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+
 - Goal (incl. success criteria):
   - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
 - Constraints/Assumptions:
@@ -10,6 +13,8 @@
   - Используем `SmartImage` + WebP (`imageVariants`) для всех изображений.
   - В `run.sh` встроены certbot, cron‑продление и генерация nginx.conf с HTTPS.
   - В nginx включены gzip и cache headers для `/assets` и `/images`.
+  - Контент 1:1 сверяется с `music_site_copy/` и переносится через `content.js`.
+  - AVIF предпочтителен, WebP используется как fallback.
 - State:
   - Done:
     - Синхронизация контента с легаси, исправления блоков/страниц.
@@ -43,10 +48,37 @@
     - В `TLS_CERT_UNDER_THE_HOOD.md` добавлено краткое введение в теорию групп и полей.
     - Добавлены гайды: `DNS_TLS_CERTS_DEEP_DIVE.md`, `BROWSER_UNDER_THE_HOOD.md`, `NGINX_UNDER_THE_HOOD.md`.
     - Расширен `SSL_OS_DEEP_DIVE.md` (структуры ядра, RX/TX путь, AEAD, page cache).
+    - Обновлён `AGENTS.md` с протоколом индексирования и инфраструктурой.
+    - Добавлены `AGENT_LOG.md` и `COMMIT_MESSAGE.md` для синхронизации агентов и подготовки коммитов.
+    - В `AGENTS.md` добавлены Agent Stamp и протокол синхронизации агентов.
+    - В `AGENTS.md` введены поля session_id и правило первого входа; обновлён формат `AGENT_LOG.md`.
+    - Добавлен `INDEX_REPORT.md` с полным списком файлов и правилами пересоздания.
+    - Добавлен `scripts/generate_index_report.sh` для автоматической генерации INDEX_REPORT.
+    - Добавлена папка `future/` с шаблонами документов для новых проектов.
+    - Добавлен `future/USAGE.md` с инструкцией по применению шаблонов.
+    - В `scripts/generate_index_report.sh` добавлен авто‑выбор пути `meta/INDEX_REPORT.md` при наличии папки `meta/`.
+    - Шаблоны перенесены в `future/meta/`, добавлен `future/scripts/generate_index_report.sh`.
+    - Обновлён `AGENTS.md` с правилом расположения служебных md файлов.
+    - Обновлены правила Continuity Ledger в `AGENTS.md` и `future/meta/AGENTS.md`.
+    - Добавлена политика использования чата в `AGENTS.md` и `future/meta/AGENTS.md`.
+    - Обновлён `future/USAGE.md` под копирование файлов в корень нового проекта.
+    - Добавлено правило русского языка для коммитов в `AGENTS.md` и `future/meta/AGENTS.md`.
+  - Infra:
+    - Сервер: Ubuntu VPS, деплой через Docker (`./run.sh`).
+    - Домены: `musikschule-cms-bielefeld.de` и `www` → A‑записи на IP сервера.
+    - HTTPS: certbot + cron, сертификаты в `/etc/letsencrypt/live/<domain>/`.
+    - nginx: HTTP/2, gzip, cache headers для `/assets`, `/images`, `/fonts`.
+    - Cloudflare — опционально (HTTP/3, Brotli, edge‑cache).
+  - Performance/UX:
+    - Изображения: AVIF/WebP + `srcSet`, preload для hero/карточек, eager для ключевых карточек.
+    - Видео: ленивый YouTube (LazyYouTube) для снижения TBT.
+    - Self‑host шрифты (woff2), долгий кэш для `/fonts`.
+  - SEO:
+    - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
-    - Завершить merge‑коммит после разрешения конфликтов.
-    - Проверить, что `run.sh` и HTTPS работают после мерджа.
     - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
+    - Держать контент 1:1 с `music_site_copy/`.
+    - Сверить, что все страницы используют `SmartImage`.
   - Next:
     - При необходимости: code splitting и self‑host шрифтов для ускорения first‑load.
 - Open questions (UNCONFIRMED if needed):

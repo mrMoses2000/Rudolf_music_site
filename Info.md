@@ -25,6 +25,9 @@
 - `meta description` в `site/index.html`
 
 ## Гайды
+- `AGENT_LOG.md` — журнал входов агентов (модель/аккаунт/время).
+- `COMMIT_MESSAGE.md` — шаблон текста коммита от агента.
+- `INDEX_REPORT.md` — отчёт полного индексирования (полный список файлов).
 - `SSL_GUIDE.md` — базовая криптография и TLS.
 - `SSL_OS_DEEP_DIVE.md` — TLS/HTTPS на уровне ОС и ядра.
 - `TLS_CERT_UNDER_THE_HOOD.md` — структура сертификатов и математика.
