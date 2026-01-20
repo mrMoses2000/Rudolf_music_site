@@ -164,6 +164,12 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ARG VITE_WEB3FORMS_KEY
+ARG VITE_ACCESS_WEB3FORMS_KEY
+ARG VITE_WEB3FORMS_TO_EMAIL
+ENV VITE_WEB3FORMS_KEY=$VITE_WEB3FORMS_KEY
+ENV VITE_ACCESS_WEB3FORMS_KEY=$VITE_ACCESS_WEB3FORMS_KEY
+ENV VITE_WEB3FORMS_TO_EMAIL=$VITE_WEB3FORMS_TO_EMAIL
 RUN npm run build
 
 # Production stage
@@ -271,7 +277,11 @@ fi
 
 # 5. Прямой запуск через Docker (без Compose!)
 echo "🏗️ Сборка образа (direct build)..."
-sudo docker build -t music_school_site .
+sudo docker build \
+    --build-arg VITE_WEB3FORMS_KEY="${VITE_WEB3FORMS_KEY:-}" \
+    --build-arg VITE_ACCESS_WEB3FORMS_KEY="${VITE_ACCESS_WEB3FORMS_KEY:-}" \
+    --build-arg VITE_WEB3FORMS_TO_EMAIL="${VITE_WEB3FORMS_TO_EMAIL:-}" \
+    -t music_school_site .
 
 echo "🚀 Запуск нового контейнера (direct run)..."
 DOCKER_PORTS="-p 80:80"
