@@ -62,11 +62,10 @@ const Layout = () => {
                     <nav className="hidden lg:flex gap-5 font-bold text-xs uppercase tracking-widest text-ink-muted">
                         <Link to="/" className="hover:text-ink transition-colors">Start</Link>
                         <Link to="/about" className="hover:text-ink transition-colors">Über uns</Link>
+                        <Link to="/standorte" className="hover:text-ink transition-colors">Unsere Standorte</Link>
                         <Link to="/offer" className="hover:text-ink transition-colors">Angebot</Link>
                         <Link to="/aktuelles" className="hover:text-ink transition-colors">Aktuelles</Link>
                         <Link to="/fees" className="hover:text-ink transition-colors">Gebühren/Anmeldung</Link>
-                        <Link to="/agb" className="hover:text-ink transition-colors">AGB</Link>
-                        <Link to="/impressum" className="hover:text-ink transition-colors">Impressum</Link>
                     </nav>
 
                     {/* Kontakt Button */}
@@ -107,11 +106,10 @@ const Layout = () => {
                         <nav className="flex flex-col gap-6 sm:gap-8 text-2xl sm:text-3xl font-black uppercase tracking-tighter text-ink">
                             <Link to="/" className="hover:text-gold">Start</Link>
                             <Link to="/about" className="hover:text-gold">Über uns</Link>
+                            <Link to="/standorte" className="hover:text-gold">Unsere Standorte</Link>
                             <Link to="/offer" className="hover:text-gold">Angebot</Link>
                             <Link to="/aktuelles" className="hover:text-gold">Aktuelles</Link>
                             <Link to="/fees" className="hover:text-gold">Gebühren/Anmeldung</Link>
-                            <Link to="/agb" className="hover:text-gold">AGB</Link>
-                            <Link to="/impressum" className="hover:text-gold">Impressum</Link>
                         </nav>
                         
                         {/* Kontakt Button for Mobile Menu */}

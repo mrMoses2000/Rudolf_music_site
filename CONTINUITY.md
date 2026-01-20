@@ -1,13 +1,13 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-01-20T07:53:27Z
-- Last Agent Stamp: 2026-01-20T07:53:27Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+- Last Updated (UTC): 2026-01-20T10:35:03Z
+- Last Agent Stamp: 2026-01-20T10:35:03Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
 
 - Goal (incl. success criteria):
-  - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
+  - Сделать блок "Unsere Standorte" более выразительным и читабельным (карточки с адресами).
 - Constraints/Assumptions:
-  - Следовать AGENTS.md; контент править через `site/src/data/content.js`.
-  - Коммуникация на русском.
+  - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
+  - Language rule: communicate in Russian.
   - Sandbox: danger-full-access; network enabled; approval_policy never.
 - Key decisions:
   - Используем `SmartImage` + WebP (`imageVariants`) для всех изображений.
@@ -15,8 +15,15 @@
   - В nginx включены gzip и cache headers для `/assets` и `/images`.
   - Контент 1:1 сверяется с `music_site_copy/` и переносится через `content.js`.
   - AVIF предпочтителен, WebP используется как fallback.
+  - В верхнем меню оставить "Unsere Standorte", убрать AGB/Impressum и оставить их в футере.
 - State:
   - Done:
+    - Коммит: `ui: поменяли местами логотип и текст`.
+    - В шапке добавлен пункт "Unsere Standorte", AGB/Impressum убраны из верхнего меню (desktop + mobile).
+    - Обновлен контент `pages.standorte` под 3 адреса клиента.
+    - Исправлен синтаксис строк адресов в `site/src/data/content.js` (переносы строки через `\n`).
+    - Страница `/standorte` переведена на карточки адресов (grid).
+    - Убрано дублирование заголовка "Unsere Standorte" на странице.
     - Синхронизация контента с легаси, исправления блоков/страниц.
     - Перевод всех изображений на WebP и удаление дублей PNG/JPG.
     - Автоматизация HTTPS в `run.sh` (certbot + cron + 80→443).
@@ -76,14 +83,17 @@
   - SEO:
     - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
+    - Подтвердить, что заголовок и карточки выглядят логично.
     - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
     - Держать контент 1:1 с `music_site_copy/`.
     - Сверить, что все страницы используют `SmartImage`.
   - Next:
+    - Внести точечные правки по замечаниям пользователя.
     - При необходимости: code splitting и self‑host шрифтов для ускорения first‑load.
+
 - Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: Какие актуальные данные для Impressum (адрес/телефон/ответственные)?
-  - UNCONFIRMED: Что именно тормозит первый заход (JS‑bundle/шрифты/hero)?
+  - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
+  - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
 - Working set (files/ids/commands):
-  - Files: `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
-  - Commands: `rg --files`, `./run.sh`.
+  - Files: `site/src/pages/Standorte.jsx`, `site/src/data/content.js`, `CONTINUITY.md`.
+  - Commands: `rg -n "Kleebring|Kleebrink" site/src/data/content.js`.
