@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Системные Внутренности: The Definitive Guide</title>
+
+    <!-- FONTS: Premium Selection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- MERMAID -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#e0e7ff',
+                edgeLabelBackground: '#ffffff',
+                tertiaryColor: '#f1f5f9'
+            },
+            flowchart: { curve: 'basis' }
+        });
+    </script>
+
+    <!-- MATHJAX with $ delimiter support -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            /* Palette: Deep Blue & Paper White (Premium Tech Blog Style) */
+            --bg-color: #ffffff;
+            --text-color: #111827;
+            /* Gray 900 */
+            --heading-color: #0f172a;
+            --accent-color: #2563eb;
+            /* Royal Blue */
+            --code-bg: #1e293b;
+            /* Slate 800 */
+            --code-text: #e2e8f0;
+            --note-bg: #fff1f2;
+            /* Rose 50 */
+            --note-border: #be123c;
+            /* Rose 700 */
+            --deep-dive-bg: #f8fafc;
+            /* Slate 50 */
+            --deep-dive-border: #3b82f6;
+
+            --font-serif: 'EB Garamond', serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            /* Larger text for readability (20px) */
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            /* Centered Layout "Medium" style */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            counter-reset: chapter;
+        }
+
+        /* Typography Upgrade */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--font-sans);
+            color: var(--heading-color);
+            line-height: 1.2;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            /* 56px */
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            /* 36px */
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            position: relative;
+            padding-top: 2rem;
+            counter-increment: chapter;
+        }
+
+        h2::before {
+            content: "CHAPTER " counter(chapter);
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        /* Code Blocks - "Stripe" Style */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin: 2rem 0;
+            border: 1px solid #334155;
+            position: relative;
+        }
+
+        pre::after {
+            content: "KERNEL SOURCE";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #334155;
+            color: #94a3b8;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-bottom-left-radius: 6px;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            background-color: #f1f5f9;
+            color: #be123c;
+            /* Red 700 */
+            padding: 0.1em 0.3em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Highlights */
+        .kw {
+            color: #f472b6;
+            font-weight: bold;
+        }
+
+        /* Pink */
+        .type {
+            color: #22d3ee;
+        }
+
+        /* Cyan */
+        .fn {
+            color: #60a5fa;
+        }
+
+        /* Blue */
+        .com {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        /* Gray */
+
+        /* Components */
+        .deep-dive {
+            background-color: var(--deep-dive-bg);
+            border-left: 4px solid var(--deep-dive-border);
+            padding: 2rem;
+            margin: 3rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .deep-dive h4 {
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+
+        .math-block {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            text-align: center;
+            background-color: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* ANIMATIONS */
+        .anim-container {
+            border: 1px solid #e5e7eb;
+            background: #fdfdfd;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Packet Pipeline Animation */
+        .pipeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            height: 80px;
+        }
+
+        .pipe-stage {
+            width: 18%;
+            border: 2px solid #cbd5e1;
+            background: #fff;
+            color: #64748b;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 10;
+        }
+
+        .pipe-packet {
+            width: 16px;
+            height: 16px;
+            background: #ef4444;
+            /* Red */
+            border-radius: 50%;
+            position: absolute;
+            top: 32px;
+            left: 0;
+            z-index: 20;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            animation: flow 4s infinite linear;
+        }
+
+        @keyframes flow {
+            0% {
+                left: 5%;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            45% {
+                background: #ef4444;
+            }
+
+            /* NIC */
+            50% {
+                background: #3b82f6;
+            }
+
+            /* Driver (Blue) */
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: 90%;
+                opacity: 0;
+            }
+        }
+
+        /* TLS Handshake Animation */
+        .tls-anim {
+            height: 150px;
+            position: relative;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        .actor {
+            position: absolute;
+            top: 10px;
+            width: 80px;
+            text-align: center;
+            font-weight: bold;
+            font-family: var(--font-sans);
+        }
+
+        .client {
+            left: 20px;
+            color: #10b981;
+        }
+
+        .server {
+            right: 20px;
+            color: #6366f1;
+        }
+
+        .arrow {
+            position: absolute;
+            height: 2px;
+            background: #cbd5e1;
+            top: 50px;
+            left: 60px;
+            right: 60px;
+        }
+
+        .msg {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            animation: pingpong 4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pingpong {
+            0% {
+                left: 40px;
+                top: 40px;
+                content: "ClientHello";
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            45% {
+                left: calc(100% - 140px);
+                top: 40px;
+            }
+
+            /* Arrive Server */
+            50% {
+                left: calc(100% - 140px);
+                top: 80px;
+                content: "ServerHello";
+                background: #e0e7ff;
+            }
+
+            /* Process */
+            90% {
+                left: 40px;
+                top: 80px;
+                background: #e0e7ff;
+            }
+
+            /* Arrive Client */
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <p
+            style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); font-family: var(--font-sans); font-size: 0.875rem; font-weight: 700;">
+            Systems Internals Series
+        </p>
+        <h1>Anatomy of a Request</h1>
+        <p style="font-size: 1.5rem; color: #4b5563; font-family: var(--font-serif); font-style: italic;">
+            Исчерпывающее погружение в архитектуру Linux: от физики полупроводников до эллиптических кривых TLS 1.3.
+        </p>
+    </header>
+
+    <div class="anim-container">
+        <h4 style="font-family: var(--font-sans); margin-top: 0; color: #475569;">VISUALIZATION 1: THE PACKET PIPELINE
+        </h4>
+        <div class="pipeline">
+            <div class="pipe-stage">NIC</div>
+            <div class="pipe-stage">DMA</div>
+            <div class="pipe-stage">KERNEL</div>
+            <div class="pipe-stage">USER</div>
+            <div class="pipe-packet"></div>
+        </div>
+    </div>
+
+    <!-- CHAPTER 1 -->
+    <section>
+        <h2>Hardware & DMA</h2>
+        <p>
+            Сетевая карта (NIC) — это автономный компьютер. Она не ждет приказов CPU на каждый байт. Вместо этого они
+            используют
+            общую "почтовую ячейку" в оперативной памяти — <strong>Ring Buffer</strong>.
+        </p>
+
+        <h3>1.1. Молекулярный Уровень: Запись в Память</h3>
+        <p>
+            Что происходит на уровне транзисторов и шины, когда пакет прилетает в карту?
+        </p>
+
+        <div class="deep-dive">
+            <h4>CAUSAL CHAIN: DIRECT MEMORY ACCESS (DMA)</h4>
+            <ol>
+                <li><strong>Fetch:</strong> NIC считывает свой внутренний регистр <code>RDT</code> (Tail Index). Пусть
+                    он равен 5.</li>
+                <li><strong>Address Calculation:</strong> NIC вычисляет физический адрес дескриптора в RAM: $$Addr =
+                    Base + (5 \times 16)$$</li>
+                <li><strong>PCIe Read:</strong> NIC отправляет электрический сигнал по шине PCIe (TLP Read Request).
+                    Контроллер памяти (MMU) возвращает 16 байт дескриптора.</li>
+                <li><strong>Extraction:</strong> NIC извлекает из дескриптора 64-битный адрес буфера данных (например,
+                    <code>0xFF1000</code>).
+                </li>
+                <li><strong>Write Packet:</strong> NIC начинает пересылать байты принятого пакета (Payload) прямиком по
+                    адресу <code>0xFF1000</code>. CPU в этот момент может спать или считать числа Фибоначчи — он не
+                    задействован.</li>
+                <li><strong>Write Back:</strong> Закончив, NIC снова пишет в RAM (в дескриптор), выставляя бит статуса
+                    <code>DD=1</code> (Descriptor Done).
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- CHAPTER 2 -->
+    <section>
+        <h2>Kernel Memory & sk_buff</h2>
+        <p>
+            Linux не копирует пакеты. Это правило №1. Вместо этого мы передаем указатель на огромную структуру
+            <code>sk_buff</code>.
+        </p>
+
+        <h3>2.1. Ассемблерная Реальность</h3>
+        <p>
+            Как добавить заголовок к пакету, не двигая байты? Функция <code>skb_push</code>.
+        </p>
+        <pre><span class="type">void</span> *<span class="fn">skb_push</span>(<span class="kw">struct</span> sk_buff *skb, <span class="type">unsigned int</span> p_len) {
+    skb->data -= p_len;
+    skb->len  += p_len;
+    <span class="kw">return</span> skb->data;
+}</pre>
+        <p>
+            На уровне регистров процессора (x86-64) эта операция выглядит так:
+        </p>
+        <div class="deep-dive">
+            <h4>MACHINE CODE EXECUTION</h4>
+            <ul>
+                <li><code>MOV RAX, [RDI + 0xD0]</code> — Процессор загружает текущее значение указателя
+                    <code>data</code> из памяти (по смещению 0xD0 от начала структуры) в регистр аккумулятора.
+                </li>
+                <li><code>SUB RAX, RSI</code> — Вычитает длину заголовка из адреса. Адрес сдвигается "влево" (в сторону
+                    младших адресов).</li>
+                <li><code>MOV [RDI + 0xD0], RAX</code> — Сохраняет новый адрес обратно в память.</li>
+                <li>Теперь, когда код будет писать по <code>skb->data</code>, он будет писать в свободное пространство
+                    ПЕРЕД старыми данными. <strong>Стоимость: 3 такта.</strong></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CHAPTER 3 -->
+    <section>
+        <h2>Namespaces</h2>
+        <p>
+            В ядре нет структуры "Контейнер". Есть только <code>struct nsproxy</code>.
+        </p>
+        <p>
+            Когда процесс делает <code>socket(AF_INET, ...)</code>, ядро неявно использует указатель
+            <code>current->nsproxy->net_ns</code>, чтобы найти нужную таблицу маршрутизации.
+            Именно поэтому процесс в "контейнере" не видит интерфейс <code>eth0</code> хоста — его дерево объектов
+            просто не содержит ссылки на него.
+        </p>
+    </section>
+
+    <!-- CHAPTER 4 -->
+    <section>
+        <h2>Virtual Switching (Veth & Bridge)</h2>
+        <p>
+            Veth — это не труба. Это залинкованные структуры.
+        </p>
+        <div class="mermaid">
+            graph LR
+            VethA[net_device VethA]
+            VethB[net_device VethB]
+            Bridge[Bridge RX Handler]
+
+            VethA -- "peer ptr" --> VethB
+            VethA -- "rx_handler ptr" --> Bridge
+        </div>
+        <p>
+            Когда пакет попадает на Veth, ядро проверяет поле <code>rx_handler</code>.
+            Если оно не NULL (а при подключении к мосту это так), вместо передачи в IP стек, исполнение прыгает на код
+            моста.
+            <strong>Это просто косвенный вызов функции (indirect function call).</strong>
+        </p>
+    </section>
+
+    <!-- ANIMATION 2 -->
+    <div class="anim-container">
+        <h4 style="font-family: var(--font-sans); margin-top: 0; color: #475569;">VISUALIZATION 2: TLS HANDSHAKE (RTT)
+        </h4>
+        <div class="tls-anim">
+            <div class="actor client">CLIENT</div>
+            <div class="actor server">SERVER</div>
+            <div class="arrow"></div>
+            <div class="msg" id="tls-msg">ClientHello</div>
+        </div>
+    </div>
+
+    <!-- CHAPTER 5 -->
+    <section>
+        <h2>The DNS Recursive Resolver</h2>
+        <p>
+            Прежде чем отправить первый TCP SYN пакет, приложение должно узнать IP-адрес. Это задача <strong>DNS
+                Resolver</strong>.
+            В Linux это не магия ядра, это обычная библиотека (glibc), работающая в User Space.
+        </p>
+
+        <h3>5.1. System Call: getaddrinfo</h3>
+        <p>
+            Когда ваш код вызывает <code>getaddrinfo("google.com", ...)</code>, происходят следующие события:
+        </p>
+        <ol>
+            <li><strong>Config Parsing:</strong> Glibc открывает <code>/etc/resolv.conf</code>. В Docker-контейнере там
+                обычно написано <code>nameserver 127.0.0.11</code>.</li>
+            <li><strong>Socket Creation:</strong> Glibc создает UDP сокет
+                (<code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)</code>).</li>
+            <li><strong>Packet Construction:</strong> Библиотека вручную собирает DNS-пакет в буфере памяти.</li>
+        </ol>
+
+        <div class="deep-dive">
+            <h4>BINARY FORENSICS: THE DNS QUERY PACKET</h4>
+            <p>DNS пакет — это структура из хедеров и секций. Взглянем на байты запроса для <code>google.com</code>.</p>
+
+            <strong>1. Header (12 Bytes)</strong>
+            <pre>
+Transaction ID: 0x1a2b  (Random matching ID)
+Flags:          0x0100  (Standard Query, Recursion Desired)
+Questions:      0x0001
+Answer RRs:     0x0000
+Authority RRs:  0x0000
+Additional RRs: 0x0000</pre>
+
+            <strong>2. Question Section (Encoding)</strong>
+            <p>DNS использует формат "Length-Value" для частей домена (Labels). Точки не передаются.</p>
+            <pre>
+0x06 'g' 'o' 'o' 'g' 'l' 'e'  (Length 6, "google")
+0x03 'c' 'o' 'm'              (Length 3, "com")
+0x00                          (Null Terminator, End of Name)
+0x00 0x01                     (Type: A Record)
+0x00 0x01                     (Class: IN)</pre>
+        </div>
+
+        <h3>5.2. UDP Transport & Recursion</h3>
+        <p>
+            Glibc вызывает <code>sendto()</code>, отправляя эти ~30 байт на 127.0.0.11:53.
+            Почему UDP? Потому что Handshake TCP удвоил бы время задержки.
+        </p>
+        <p>
+            Если локальный резолвер не знает ответа, он начинает <strong>рекурсию</strong>:
+        </p>
+        <ol>
+            <li>Спрашивает <strong>Root Server</strong> (один из 13 мировых IP, например <code>198.41.0.4</code>). "Кто
+                отвечает за .com?"</li>
+            <li>Root отвечает: "Я не знаю IP гугла, но знаю, что за .com отвечают сервера Verisign".</li>
+            <li>Резолвер спрашивает сервер Verisign. Тот посылает на <code>ns1.google.com</code>.</li>
+            <li>Наконец, <code>ns1.google.com</code> отдает заветный IP.</li>
+        </ol>
+    </section>
+
+    <!-- CHAPTER 6 -->
+    <section>
+        <h2>TCP: The Connection</h2>
+        <p>
+            Получив IP, мы начинаем TCP Handshake.
+        </p>
+        <div class="deep-dive">
+            <h4>STATE MACHINE: 3-WAY HANDSHAKE</h4>
+            <ol>
+                <li><strong>SYN:</strong> Клиент выбирает случайное число $Seq = X$. (State: SYN_SENT).</li>
+                <li><strong>SYN-ACK:</strong> Сервер выбирает $Seq = Y$, подтверждает $Ack = X+1$. (State: SYN_RECV).
+                </li>
+                <li><strong>ACK:</strong> Клиент подтверждает $Ack = Y+1$. (State: ESTABLISHED).</li>
+            </ol>
+            <p>
+                Только теперь ядро создает структуру <code>struct sock</code> в состоянии ESTABLISHED и готово
+                передавать данные.
+            </p>
+        </div>
+    </section>
+    <section>
+        <h2>Cryptography & TLS 1.3</h2>
+        <p>
+            Самая математически насыщенная часть. Как передать секрет по открытому каналу?
+        </p>
+
+        <h3>7.1. Elliptic Curve Diffie-Hellman (ECDH)</h3>
+        <p>
+            В TLS 1.3 мы используем кривую Curve25519. Ее уравнение:
+        </p>
+        <div class="math-block">
+            $$y^2 = x^3 + 486662x^2 + x \pmod {2^{255}-19}$$
+        </div>
+
+        <div class="deep-dive">
+            <h4>DERIVATION: THE SHARED SECRET</h4>
+            <p>Пусть $G$ — базовая точка кривой (генератор).</p>
+            <ol>
+                <li><strong>Client:</strong> Генерирует секретное число $a$ (private key).
+                    <br>Вычисляет публичный ключ $A = a \times G$. (Умножение точки на скаляр).
+                    <br>Отправляет $A$ серверу в сообщении <code>ClientHello</code>.
+                </li>
+                <li><strong>Server:</strong> Генерирует секретное число $b$.
+                    <br>Вычисляет $B = b \times G$.
+                    <br>Отправляет $B$ клиенту в <code>ServerHello</code>.
+                </li>
+                <li><strong>Magic:</strong>
+                    <br>Клиент вычисляет $S = a \times B = a \times (b \times G)$.
+                    <br>Сервер вычисляет $S = b \times A = b \times (a \times G)$.
+                </li>
+            </ol>
+            <p>
+                Поскольку умножение на скаляр коммутативно ($a \cdot b = b \cdot a$), они получают <strong>одинаковую
+                    точку $S$</strong>.
+                Координата $x$ этой точки становится общим секретным ключом (Pre-Master Secret).
+            </p>
+        </div>
+
+        <h3>7.2. Galois Field Arithmetic (AES-GCM)</h3>
+        <p>
+            Шифрование — это не проблема. Проблема — это аутентификация (убедиться, что данные не подменили).
+            Для этого используется GCM (Galois Counter Mode), работающий в поле Галуа $GF(2^{128})$.
+        </p>
+        <div class="math-block">
+            Полином поля: $$P(x) = x^{128} + x^7 + x^2 + x + 1$$
+        </div>
+        <p>
+            Операция умножения в этом поле ($A \otimes B$) сложна для обычного CPU.
+            Поэтому Intel добавил инструкцию <code>PCLMULQDQ</code> (Carry-less Multiplication), которая выполняет
+            полиномиальное умножение аппаратно.
+            Это позволяет шифровать и подписывать трафик на скоростях 10-100 Гбит/с.
+        </p>
+
+        <h3>7.3. X.509 Certificates & Chain of Trust</h3>
+        <p>
+            Как браузер узнает, что ключ $B$, присланный сервером, действительно принадлежит
+            <code>rudolf-music.ru</code>, а не хакеру посередине?
+            Ответ: <strong>Цифровая Подпись</strong>.
+        </p>
+
+        <div class="deep-dive">
+            <h4>NUCLEOLAR LEVEL: ASN.1 STRUCTURE</h4>
+            <p>
+                Сертификат — это структура <code>Certificate</code>, описанная на языке ASN.1.
+            </p>
+            <pre>
+Certificate  ::=  SEQUENCE  {
+    tbsCertificate       TBSCertificate,  -- "To Be Signed" (Body)
+    signatureAlgorithm   AlgorithmIdentifier,
+    signatureValue       BIT STRING       -- The Encrypted Hash
+}
+
+TBSCertificate  ::=  SEQUENCE  {
+    version         [0]  EXPLICIT Version DEFAULT v1,
+    serialNumber         CertificateSerialNumber,
+    signature            AlgorithmIdentifier,
+    issuer               Name,            -- Who signed this? (R3)
+    validity             Validity,        -- NotBefore / NotAfter
+    subject              Name,            -- Who owns this? (rudolf-music.ru)
+    subjectPublicKeyInfo SubjectPublicKeyInfo, -- THE PUBLIC KEY ITSELF
+    extensions      [3]  EXPLICIT Extensions OPTIONAL
+}</pre>
+            <p>
+                Самое важное поле — <code>subjectPublicKeyInfo</code>. Именно тут лежит публичный ключ сервера ($e, n$
+                для RSA или точка $P$ для ECC), который мы используем для обмена ключами.
+            </p>
+        </div>
+
+        <h4>MATHEMATICAL PROOF: A CONCRETE EXAMPLE</h4>
+        <p>
+            Перестанем говорить абстракциями. Давайте "взломаем" RSA на калькуляторе.
+            Представим, что мы — CA (Certificate Authority), и подписываем хеш сертификата.
+        </p>
+        <div class="math-block">
+            <strong>1. Генерация ключей CA (Keygen)</strong><br>
+            Взяли два простых числа: $p = 61, q = 53$.<br>
+            Модуль $n = p \times q = 3233$.<br>
+            Функция Эйлера $\phi(n) = (61-1)(53-1) = 3120$.<br>
+            Выбрали открытую экспоненту $e = 17$ (должна быть взаимно проста с $\phi(n)$).<br>
+            Вычислили секретную экспоненту $d = 2753$ (обратное к $e$ по модулю $\phi(n)$).<br>
+            <strong>Public Key:</strong> $(17, 3233)$, <strong>Secret Key:</strong> $(2753, 3233)$.
+        </div>
+
+        <div class="math-block">
+            <strong>2. Подписание (Signing)</strong><br>
+            Пусть хеш сертификата $H = 65$. (В реальности это 32 байта SHA-256).<br>
+            CA вычисляет подпись $S$, используя свой <strong>SECRET KEY</strong> $d$:<br>
+            $$S = H^d \pmod n = 65^{2753} \pmod{3233} = 2790$$
+            <br>Число <strong>2790</strong> записывается в поле <code>signatureValue</code> сертификата.
+        </div>
+
+        <div class="math-block">
+            <strong>3. Верификация (Verification)</strong><br>
+            Браузер получает сертификат, видит подпись $S = 2790$.<br>
+            Браузер знает <strong>PUBLIC KEY</strong> CA ($e=17, n=3233$) — он зашит в ОС.<br>
+            Браузер вычисляет:<br>
+            $$H_{check} = S^e \pmod n = 2790^{17} \pmod{3233}$$
+            <br>
+            Если посчитать (через Modular Exponentiation), результат будет <strong>65</strong>.<br>
+            $$65 == 65$$
+            <br>
+            <strong>Магия работает.</strong> Никто, не зная $d=2753$, не мог бы подобрать такое число $S=2790$, которое
+            при возведении в 17-ю степень даст 65.
+        </div>
+    </section>
+
+    <!-- CHAPTER 8 -->
+    <section>
+        <h2>The Browser Engine</h2>
+        <p>
+            V8 — это не интерпретатор. Это JIT-компилятор.
+        </p>
+        <h3>8.1. Inline Caching</h3>
+        <p>
+            V8 запоминает смещения полей в объектах (Shapes).
+            Вместо того чтобы каждый раз искать "где лежит поле x" в хеш-таблице, V8 <strong>переписывает сам
+                себя</strong>, вставляя инструкцию прямого доступа к памяти.
+        </p>
+        <pre><span class="com">// Before Optimization</span>
+CALL HashLookup("x")
+MOV EAX, [Result]
+
+<span class="com">// After Optimization (Hot Path)</span>
+CMP [ObjectMap], ExpectedShape  <span class="com">; Check strictly</span>
+JNE Deoptimize
+MOV EAX, [RCX + 16]             <span class="com">; Direct Access!</span></pre>
+    </section>
+
+</body>
+
+</html>
