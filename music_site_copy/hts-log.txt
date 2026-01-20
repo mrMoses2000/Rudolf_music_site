@@ -1,0 +1,15 @@
+HTTrack3.49-2 launched on Fri, 26 Dec 2025 13:15:22 at https://musikschule-cms-bielefeld.de/ +*.musikschule-cms-bielefeld.de/*
+(httrack https://musikschule-cms-bielefeld.de/ -O ./music_site_copy +*.musikschule-cms-bielefeld.de/* )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+13:15:26	Warning: 	file not stored in cache due to bogus state (incomplete type with OK (200), size 0): https://musikschule-cms-bielefeld.de/js/a189c6ad0d532018895de4c4e51e078b-bundle.js?ts=20250612232551
+13:17:39	Error: 	"Not Found" (404) at link https://musikschule-cms-bielefeld.de/img/icon-logo.svg (from https://musikschule-cms-bielefeld.de/css/common-bundle.css?ts=20250612232551)
+13:17:39	Error: 	"Not Found" (404) at link https://musikschule-cms-bielefeld.de/img/icon-logo-red.svg (from https://musikschule-cms-bielefeld.de/css/common-bundle.css?ts=20250612232551)
+13:17:39	Error: 	"Not Found" (404) at link https://musikschule-cms-bielefeld.de/img/flags_matrix.png (from https://musikschule-cms-bielefeld.de/css/common-bundle.css?ts=20250612232551)
+
+HTTrack Website Copier/3.49-2 mirror complete in 2 minutes 30 seconds : 149 links scanned, 145 files written (10476312 bytes overall) [8939841 bytes received at 59598 bytes/sec], 2016642 bytes transferred using HTTP compression in 65 files, ratio 20%, 4.0 requests per connection
+(3 errors, 1 warnings, 0 messages)
