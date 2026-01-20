@@ -1,57 +1,30 @@
 # CONTINUITY.md
 
 - Goal (incl. success criteria):
-  - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
+  - Сделать блок "Unsere Standorte" более выразительным и читабельным (карточки с адресами).
 - Constraints/Assumptions:
-  - Следовать AGENTS.md; контент править через `site/src/data/content.js`.
-  - Коммуникация на русском.
+  - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
+  - Language rule: communicate in Russian.
   - Sandbox: danger-full-access; network enabled; approval_policy never.
 - Key decisions:
-  - Используем `SmartImage` + WebP (`imageVariants`) для всех изображений.
-  - В `run.sh` встроены certbot, cron‑продление и генерация nginx.conf с HTTPS.
-  - В nginx включены gzip и cache headers для `/assets` и `/images`.
+  - Коммит перестановки логотипа сделан отдельно.
+  - Добавить пункт меню "Unsere Standorte" (ссылка на `/standorte`) и убрать AGB/Impressum из верхнего меню; оставить их в футере.
 - State:
   - Done:
-    - Синхронизация контента с легаси, исправления блоков/страниц.
-    - Перевод всех изображений на WebP и удаление дублей PNG/JPG.
-    - Автоматизация HTTPS в `run.sh` (certbot + cron + 80→443).
-    - Добавлены `SSL_GUIDE.md` и `SSL_OS_DEEP_DIVE.md`.
-    - Сильно уменьшены большие WebP (макс. 2560px, q=72), восстановлены `Cajon.webp`/`Keyboard.webp`, обновлены размеры в `imageVariants`.
-    - Удалены Musikkurse (страница/контент/кнопка/изображения) по просьбе клиента.
-    - Добавлен lazy‑loading страниц через `React.lazy` и `Suspense` вокруг `Outlet`.
-    - Добавлены preconnect к Google Fonts и корректный preload WebP hero в `index.html`.
-    - Добавлены srcset‑варианты 512/768/1024 для карточек категорий и подключены `useSrcSet`/`sizes` на главной и Offer.
-    - Встроен `LazyYouTube` (ленивая подгрузка iframe по клику) для снижения начальной нагрузки JS.
-    - Исправлены ссылки на устаревшие `.png` в `content.js` на `.webp`.
-    - Подключены self‑host шрифты Inter/Outfit/Libre Baskerville (woff2) и убран Google Fonts import.
-    - Добавлены уменьшенные WebP‑варианты для hero/карточек (Offer/Kunst/Contact/About) и расширены srcset‑списки.
-    - В Kunst‑галерее включены `useSrcSet` + `sizes` для более лёгких превью.
-    - Агрессивно пересжаты WebP (q=60) и уменьшены 2560px базы до 1920px, добавлены/обновлены 768/512 варианты и srcset для header‑изображений и JeKits.
-    - Агрессивно пересжаты карточки (q=50) и включён eager‑loading для ключевых карточек на главной и Offer.
-    - Добавлены AVIF‑варианты и srcset для всех ключевых изображений, SmartImage теперь отдаёт AVIF→WebP.
-    - Включён `content-visibility: auto` для тяжёлых секций и длительный кэш для `/fonts` в nginx.
-    - Прелоад AVIF‑карточек на главной и в Offer, карточки переведены на eager + high priority.
-    - Добавлены meta description, `robots.txt` и `sitemap.xml` для SEO.
-    - Добавлен подробный разбор TLS/сертификатов и роли Cloudflare: `TLS_CERT_UNDER_THE_HOOD.md`.
-    - Повышено качество hero‑изображений (WebP/AVIF) и апскейлнут низкокачественный снимок на JeKits.
-    - Ещё повышено качество hero‑изображений (WebP 75 / AVIF 60) и улучшено превью YouTube (srcset).
-    - Апскейл JeKits‑фото до 1400px и обновление его srcset‑вариантов.
-    - Переведён Web3Forms ключ и адрес получателя в переменные окружения (VITE_WEB3FORMS_KEY, VITE_WEB3FORMS_TO_EMAIL).
-    - Обновлены все .md документы проекта под текущее состояние (AGENTS/README/Info/SSL).
-    - Переписаны гайды по TLS/криптографии с математикой и ОС (SSL_GUIDE/SSL_OS_DEEP_DIVE/TLS_CERT_UNDER_THE_HOOD).
-    - Добавлен раздел Cloudflare (шаг‑за‑шагом) в README.
-    - В `TLS_CERT_UNDER_THE_HOOD.md` добавлено краткое введение в теорию групп и полей.
-    - Добавлены гайды: `DNS_TLS_CERTS_DEEP_DIVE.md`, `BROWSER_UNDER_THE_HOOD.md`, `NGINX_UNDER_THE_HOOD.md`.
-    - Расширен `SSL_OS_DEEP_DIVE.md` (структуры ядра, RX/TX путь, AEAD, page cache).
+    - Коммит: `ui: поменяли местами логотип и текст`.
+    - В шапке добавлен пункт "Unsere Standorte", AGB/Impressum убраны из верхнего меню (desktop + mobile).
+    - Обновлен контент `pages.standorte` под 3 адреса клиента.
+    - Исправлен синтаксис строк адресов в `site/src/data/content.js` (переносы строки через `\n`).
+    - Страница `/standorte` переведена на карточки адресов (grid).
+    - Убрано дублирование заголовка "Unsere Standorte" на странице.
   - Now:
-    - Завершить merge‑коммит после разрешения конфликтов.
-    - Проверить, что `run.sh` и HTTPS работают после мерджа.
-    - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
+    - Подтвердить, что заголовок и карточки выглядят логично.
   - Next:
-    - При необходимости: code splitting и self‑host шрифтов для ускорения first‑load.
+    - Внести точечные правки по замечаниям пользователя.
+
 - Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: Какие актуальные данные для Impressum (адрес/телефон/ответственные)?
-  - UNCONFIRMED: Что именно тормозит первый заход (JS‑bundle/шрифты/hero)?
+  - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
+  - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
 - Working set (files/ids/commands):
-  - Files: `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
-  - Commands: `rg --files`, `./run.sh`.
+  - Files: `site/src/pages/Standorte.jsx`, `site/src/data/content.js`, `CONTINUITY.md`.
+  - Commands: `rg -n "Kleebring|Kleebrink" site/src/data/content.js`.

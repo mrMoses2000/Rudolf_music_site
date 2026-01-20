@@ -285,22 +285,32 @@ export const content = {
             ]
         },
         "standorte": {
-            "title": "Standorte",
+            "title": "Unsere Standorte",
             "blocks": [
-                { "type": "p", "text": "Wir erteilen Musikunterricht an folgenden Standorten:" },
-                { "type": "p", "text": "33647 Bielefeld - Brackwede" },
-                { "type": "p", "text": "Glockenweg 9" },
-                { "type": "p", "text": "(Gemeindehaus der MCG Bi-Brackwede)" },
-                { "type": "p", "text": "33719 Bielefeld - Heepen" },
-                { "type": "p", "text": "Kleebrink 3" },
-                { "type": "p", "text": "(Gemeindehaus der MBG Bi-Heepen)" },
-                { "type": "p", "text": "Christliche Musikschule Leopoldshöhe\n33818 Leopoldshöhe" },
-                { "type": "p", "text": "Krentruper Str. 20" },
-                { "type": "p", "text": "32108 Bad Salzuflen (Kreis Lippe)" },
-                { "type": "p", "text": "Lagesche Str. 109" },
-                { "type": "p", "text": "Ameldung unter: 0521/3367416" }
+                { "type": "h1", "text": "Unsere Standorte" },
+                { "type": "h4", "text": "Bielefeld Heepen" },
+                { "type": "p", "text": "Kleebring 3\n33719 Bielefeld" },
+                { "type": "h4", "text": "Bielefeld Brackwede" },
+                { "type": "p", "text": "Glockenweg 9\n33647 Bielefeld" },
+                { "type": "h4", "text": "Leopoldshöhe" },
+                { "type": "p", "text": "Krentruper Str. 20\n33818 Leopoldshöhe" }
+            ],
+            "locations": [
+                {
+                    "name": "Bielefeld Heepen",
+                    "address": ["Kleebring 3", "33719 Bielefeld"]
+                },
+                {
+                    "name": "Bielefeld Brackwede",
+                    "address": ["Glockenweg 9", "33647 Bielefeld"]
+                },
+                {
+                    "name": "Leopoldshöhe",
+                    "address": ["Krentruper Str. 20", "33818 Leopoldshöhe"]
+                }
             ]
         },
+
         "jekits": {
             "title": "JeKits",
             "headerImage": "/images/JeKits.webp",
