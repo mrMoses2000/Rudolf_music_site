@@ -1,6 +1,12 @@
 # AGENTS.md - Контекст проекта и правила работы
 
 ## Continuity Ledger (compaction-safe)
+> [!IMPORTANT]
+> **CRITICAL: START HERE.**
+> Before doing ANYTHING else, check `AGENT_LOG.md`.
+> If you are a new agent/session: **YOU MUST EXECUTE THE "Протокол синхронизации" (Section below).**
+> Do not write code until you have read `Info.md` and checked `INDEX_REPORT.md`.
+
 Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The ledger is the canonical session briefing designed to survive context compaction; do not rely on earlier chat text unless it’s reflected in the ledger.
 
 ### How it works
