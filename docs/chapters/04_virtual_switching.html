@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 4: Виртуальная Коммутация (Bridge и Veth) - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <section>
+            <h1>Глава 4: Виртуальная Коммутация (Bridge и Veth)</h1>
+            <p>
+                Linux Bridge — это не отдельный процесс. Это модуль ядра, который "ворует" пакеты у физических
+                интерфейсов, используя хук <code>rx_handler</code>.
+            </p>
+
+            <h3>4.1. Крючок: br_handle_frame</h3>
+            <p>
+                В структуре <code>net_device</code> есть указатель на функцию <code>rx_handler</code>.
+                Когда вы добавляете интерфейс в мост (`brctl addif br0 eth0`), ядро устанавливает этот указатель на
+                функцию <code>br_handle_frame</code>.
+            </p>
+            <div class="mermaid">
+                graph LR
+                Packet[Incoming Packet]
+                Eth0[eth0 Driver]
+                NetifRx[netif_receive_skb]
+                Check{Has rx_handler?}
+                IPStack[IP Stack (Layer 3)]
+                Bridge[br_handle_frame (Layer 2)]
+
+                Packet --> Eth0
+                Eth0 --> NetifRx
+                NetifRx --> Check
+                Check -- No (NULL) --> IPStack
+                Check -- Yes (ptr) --> Bridge
+            </div>
+
+            <h3>4.2. Обучение: Forwarding Database (FDB)</h3>
+            <p>
+                Бридж работает как Ethernet-свитч. Он должен знать, на каком порту находится какой MAC-адрес.
+                Это делается в функции <code>br_fdb_update</code>.
+            </p>
+            <div class="deep-dive">
+                <h4>АНАЛИЗ ИСХОДНОГО КОДА ЯДРА: MAC LEARNING</h4>
+                <p>Когда пакет приходит на порт, бридж смотрит на <strong>Source MAC</strong>:</p>
+                <ol>
+                    <li>Берет Source MAC (например, <code>AA:BB:CC:DD:EE:FF</code>) и делает хеш.</li>
+                    <li>Ищет этот хеш в хеш-таблице <code>br->fdb</code>.</li>
+                    <li>Если записи нет — создает новую: "MAC ...FF доступен через порт VethA".</li>
+                    <li>Если запись есть — обновляет timestamp (чтобы она не устарела).</li>
+                </ol>
+                <pre data-lang="KERNEL SOURCE">
+void br_fdb_update(struct net_bridge *br, struct net_bridge_port *source,
+                   const unsigned char *addr, u16 vid, unsigned long flags)
+{
+    /* Calculate Hash of MAC Address */
+    struct hlist_head *head = &br->hash[br_mac_hash(addr, vid)];
+    struct net_bridge_fdb_entry *fdb;
+
+    /* Look for existing entry */
+    fdb = fdb_find(head, addr, vid);
+    
+    if (likely(fdb)) {
+        /* Update timestamp - device is alive */
+        fdb->updated = jiffies;
+    } else {
+        /* Create NEW entry (Learning) */
+        fdb = fdb_create(head, source, addr, vid, flags);
+    }
+}</pre>
+            </div>
+
+            <h3>4.3. Решение: Flood или Forward</h3>
+            <p>
+                Далее бридж смотрит на <strong>Destination MAC</strong>:
+            </p>
+            <ul>
+                <li>Если MAC есть в FDB (и он на другом порту) -> <strong>Forward</strong> (отправить только туда).</li>
+                <li>Если MAC нет в FDB (неизвестен) -> <strong>Flood</strong> (отправить на ВСЕ порты, кроме входящего).
+                </li>
+                <li>Если MAC - Broadcast (FF:FF:FF:FF:FF:FF) -> <strong>Flood</strong>.</li>
+            </ul>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="03_namespaces.html" class="btn">&larr; Назад: Namespaces</a>
+            <a href="05_dns.html" class="btn">Далее: DNS Resolver &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

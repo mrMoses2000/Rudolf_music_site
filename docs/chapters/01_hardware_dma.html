@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 1: Аппаратное Обеспечение и DMA - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <div class="anim-container">
+            <h4 style="font-family: var(--font-sans); margin-top: 0; color: #475569;">ВИЗУАЛИЗАЦИЯ: КОНВЕЙЕР ПАКЕТОВ
+            </h4>
+            <div class="pipeline">
+                <div class="pipe-stage">NIC</div>
+                <div class="pipe-stage">DMA</div>
+                <div class="pipe-stage">KERNEL</div>
+                <div class="pipe-stage">USER</div>
+                <div class="pipe-packet"></div>
+            </div>
+        </div>
+
+        <section>
+            <h1>Глава 1: Аппаратное Обеспечение и DMA</h1>
+            <p>
+                Сетевая карта (NIC) — это автономный компьютер. Она не ждет приказов CPU на каждый байт. Вместо этого
+                они используют
+                общую "почтовую ячейку" в оперативной памяти — <strong>Ring Buffer</strong>.
+            </p>
+
+            <h3>1.1. Молекулярный Уровень: Запись в Память</h3>
+            <p>
+                Что происходит на уровне транзисторов и шины, когда пакет прилетает в карту?
+            </p>
+
+            <div class="deep-dive">
+                <h4>ПРИЧИННО-СЛЕДСТВЕННАЯ СВЯЗЬ: DIRECT MEMORY ACCESS (DMA)</h4>
+                <ol>
+                    <li><strong>Fetch:</strong> NIC считывает свой внутренний регистр <code>RDT</code> (Tail Index).
+                        Пусть он равен 5.</li>
+                    <li><strong>Address Calculation:</strong> NIC вычисляет физический адрес дескриптора в RAM: $$Addr =
+                        Base + (5 \times 16)$$</li>
+                    <li><strong>PCIe Read:</strong> NIC отправляет электрический сигнал по шине PCIe (TLP Read Request).
+                        Контроллер памяти (MMU) возвращает 16 байт дескриптора.</li>
+                    <li><strong>Extraction:</strong> NIC извлекает из дескриптора 64-битный адрес буфера данных
+                        (например, <code>0xFF1000</code>).</li>
+                    <li><strong>Write Packet:</strong> NIC начинает пересылать байты принятого пакета (Payload) прямиком
+                        по адресу <code>0xFF1000</code>. CPU в этот момент может спать или считать числа Фибоначчи — он
+                        не задействован.</li>
+                    <li><strong>Write Back:</strong> Закончив, NIC снова пишет в RAM (в дескриптор), выставляя бит
+                        статуса <code>DD=1</code> (Descriptor Done).</li>
+                </ol>
+            </div>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="../index.html" class="btn">Домой</a>
+            <a href="02_kernel_skb.html" class="btn">Далее: Память ядра &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

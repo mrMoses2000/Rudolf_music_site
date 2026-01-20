@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 5: Рекурсивный DNS Резолвер - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <section>
+            <h1>Глава 5: Рекурсивный DNS Резолвер</h1>
+            <p>
+                Прежде чем отправить первый TCP SYN пакет, приложение должно узнать IP-адрес. Это задача <strong>DNS
+                    Resolver</strong>.
+                В Linux это не магия ядра, это обычная библиотека (glibc), работающая в User Space.
+            </p>
+
+            <h3>5.1. System Call: getaddrinfo</h3>
+            <p>
+                Когда ваш код вызывает <code>getaddrinfo("google.com", ...)</code>, происходят следующие события:
+            </p>
+            <ol>
+                <li><strong>Config Parsing:</strong> Glibc (функция <code>__libc_res_nquery</code>) читает
+                    <code>/etc/resolv.conf</code> для получения списка nameservers.</li>
+                <li><strong>Kernel Transition:</strong> Создается UDP сокет через
+                    <code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)</code>.</li>
+                <li><strong>Packet Assembly:</strong> Библиотека формирует буфер байтов. В файле
+                    <code>resolv/res_send.c</code> это функция <code>__res_context_send</code>.</li>
+            </ol>
+
+            <div class="deep-dive">
+                <h4>НУКЛЕОЛЯРНЫЙ УРОВЕНЬ: ЗАГОЛОВОК DNS</h4>
+                <p>Это не просто "заголовок". Это битовая карта. В C это выглядит как <code>struct dns_header</code>:
+                </p>
+                <pre data-lang="LIBC SOURCE">
+struct dns_header {
+    uint16_t id;      // 16 bit: Random ID (e.g., 0x1A2B) to match Response
+    
+    // Flags (16 bit total) - Let's dissect them:
+    uint16_t qr : 1;  // Query(0) vs Response(1)
+    uint16_t opcode:4;// 0=Standard, 4=Notify
+    uint16_t aa : 1;  // Authoritative Answer (Is this THE server?)
+    uint16_t tc : 1;  // Truncated (Packet > 512 bytes? Switch to TCP)
+    uint16_t rd : 1;  // Recursion Desired (Client: "Please do the work")
+    uint16_t ra : 1;  // Recursion Available (Server: "I can dig for you")
+    uint16_t z  : 3;  // Reserved (Zero)
+    uint16_t rcode:4; // Return Code (0=OK, 3=NXDOMAIN - No Such Domain)
+
+    uint16_t q_count; // Number of Questions
+    uint16_t ans_count; // Number of Answer RRs
+    uint16_t auth_count;// Number of Authority RRs
+    uint16_t add_count; // Number of Additional RRs
+};</pre>
+                <p>
+                    Бит <strong>RD (Recursion Desired)</strong> — самый важный для клиента.
+                    Если его не выставить (0), сервер ответит ссылкой на другой сервер, и клиенту придется делать работу
+                    самому.
+                    Glibc всегда ставит <code>RD=1</code>.
+                </p>
+
+                <strong>2. Question Section (Wire Format)</strong>
+                <p>
+                    Имя <code>google.com</code> кодируется как последовательность Label-ов с префиксом длины (Pascal
+                    String concept):
+                </p>
+                <pre>
+[0x06] 'g' 'o' 'o' 'g' 'l' 'e'   (Length 6)
+[0x03] 'c' 'o' 'm'               (Length 3)
+[0x00]                           (Null Terminator = Root)</pre>
+                <p>Это позволяет парсить имя без сканирования на наличие точек.</p>
+            </div>
+
+            <h3>5.2. UDP vs TCP Logic</h3>
+            <p>
+                Glibc отправляет пакет через <code>sendto()</code>. Если в ответ придет пакет с флагом <code>TC=1</code>
+                (Truncated),
+                библиотека тут же закроет UDP сокет, откроет TCP (порт 53) и повторит запрос внутри потока.
+                Это происходит при больших размерах ключей DNSSEC.
+            </p>
+            <p>
+                Если локальный резолвер не знает ответа, он начинает <strong>рекурсию</strong>:
+            </p>
+            <ol>
+                <li>Спрашивает <strong>Root Server</strong> (один из 13 мировых IP, например <code>198.41.0.4</code>).
+                    "Кто отвечает за .com?"</li>
+                <li>Root отвечает: "Я не знаю IP гугла, но знаю, что за .com отвечают сервера Verisign".</li>
+                <li>Резолвер спрашивает сервер Verisign. Тот посылает на <code>ns1.google.com</code>.</li>
+                <li>Наконец, <code>ns1.google.com</code> отдает заветный IP.</li>
+            </ol>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="04_virtual_switching.html" class="btn">&larr; Назад: Virtual Switching</a>
+            <a href="06_tcp.html" class="btn">Далее: TCP Connection &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

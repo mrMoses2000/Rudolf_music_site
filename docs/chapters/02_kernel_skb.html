@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 2: Память ядра и sk_buff - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <section>
+            <h1>Глава 2: Память ядра и sk_buff</h1>
+            <p>
+                Linux не копирует пакеты. Это правило №1. Вместо этого мы передаем указатель на огромную структуру
+                <code>sk_buff</code>.
+            </p>
+
+            <h3>2.1. Ассемблерная Реальность</h3>
+
+            <div class="anim-container">
+                <div id="anim-skb"></div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">VISUALIZATION: skb_push(16)</p>
+            </div>
+
+            <p>
+                Как добавить заголовок к пакету, не двигая байты? Функция <code>skb_push</code>.
+            </p>
+            <pre><span class="type">void</span> *<span class="fn">skb_push</span>(<span class="kw">struct</span> sk_buff *skb, <span class="type">unsigned int</span> p_len) {
+    skb->data -= p_len;
+    skb->len  += p_len;
+    <span class="kw">return</span> skb->data;
+}</pre>
+            <p>
+                На уровне регистров процессора (x86-64) эта операция выглядит так:
+            </p>
+            <div class="deep-dive">
+                <h4>ИСПОЛНЕНИЕ МАШИННОГО КОДА</h4>
+                <ul>
+                    <li><code>MOV RAX, [RDI + 0xD0]</code> — Процессор загружает текущее значение указателя
+                        <code>data</code> из памяти (по смещению 0xD0 от начала структуры) в регистр аккумулятора.
+                    </li>
+                    <li><code>SUB RAX, RSI</code> — Вычитает длину заголовка из адреса. Адрес сдвигается "влево" (в
+                        сторону
+                        младших адресов).</li>
+                    <li><code>MOV [RDI + 0xD0], RAX</code> — Сохраняет новый адрес обратно в память.</li>
+                    <li>Теперь, когда код будет писать по <code>skb->data</code>, он будет писать в свободное
+                        пространство
+                        ПЕРЕД старыми данными. <strong>Стоимость: 3 такта.</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="01_hardware_dma.html" class="btn">&larr; Назад: Hardware</a>
+            <a href="03_namespaces.html" class="btn">Далее: Namespaces &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

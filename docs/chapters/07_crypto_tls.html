@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 7: Криптография и TLS 1.3 - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <div class="anim-container">
+            <h4 style="font-family: var(--font-sans); margin-top: 0; color: #475569;">ВИЗУАЛИЗАЦИЯ: TLS HANDSHAKE (RTT)
+            </h4>
+            <div class="tls-anim">
+                <div class="actor client">CLIENT</div>
+                <div class="actor server">SERVER</div>
+                <div class="arrow"></div>
+                <div class="msg" id="tls-msg">ClientHello</div>
+            </div>
+        </div>
+
+        <section>
+            <h1>Глава 7: Криптография и TLS 1.3</h1>
+            <p>
+                Самая математически насыщенная часть. Как передать секрет по открытому каналу?
+            </p>
+
+            <h3>7.1. Elliptic Curve Diffie-Hellman (ECDH)</h3>
+            <p>
+                В TLS 1.3 мы используем кривую Curve25519. Ее уравнение:
+            </p>
+            <div class="math-block">
+                $$y^2 = x^3 + 486662x^2 + x \pmod {2^{255}-19}$$
+            </div>
+
+            <div class="deep-dive">
+                <h4>ВЫВОД: ОБЩИЙ СЕКРЕТ (SHARED SECRET)</h4>
+                <p>Пусть $G$ — базовая точка кривой (генератор).</p>
+                <ol>
+                    <li><strong>Client:</strong> Генерирует секретное число $a$ (private key).
+                        <br>Вычисляет публичный ключ $A = a \times G$. (Умножение точки на скаляр).
+                        <br>Отправляет $A$ серверу в сообщении <code>ClientHello</code>.
+                    </li>
+                    <li><strong>Server:</strong> Генерирует секретное число $b$.
+                        <br>Вычисляет $B = b \times G$.
+                        <br>Отправляет $B$ клиенту в <code>ServerHello</code>.
+                    </li>
+                    <li><strong>Magic:</strong>
+                        <br>Клиент вычисляет $S = a \times B = a \times (b \times G)$.
+                        <br>Сервер вычисляет $S = b \times A = b \times (a \times G)$.
+                    </li>
+                </ol>
+                <p>
+                    Поскольку умножение на скаляр коммутативно ($a \cdot b = b \cdot a$), они получают
+                    <strong>одинаковую точку $S$</strong>.
+                    Координата $x$ этой точки становится общим секретным ключом (Pre-Master Secret).
+                </p>
+            </div>
+
+            <h3>7.2. Арифметика в полях Галуа (AES-GCM)</h3>
+            <p>
+                Шифрование — это не проблема. Проблема — это аутентификация (убедиться, что данные не подменили).
+                Для этого используется GCM (Galois Counter Mode), работающий в поле Галуа $GF(2^{128})$.
+            </p>
+            <div class="math-block">
+                Полином поля: $$P(x) = x^{128} + x^7 + x^2 + x + 1$$
+            </div>
+            <p>
+                Операция умножения в этом поле ($A \otimes B$) сложна для обычного CPU.
+                Поэтому Intel добавил инструкцию <code>PCLMULQDQ</code> (Carry-less Multiplication), которая выполняет
+                полиномиальное умножение аппаратно.
+                Это позволяет шифровать и подписывать трафик на скоростях 10-100 Гбит/с.
+            </p>
+
+            <h3>7.3. Сертификаты X.509 и Цепочка Доверия</h3>
+            <p>
+                Как браузер узнает, что ключ $B$, присланный сервером, действительно принадлежит
+                <code>rudolf-music.ru</code>, а не хакеру посередине?
+                Ответ: <strong>Цифровая Подпись</strong>.
+            </p>
+
+            <div class="deep-dive">
+                <h4>НУКЛЕОЛЯРНЫЙ УРОВЕНЬ: СТРУКТУРА ASN.1</h4>
+                <p>
+                    Сертификат — это структура <code>Certificate</code>, описанная на языке ASN.1.
+                </p>
+                <pre>
+    Certificate  ::=  SEQUENCE  {
+        tbsCertificate       TBSCertificate,  -- "To Be Signed" (Body)
+        signatureAlgorithm   AlgorithmIdentifier,
+        signatureValue       BIT STRING       -- The Encrypted Hash
+    }
+    
+    TBSCertificate  ::=  SEQUENCE  {
+        version         [0]  EXPLICIT Version DEFAULT v1,
+        serialNumber         CertificateSerialNumber,
+        signature            AlgorithmIdentifier,
+        issuer               Name,            -- Who signed this? (R3)
+        validity             Validity,        -- NotBefore / NotAfter
+        subject              Name,            -- Who owns this? (rudolf-music.ru)
+        subjectPublicKeyInfo SubjectPublicKeyInfo, -- THE PUBLIC KEY ITSELF
+        extensions      [3]  EXPLICIT Extensions OPTIONAL
+    }</pre>
+                <p>
+                    Самое важное поле — <code>subjectPublicKeyInfo</code>. Именно тут лежит публичный ключ сервера ($e,
+                    n$ для RSA или точка $P$ для ECC), который мы используем для обмена ключами.
+                </p>
+            </div>
+
+            <h4>МАТЕМАТИЧЕСКОЕ ДОКАЗАТЕЛЬСТВО: КОНКРЕТНЫЙ ПРИМЕР</h4>
+            <p>
+                Перестанем говорить абстракциями. Давайте "взломаем" RSA на калькуляторе.
+                Представим, что мы — CA (Certificate Authority), и подписываем хеш сертификата.
+            </p>
+            <div class="math-block">
+                <strong>1. Генерация ключей CA (Keygen)</strong><br>
+                Взяли два простых числа: $p = 61, q = 53$.<br>
+                Модуль $n = p \times q = 3233$.<br>
+                Функция Эйлера $\phi(n) = (61-1)(53-1) = 3120$.<br>
+                Выбрали открытую экспоненту $e = 17$ (должна быть взаимно проста с $\phi(n)$).<br>
+                Вычислили секретную экспоненту $d = 2753$ (обратное к $e$ по модулю $\phi(n)$).<br>
+                <strong>Public Key:</strong> $(17, 3233)$, <strong>Secret Key:</strong> $(2753, 3233)$.
+            </div>
+
+            <div class="math-block">
+                <strong>2. Подписание (Signing)</strong><br>
+                Пусть хеш сертификата $H = 65$. (В реальности это 32 байта SHA-256).<br>
+                CA вычисляет подпись $S$, используя свой <strong>SECRET KEY</strong> $d$:<br>
+                $$S = H^d \pmod n = 65^{2753} \pmod{3233} = 2790$$
+                <br>Число <strong>2790</strong> записывается в поле <code>signatureValue</code> сертификата.
+            </div>
+
+            <div class="math-block">
+                <strong>3. Верификация (Verification)</strong><br>
+                Браузер получает сертификат, видит подпись $S = 2790$.<br>
+                Браузер знает <strong>PUBLIC KEY</strong> CA ($e=17, n=3233$) — он зашит в ОС.<br>
+                Браузер вычисляет:<br>
+                $$H_{check} = S^e \pmod n = 2790^{17} \pmod{3233}$$
+                <br>
+                Если посчитать (через Modular Exponentiation), результат будет <strong>65</strong>.<br>
+                $$65 == 65$$
+                <br>
+                <strong>Магия работает.</strong> Никто, не зная $d=2753$, не мог бы подобрать такое число $S=2790$,
+                которое при возведении в 17-ю степень даст 65.
+            </div>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="06_tcp.html" class="btn">&larr; Назад: TCP Connection</a>
+            <a href="08_browser_engine.html" class="btn">Далее: Browser Engine &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

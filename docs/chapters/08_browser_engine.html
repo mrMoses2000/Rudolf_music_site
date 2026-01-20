@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 8: Браузерный движок - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <section>
+            <h1>Глава 8: Браузерный движок</h1>
+            <p>
+                Браузер — это операционная система внутри операционной системы. V8 — это не интерпретатор
+                JIT-компилятор.
+            </p>
+
+            <h3>8.1. Критический Путь Рендеринга (Critical Rendering Path)</h3>
+            <p>
+                Что происходит, когда вы получаете HTML байты?
+            </p>
+            <div class="mermaid">
+                graph TD
+                HTML[HTML Bytes] --> Token[Tokenizer]
+                Token --> DOM[DOM Tree]
+                CSS[CSS Bytes] --> CSSOM[CSSOM Tree]
+                DOM --> RenderTree[Render Tree]
+                CSSOM --> RenderTree
+                RenderTree --> Layout[Layout (Geometry)]
+                Layout --> Paint[Paint (Pixels)]
+                Paint --> Composite[Composite (Layers)]
+            </div>
+            <ul>
+                <li><strong>DOM:</strong> Содержит все теги (даже <code>display: none</code>).</li>
+                <li><strong>Render Tree:</strong> Содержит только ВИДИМЫЕ элементы. <code>head</code> и
+                    <code>display: none</code> удаляются.
+                </li>
+                <li><strong>Layout (Reflow):</strong> Браузер вычисляет <code>x, y, width, height</code> для каждого
+                    прямоугольника. Самая дорогая операция.</li>
+            </ul>
+
+            <div class="deep-dive">
+                <h4>УБИЙЦА ПРОИЗВОДИТЕЛЬНОСТИ: СИНХРОННЫЙ REFLOW</h4>
+                <p>
+                    JavaScript меняет стили лениво. Но если вы прочитаете геометрическое свойство сразу после записи, вы
+                    заставите браузер бросить всё и пересчитать Layout.
+                </p>
+                <pre>
+// WRITE
+div.style.width = '100px';
+
+// READ (Danger!)
+// Browser MUST calculate Layout NOW to give you the answer.
+console.log(div.offsetWidth); 
+
+// WRITE AGAIN
+div.style.height = '100px';</pre>
+            </div>
+
+            <h3>8.2. Event Loop: Микрозадачи и Макрозадачи</h3>
+
+            <div class="anim-container">
+                <div id="anim-event-loop"></div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">VISUALIZATION: CALL STACK & QUEUES</p>
+            </div>
+
+            <p>
+                JavaScript однопоточен. Каков приоритет задач?
+            </p>
+            <ol>
+                <li><strong>Call Stack:</strong> Синхронный код (<code>console.log</code>). Выполняется до пустоты.</li>
+                <li><strong>Microtasks (VIP):</strong> <code>Promise.then</code>, <code>MutationObserver</code>.
+                    Выполняются ВСЕ сразу, как только стек пуст. Если они добавляют новые микрозадачи — браузер
+                    зависнет.</li>
+                <li><strong>Render Step:</strong> Раз в 16мс (60 FPS) браузер обновляет кадр (Style, Layout, Paint).
+                    <code>requestAnimationFrame</code>.
+                </li>
+                <li><strong>Macrotasks (Plebs):</strong> <code>setTimeout</code>, <code>I/O</code>. Выполняется ТОЛЬКО
+                    ОДНА за раз, после рендера.</li>
+            </ol>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="07_crypto_tls.html" class="btn">&larr; Назад: Cryptography</a>
+            <a href="../index.html" class="btn">Финиш: На главную</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

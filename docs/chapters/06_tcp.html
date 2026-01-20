@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 6: TCP: Соединение - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <section>
+            <h1>Глава 6: TCP: Соединение</h1>
+            <p>
+                В Linux нет магии "соединения". Есть <code>struct tcp_sock</code>.
+                Когда вы делаете <code>connect()</code>, ядро просто меняет поле <code>sk_state</code> в структуре.
+            </p>
+
+            <h3>6.1. Конечный автомат: The 3-Way Handshake</h3>
+            <div class="deep-dive">
+                <h4>СОСТОЯНИЯ ЯДРА (KERNEL STATES)</h4>
+                <ol>
+                    <li><strong>SYN:</strong> Клиент выбирает $Seq = X$. (State: <code>TCP_SYN_SENT</code>).</li>
+                    <li><strong>SYN-ACK:</strong> Сервер выбирает $Seq = Y$, подтверждает $Ack = X+1$. (State:
+                        <code>TCP_SYN_RECV</code>).
+                    </li>
+                    <li><strong>ACK:</strong> Клиент подтверждает $Ack = Y+1$. (State: <code>TCP_ESTABLISHED</code>).
+                    </li>
+                </ol>
+            </div>
+
+            <h3>6.2. Window Scaling (RFC 1323)</h3>
+
+            <div class="anim-container">
+                <div id="anim-tcp"></div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">VISUALIZATION: SLIDING WINDOW BUFFER</p>
+            </div>
+
+            <p>
+                Стандартный заголовок TCP имеет поле «Window Size» размером всего 16 бит. Это позволяет передать
+                максимум $2^{16} - 1 = 65,535$ байт за раз.
+                В современных гигабитных сетях этого катастрофически мало (труба будет пустой).
+            </p>
+            <p>
+                Решение: <strong>Window Scaling</strong>. В SYN пакете стороны договариваются о множителе (Shift Count).
+            </p>
+            <div class="math-block">
+                $$TrueWindowSize = WindowField \ll ScaleFactor$$
+                <br>
+                Например, если Scale = 7, то максимальное окно:
+                $$65535 \times 2^7 = 65535 \times 128 \approx 8.3 \text{ MB}$$
+            </div>
+
+            <h3>6.3. Congestion Control: CUBIC</h3>
+            <p>
+                Как быстро можно слать данные? Linux использует алгоритм <strong>CUBIC</strong>.
+                Он описывает кривую роста окна как кубическую функцию от времени $t$:
+            </p>
+            <div class="math-block">
+                $$W(t) = C(t - K)^3 + W_{max}$$
+            </div>
+            <ul>
+                <li>$W(t)$ — целевой размер окна перегрузки (cwnd).</li>
+                <li>$W_{max}$ — размер окна в момент последней потери пакета.</li>
+                <li>$t$ — время, прошедшее с момента потери.</li>
+                <li>$K$ — время, необходимое для достижения $W_{max}$.</li>
+            </ul>
+            <p>
+                Это уравнение позволяет CUBIC быстро восстанавливать скорость (крутой подъем), аккуратно подходить к
+                пределу (плато), и затем агрессивно искать новую пропускную способность (новый резкий рост).
+            </p>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="05_dns.html" class="btn">&larr; Назад: DNS Resolver</a>
+            <a href="07_crypto_tls.html" class="btn">Далее: Cryptography &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

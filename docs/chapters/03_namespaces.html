@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глава 3: Namespaces и Контейнеры - Systems Internals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="../index.html" style="font-family: var(--font-sans); font-weight: 600; text-decoration: none;">&larr;
+            Оглавление</a>
+
+        <section>
+            <h1>Глава 3: Namespaces и Контейнеры</h1>
+            <p>
+                В исходном коде ядра Linux нет ни одной структуры, названной "Container". Docker — это просто удобная
+                обертка над двумя механизмами: <strong>Namespaces</strong> (Namespace Isolation) и
+                <strong>Cgroups</strong> (Resource Control).
+            </p>
+
+            <h3>3.1. Взгляд со стороны ядра: task_struct</h3>
+            <p>
+                Каждый процесс в ядре представлен структурой <code>task_struct</code>. В ней есть поле
+                <code>nsproxy</code>:
+            </p>
+            <pre data-lang="KERNEL SOURCE">
+struct task_struct {
+    ...
+    /* Namespaces */
+    struct nsproxy *nsproxy;
+    ...
+};
+
+struct nsproxy {
+    atomic_t count;
+    struct uts_namespace *uts_ns;
+    struct ipc_namespace *ipc_ns;
+    struct mnt_namespace *mnt_ns;
+    struct pid_namespace *pid_ns_for_children;
+    struct net           *net_ns; /* THIS IS THE KEY */
+};</pre>
+            <p>
+                Когда вы делаете <code>ip link add</code>, ядро не добавляет интерфейс в какой-то глобальный список.
+                Оно берет указатель <code>current->nsproxy->net_ns</code> и добавляет устройство в список, привязанный
+                именно к этому namespace.
+            </p>
+
+            <div class="deep-dive">
+                <h4>ТРАССИРОВКА СИСТЕМНОГО ВЫЗОВА: CLONE_NEWNET</h4>
+                <p>
+                    Когда демон Docker запускает контейнер, он вызывает системный вызов <code>clone()</code> (или
+                    <code>unshare()</code>) с флагом <strong>CLONE_NEWNET</strong>.
+                </p>
+                <ol>
+                    <li>Ядро видит флаг <code>CLONE_NEWNET</code>.</li>
+                    <li>Оно выделяет новую структуру <code>struct net</code> в памяти ядра (отдельную от
+                        <code>init_net</code>).</li>
+                    <li>В этой новой структуре создается свой пустой список сетевых интерфейсов, своя таблица
+                        маршрутизации (FIB) и свои правила iptables.</li>
+                    <li>В новой структуре автоматически создается только <code>lo</code> (loopback) интерфейс.</li>
+                    <li>Поле <code>nsproxy->net_ns</code> нового процесса начинает указывать на эту новую структуру.
+                    </li>
+                </ol>
+                <p>
+                    <strong>Результат:</strong> Процесс физически не может "увидеть" <code>eth0</code> хоста, потому что
+                    в его "вселенной" (struct net) этого указателя просто не существует.
+                </p>
+            </div>
+
+            <h3>3.2. Причинно-следственная изоляция</h3>
+            <div class="mermaid">
+                graph TD
+                Root[Generic Kernel Space]
+                InitTask[Process: Init (PID 1)]
+                DockerTask[Process: Nginx Container]
+
+                InitNS[struct net (Host)]
+                DockerNS[struct net (Container)]
+
+                Eth0[Device: eth0]
+                Veth[Device: eth0 (inside container)]
+
+                InitTask -->|nsproxy->net_ns| InitNS
+                DockerTask -->|nsproxy->net_ns| DockerNS
+
+                InitNS --> Eth0
+                DockerNS --> Veth
+
+                style InitNS fill:#e0e7ff,stroke:#3b82f6
+                style DockerNS fill:#fef3c7,stroke:#d97706
+            </div>
+        </section>
+
+        <div class="chapter-nav">
+            <a href="02_kernel_skb.html" class="btn">&larr; Назад: Kernel Memory</a>
+            <a href="04_virtual_switching.html" class="btn">Далее: Virtual Switching &rarr;</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Системные Внутренности: Полное Руководство</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <p
+            style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); font-family: var(--font-sans); font-size: 0.875rem; font-weight: 700;">
+            Серия Systems Internals
+        </p>
+        <h1>Анатомия Запроса</h1>
+        <p style="font-size: 1.5rem; color: #4b5563; font-family: var(--font-serif); font-style: italic;">
+            Исчерпывающее погружение в архитектуру Linux: от физики полупроводников до эллиптических кривых TLS 1.3.
+        </p>
+    </header>
+
+    <div class="container">
+
+        <div class="deep-dive">
+            <h4>ВВЕДЕНИЕ</h4>
+            <p>
+                Эта книга — не очередной набор туториалов. Это <strong>молекулярный разбор</strong> того, как работает
+                современный сервер.
+                Мы не верим в магию. Мы верим в source code, битовые маски и математические доказательства.
+            </p>
+            <p>
+                Ваша цель — перестать гуглить базовые вещи. После прочтения вы будете знать <em>точно</em>, что
+                происходит, когда вы нажимаете Enter.
+            </p>
+        </div>
+
+        <h2>Оглавление</h2>
+
+        <ul style="list-style: none; padding: 0; font-family: var(--font-sans); font-size: 1.1rem;">
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/01_hardware_dma.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 1: Аппаратное Обеспечение
+                    и DMA</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Как NIC пишет в RAM без участия CPU.
+                    Ring Buffers и PCIe TLP.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/02_kernel_skb.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 2: Память Ядра и
+                    sk_buff</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Структура sk_buff, манипуляции
+                    указателями и zero-copy networking.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/03_namespaces.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 3: Namespaces и
+                    Контейнеры</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">CLONE_NEWNET, struct nsproxy и изоляция
+                    на уровне ядра.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/04_virtual_switching.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 4: Виртуальная Коммутация
+                    (Bridge и Veth)</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Как работает Bridge FDB, learning и
+                    почему Veth — это не просто труба.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/05_dns.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 5: Рекурсивный DNS
+                    Резолвер</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Битовый анализ пакетов, glibc source, и
+                    почему UDP иногда переходит в TCP.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/06_tcp.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 6: TCP: Соединение</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">State Machine, Window Scaling,
+                    Congestion Control (Cubic) и struct sock.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/07_crypto_tls.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 7: Криптография и TLS
+                    1.3</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Математические доказательства, RSA, ECDH
+                    Curve25519, схема ASN.1.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="chapters/08_browser_engine.html"
+                    style="font-weight: 700; text-decoration: none; font-size: 1.25rem;">Глава 8: Браузерный движок</a>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Rendering Pipeline, Reflow/Repaint, V8
+                    Inline Caching и Event Loop.</p>
+            </li>
+        </ul>
+
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
