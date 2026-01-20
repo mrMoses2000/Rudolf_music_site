@@ -13,7 +13,8 @@ const Contact = () => {
         subject: "",
         message: ""
     });
-    const web3formsKey = import.meta.env.VITE_ACCESS_WEB3FORMS_KEY;
+    const web3formsKey =
+        import.meta.env.VITE_WEB3FORMS_KEY || import.meta.env.VITE_ACCESS_WEB3FORMS_KEY;
     const web3formsToEmail = import.meta.env.VITE_WEB3FORMS_TO_EMAIL || content.contact.email;
 
     useEffect(() => {
@@ -243,6 +244,16 @@ const Contact = () => {
                             >
                                 {content.contact.form.submit}
                             </button>
+                            {status === "sending" && (
+                                <p className="text-sm font-bold text-ink-muted">
+                                    Wird gesendet...
+                                </p>
+                            )}
+                            {status === "error" && (
+                                <p className="text-sm font-bold text-red-700">
+                                    Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+                                </p>
+                            )}
                         </form>
                     </div>
                 </div>

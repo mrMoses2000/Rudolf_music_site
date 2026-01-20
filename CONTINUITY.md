@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-01-20T10:40:40Z
-- Last Agent Stamp: 2026-01-20T10:35:03Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+- Last Updated (UTC): 2026-01-20T10:50:32Z
+- Last Agent Stamp: 2026-01-20T10:50:32Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
 
 - Goal (incl. success criteria):
   - Сделать блок "Unsere Standorte" более выразительным и читабельным (карточки с адресами).
@@ -26,6 +26,7 @@
     - Исправлен синтаксис строк адресов в `site/src/data/content.js` (переносы строки через `\n`).
     - Страница `/standorte` переведена на карточки адресов (grid).
     - Убрано дублирование заголовка "Unsere Standorte" на странице.
+    - Исправлен ключ Web3Forms в `Contact.jsx` (VITE_WEB3FORMS_KEY с fallback) и добавлены статусы отправки.
     - Синхронизация контента с легаси, исправления блоков/страниц.
     - Перевод всех изображений на WebP и удаление дублей PNG/JPG.
     - Автоматизация HTTPS в `run.sh` (certbot + cron + 80→443).

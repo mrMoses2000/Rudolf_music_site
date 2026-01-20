@@ -207,3 +207,16 @@
     - COMMIT_MESSAGE.md
     - AGENT_LOG.md
   notes: "Fixed Web3Forms key variable name for proper environment injection and updated agent session docs."
+- timestamp_utc: 2026-01-20T10:50:32Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: web3forms key fix
+  git_branch: dev_moses
+  git_head: 38443a5
+  touched_files:
+    - site/src/pages/Contact.jsx
+    - CONTINUITY.md
+    - AGENTS.md
+    - AGENT_LOG.md
+  notes: Fixed env key lookup and added visible submit status

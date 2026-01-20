@@ -40,7 +40,7 @@ Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The l
 - Working set files ids commands
 
 ## Agent Stamp (обновляется агентом)
-Last agent stamp: 2026-01-20T09:58:00Z | model=Gemini-2.0-Flash | account=mosesvasilenko | session_id=1674b66a-7455-416a-8d6b-0ca45cb2b7b0 | purpose=fix web3forms email issue
+Last agent stamp: 2026-01-20T10:50:32Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=web3forms key fix
 
 ## Базовые правила
 - **Язык общения: только русский.**
