@@ -44,16 +44,16 @@ const Layout = () => {
             >
                 {/* Left: Logo + Text */}
                 <Link to="/" className="flex items-center gap-2 group relative z-50">
+                    <div className="hidden sm:flex flex-col h-14 justify-center gap-0.5 mr-2">
+                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Christliche</span>
+                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Musikschule</span>
+                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Bielefeld</span>
+                    </div>
                     <img
                         src="/images/logo.svg"
                         alt="CMS Logo"
                         className="h-14 w-auto grayscale brightness-0 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-300"
                     />
-                    <div className="hidden sm:flex flex-col h-14 justify-center gap-0.5 ml-2">
-                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Christliche</span>
-                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Musikschule</span>
-                        <span className="font-libre text-[11px] leading-none text-ink tracking-tight">Bielefeld</span>
-                    </div>
                 </Link>
 
                 {/* Right: Nav + Button grouped */}
