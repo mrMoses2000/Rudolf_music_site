@@ -1,9 +1,10 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-01-20T07:53:27Z
-- Last Agent Stamp: 2026-01-20T07:53:27Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+- Last Updated (UTC): 2026-01-20T09:58:00Z
+- Last Agent Stamp: 2026-01-20T09:58:00Z | Gemini-2.0-Flash | account=mosesvasilenko | session_id=1674b66a-7455-416a-8d6b-0ca45cb2b7b0
 
 - Goal (incl. success criteria):
+  - Исправить проблему с отправкой писем (Web3Forms) на неправильный email.
   - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
 - Constraints/Assumptions:
   - Следовать AGENTS.md; контент править через `site/src/data/content.js`.
@@ -76,6 +77,7 @@
   - SEO:
     - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
+    - Исправление Web3Forms (ожидание нового ключа от пользователя).
     - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
     - Держать контент 1:1 с `music_site_copy/`.
     - Сверить, что все страницы используют `SmartImage`.
@@ -85,5 +87,5 @@
   - UNCONFIRMED: Какие актуальные данные для Impressum (адрес/телефон/ответственные)?
   - UNCONFIRMED: Что именно тормозит первый заход (JS‑bundle/шрифты/hero)?
 - Working set (files/ids/commands):
-  - Files: `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
+  - Files: `site/src/pages/Contact.jsx`, `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
   - Commands: `rg --files`, `./run.sh`.
