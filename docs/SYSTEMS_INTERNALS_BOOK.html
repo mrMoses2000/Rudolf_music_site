@@ -79,6 +79,7 @@
             margin: 0 auto;
             padding: 80px 40px;
             counter-reset: chapter;
+            /* FIX: Reset chapter counter */
         }
 
         /* Typography Upgrade */
@@ -550,7 +551,7 @@
         </div>
     </div>
 
-    <!-- CHAPTER 5 -->
+    <!-- CHAPTER 5: DNS (REWRITTEN) -->
     <section>
         <h2>The DNS Recursive Resolver</h2>
         <p>
@@ -564,40 +565,61 @@
             Когда ваш код вызывает <code>getaddrinfo("google.com", ...)</code>, происходят следующие события:
         </p>
         <ol>
-            <li><strong>Config Parsing:</strong> Glibc открывает <code>/etc/resolv.conf</code>. В Docker-контейнере там
-                обычно написано <code>nameserver 127.0.0.11</code>.</li>
-            <li><strong>Socket Creation:</strong> Glibc создает UDP сокет
-                (<code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)</code>).</li>
-            <li><strong>Packet Construction:</strong> Библиотека вручную собирает DNS-пакет в буфере памяти.</li>
+            <li><strong>Config Parsing:</strong> Glibc (функция <code>__libc_res_nquery</code>) читает
+                <code>/etc/resolv.conf</code> для получения списка nameservers.</li>
+            <li><strong>Kernel Transition:</strong> Создается UDP сокет через
+                <code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)</code>.</li>
+            <li><strong>Packet Assembly:</strong> Библиотека формирует буфер байтов. В файле
+                <code>resolv/res_send.c</code> это функция <code>__res_context_send</code>.</li>
         </ol>
 
         <div class="deep-dive">
-            <h4>BINARY FORENSICS: THE DNS QUERY PACKET</h4>
-            <p>DNS пакет — это структура из хедеров и секций. Взглянем на байты запроса для <code>google.com</code>.</p>
-
-            <strong>1. Header (12 Bytes)</strong>
+            <h4>NUCLEOLAR LEVEL: THE DNS HEADER</h4>
+            <p>Это не просто "заголовок". Это битовая карта. В C это выглядит как <code>struct dns_header</code>:</p>
             <pre>
-Transaction ID: 0x1a2b  (Random matching ID)
-Flags:          0x0100  (Standard Query, Recursion Desired)
-Questions:      0x0001
-Answer RRs:     0x0000
-Authority RRs:  0x0000
-Additional RRs: 0x0000</pre>
+struct dns_header {
+    uint16_t id;      // 16 bit: Random ID (e.g., 0x1A2B) to match Response
+    
+    // Flags (16 bit total) - Let's dissect them:
+    uint16_t qr : 1;  // Query(0) vs Response(1)
+    uint16_t opcode:4;// 0=Standard, 4=Notify
+    uint16_t aa : 1;  // Authoritative Answer (Is this THE server?)
+    uint16_t tc : 1;  // Truncated (Packet > 512 bytes? Switch to TCP)
+    uint16_t rd : 1;  // Recursion Desired (Client: "Please do the work")
+    uint16_t ra : 1;  // Recursion Available (Server: "I can dig for you")
+    uint16_t z  : 3;  // Reserved (Zero)
+    uint16_t rcode:4; // Return Code (0=OK, 3=NXDOMAIN - No Such Domain)
 
-            <strong>2. Question Section (Encoding)</strong>
-            <p>DNS использует формат "Length-Value" для частей домена (Labels). Точки не передаются.</p>
+    uint16_t q_count; // Number of Questions
+    uint16_t ans_count; // Number of Answer RRs
+    uint16_t auth_count;// Number of Authority RRs
+    uint16_t add_count; // Number of Additional RRs
+};</pre>
+            <p>
+                Бит <strong>RD (Recursion Desired)</strong> — самый важный для клиента.
+                Если его не выставить (0), сервер ответит ссылкой на другой сервер, и клиенту придется делать работу
+                самому.
+                Glibc всегда ставит <code>RD=1</code>.
+            </p>
+
+            <strong>2. Question Section (Wire Format)</strong>
+            <p>
+                Имя <code>google.com</code> кодируется как последовательность Label-ов с префиксом длины (Pascal String
+                concept):
+            </p>
             <pre>
-0x06 'g' 'o' 'o' 'g' 'l' 'e'  (Length 6, "google")
-0x03 'c' 'o' 'm'              (Length 3, "com")
-0x00                          (Null Terminator, End of Name)
-0x00 0x01                     (Type: A Record)
-0x00 0x01                     (Class: IN)</pre>
+[0x06] 'g' 'o' 'o' 'g' 'l' 'e'   (Length 6)
+[0x03] 'c' 'o' 'm'               (Length 3)
+[0x00]                           (Null Terminator = Root)</pre>
+            <p>Это позволяет парсить имя без сканирования на наличие точек.</p>
         </div>
 
-        <h3>5.2. UDP Transport & Recursion</h3>
+        <h3>5.2. UDP vs TCP Logic</h3>
         <p>
-            Glibc вызывает <code>sendto()</code>, отправляя эти ~30 байт на 127.0.0.11:53.
-            Почему UDP? Потому что Handshake TCP удвоил бы время задержки.
+            Glibc отправляет пакет через <code>sendto()</code>. Если в ответ придет пакет с флагом <code>TC=1</code>
+            (Truncated),
+            библиотека тут же закроет UDP сокет, откроет TCP (порт 53) и повторит запрос внутри потока.
+            Это происходит при больших размерах ключей DNSSEC.
         </p>
         <p>
             Если локальный резолвер не знает ответа, он начинает <strong>рекурсию</strong>:
@@ -631,6 +653,8 @@ Additional RRs: 0x0000</pre>
             </p>
         </div>
     </section>
+
+    <!-- CHAPTER 7 -->
     <section>
         <h2>Cryptography & TLS 1.3</h2>
         <p>
