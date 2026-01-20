@@ -193,3 +193,17 @@
     - future/meta/AGENTS.md
     - future/meta/COMMIT_MESSAGE.md
   notes: Added russian commit message rule and updated templates
+- timestamp_utc: 2026-01-20T10:15:00Z
+  model: Gemini-2.0-Flash
+  account: mosesvasilenko
+  session_id: 1674b66a-7455-416a-8d6b-0ca45cb2b7b0
+  purpose: fix web3forms email issue
+  git_branch: main
+  git_head: 03da648bd75ebd4583b2d1365e0f95363034dc71
+  touched_files:
+    - site/src/pages/Contact.jsx
+    - AGENTS.md
+    - CONTINUITY.md
+    - COMMIT_MESSAGE.md
+    - AGENT_LOG.md
+  notes: "Fixed Web3Forms key variable name for proper environment injection and updated agent session docs."

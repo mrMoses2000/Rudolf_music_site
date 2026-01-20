@@ -13,7 +13,7 @@ const Contact = () => {
         subject: "",
         message: ""
     });
-    const web3formsKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    const web3formsKey = import.meta.env.VITE_ACCESS_WEB3FORMS_KEY;
     const web3formsToEmail = import.meta.env.VITE_WEB3FORMS_TO_EMAIL || content.contact.email;
 
     useEffect(() => {

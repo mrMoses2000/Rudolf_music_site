@@ -1,10 +1,12 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-01-20T10:35:03Z
+- Last Updated (UTC): 2026-01-20T10:40:40Z
 - Last Agent Stamp: 2026-01-20T10:35:03Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
 
 - Goal (incl. success criteria):
   - Сделать блок "Unsere Standorte" более выразительным и читабельным (карточки с адресами).
+  - Исправить проблему с отправкой писем (Web3Forms) на неправильный email.
+  - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
 - Constraints/Assumptions:
   - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
   - Language rule: communicate in Russian.
@@ -84,6 +86,7 @@
     - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
     - Подтвердить, что заголовок и карточки выглядят логично.
+    - Исправление Web3Forms (ожидание нового ключа от пользователя).
     - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
     - Держать контент 1:1 с `music_site_copy/`.
     - Сверить, что все страницы используют `SmartImage`.
@@ -95,5 +98,5 @@
   - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
   - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
 - Working set (files/ids/commands):
-  - Files: `site/src/pages/Standorte.jsx`, `site/src/data/content.js`, `CONTINUITY.md`.
-  - Commands: `rg -n "Kleebring|Kleebrink" site/src/data/content.js`.
+  - Files: `site/src/pages/Standorte.jsx`, `site/src/pages/Contact.jsx`, `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
+  - Commands: `rg -n "Kleebring|Kleebrink" site/src/data/content.js`, `rg --files`, `./run.sh`.
