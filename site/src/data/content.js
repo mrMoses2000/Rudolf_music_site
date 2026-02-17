@@ -355,10 +355,10 @@ export const content = {
             "title": "Aktuelles",
             "headerImage": "/images/Aktuelles.webp",
             "blocks": [
-                { "type": "p", "text": "Wir laden Sie / Euch alle zu unserer Vorspielwoche \u201EJunges Podium 2026\u201C ein." },
+                { "type": "h4", "text": "Wir laden Sie / Euch alle zu unserer Vorspielwoche \u201EJunges Podium 2026\u201C ein." },
                 { "type": "p", "text": "In Leopoldshöhe findet sie in der Zeit von 16.03.2026 bis zum 18.03.2026 und in Bielefeld-Heepen in der Zeit von 23.03.2026 bis 27.03.2026 statt." },
                 { "type": "p", "text": "Im Laufe der Vorspielwoche spielt jeder/e Schüler/in jedes Instrumentalfachs (Ausnahme: Vorschulkinder) bei einem der Vorspiele vor. Der reguläre Unterricht während der Vorspielwoche wird durch die Teilnahme am Vorspiel ersetzt." },
-                { "type": "p", "text": "Zum Vorspiel gehört auch unbedingt das Publikum dazu, und jeder Spieler will auch gehört werden. Bitte planen Sie deswegen Ihre Zeit und die Zeit Ihrer Kinder so, dass Sie und Ihr Kind bis zum Ende des jeweiligen Vorspiels bleiben." }
+                { "type": "h4", "text": "Zum Vorspiel gehört auch unbedingt das Publikum dazu, und jeder Spieler will auch gehört werden. Bitte planen Sie deswegen Ihre Zeit und die Zeit Ihrer Kinder so, dass Sie und Ihr Kind bis zum Ende des jeweiligen Vorspiels bleiben." }
             ]
 
         },
