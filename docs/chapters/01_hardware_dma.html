@@ -41,7 +41,66 @@
             <h3>1.1. Молекулярный Уровень: Запись в Память</h3>
             <p>
                 Что происходит на уровне транзисторов и шины, когда пакет прилетает в карту?
+                Карта использует <strong>Ring Buffer</strong> (кольцевой буфер дескрипторов).
             </p>
+
+            <div class="mermaid">
+                graph LR
+                RX["RX Ring (RAM)"]
+                Desc0["Desc 0 (HW)"]
+                Desc1["Desc 1 (HW)"]
+                Desc2["Desc 2 (HEAD)"]
+                Desc3["Desc 3 (Empty)"]
+                Desc4["Desc 4 (TAIL)"]
+
+                RX --> Desc0
+                RX --> Desc1
+                RX --> Desc2
+                RX --> Desc3
+                RX --> Desc4
+
+                Desc0 --> Pkt0["Packet 0 (Done)"]
+                Desc1 --> Pkt1["Packet 1 (Done)"]
+
+                style Desc2 stroke:#ef4444,stroke-width:2px,color:#fff
+                style Desc4 stroke:#22c55e,stroke-width:2px,color:#fff
+            </div>
+
+            <div class="deep-dive">
+                <h4>ALLOCATION: dma_alloc_coherent()</h4>
+                <p>
+                    Драйвер не делает <code>malloc()</code>. Ему нужна <strong>физически непрерывная</strong> память,
+                    которую видит устройство.
+                    Он вызывает:
+                </p>
+                <code style="display:block; margin: 10px 0; color: #38bdf8;">
+                    dma_alloc_coherent(dev, size, &dma_handle, GFP_KERNEL);
+                </code>
+                <ul>
+                    <li><strong>RDH (Head):</strong> Индекс, где hardware <em>закончила</em> писать. (Пишет карта,
+                        читает драйвер).</li>
+                    <li><strong>RDT (Tail):</strong> Индекс, где hardware <em>может</em> писать. (Пишет драйвер, читает
+                        карта).</li>
+                    <li>Если <code>RDH == RDT</code>, буфер пуст (или полон, там хитрая арифметика).</li>
+                </ul>
+            </div>
+
+            <div class="deep-dive">
+                <h4>STRUKT E1000_RX_DESC (Intel Driver)</h4>
+                <p>
+                    NIC не пишет пакет абы куда. Она читает <strong>Дескриптор</strong> — структуру размером 16 байт,
+                    которая говорит карте, куда положить данные.
+                </p>
+                <pre data-lang="KERNEL DRIVER">
+struct e1000_rx_desc {
+    /* 0x00 */ u64 buffer_addr; /* 64-bit Physical Address of SKB Data */
+    /* 0x08 */ u16 length;      /* Length of data written */
+    /* 0x0A */ u16 csum;        /* Checksum calculated by hardware */
+    /* 0x0C */ u8  status;      /* Status bits (DD, EOP) */
+    /* 0x0D */ u8  errors;      /* Error bits */
+    /* 0x0E */ u16 special;     /* VLAN tag usually goes here */
+};</pre>
+            </div>
 
             <div class="deep-dive">
                 <h4>ПРИЧИННО-СЛЕДСТВЕННАЯ СВЯЗЬ: DIRECT MEMORY ACCESS (DMA)</h4>
@@ -52,13 +111,15 @@
                         Base + (5 \times 16)$$</li>
                     <li><strong>PCIe Read:</strong> NIC отправляет электрический сигнал по шине PCIe (TLP Read Request).
                         Контроллер памяти (MMU) возвращает 16 байт дескриптора.</li>
-                    <li><strong>Extraction:</strong> NIC извлекает из дескриптора 64-битный адрес буфера данных
+                    <li><strong>Extraction:</strong> NIC извлекает из дескриптора поле <code>buffer_addr</code>
                         (например, <code>0xFF1000</code>).</li>
                     <li><strong>Write Packet:</strong> NIC начинает пересылать байты принятого пакета (Payload) прямиком
                         по адресу <code>0xFF1000</code>. CPU в этот момент может спать или считать числа Фибоначчи — он
                         не задействован.</li>
-                    <li><strong>Write Back:</strong> Закончив, NIC снова пишет в RAM (в дескриптор), выставляя бит
-                        статуса <code>DD=1</code> (Descriptor Done).</li>
+                    <li><strong>Write Back:</strong> Закончив, NIC снова пишет в RAM (в дескриптор), заполняя поля
+                        <code>length</code> и выставляя бит
+                        статуса <code>DD=1</code> (Descriptor Done). Это сигнал драйверу: "Я всё!"
+                    </li>
                 </ol>
             </div>
         </section>

@@ -29,16 +29,20 @@
             <p>
                 Что происходит, когда вы получаете HTML байты?
             </p>
+            <h3>8.1. Критический Путь Рендеринга (Critical Rendering Path)</h3>
+            <p>
+                Что происходит, когда вы получаете HTML байты?
+            </p>
             <div class="mermaid">
                 graph TD
-                HTML[HTML Bytes] --> Token[Tokenizer]
-                Token --> DOM[DOM Tree]
-                CSS[CSS Bytes] --> CSSOM[CSSOM Tree]
-                DOM --> RenderTree[Render Tree]
+                HTML["HTML Bytes"] --> Token["Tokenizer"]
+                Token --> DOM["DOM Tree"]
+                CSS["CSS Bytes"] --> CSSOM["CSSOM Tree"]
+                DOM --> RenderTree["Render Tree"]
                 CSSOM --> RenderTree
-                RenderTree --> Layout[Layout (Geometry)]
-                Layout --> Paint[Paint (Pixels)]
-                Paint --> Composite[Composite (Layers)]
+                RenderTree --> Layout["Layout (Geometry)"]
+                Layout --> Paint["Paint (Pixels)"]
+                Paint --> Composite["Composite (Layers)"]
             </div>
             <ul>
                 <li><strong>DOM:</strong> Содержит все теги (даже <code>display: none</code>).</li>
@@ -56,14 +60,19 @@
                     заставите браузер бросить всё и пересчитать Layout.
                 </p>
                 <pre>
-// WRITE
+// 1. WRITE: JS invalidates the layout
+// Browser marks the Render Tree as "dirty" but doesn't calculate yet.
 div.style.width = '100px';
 
-// READ (Danger!)
-// Browser MUST calculate Layout NOW to give you the answer.
-console.log(div.offsetWidth); 
+// 2. READ (Danger!): We ask for geometry
+// To give you the correct 'offsetWidth', the browser MUST:
+//   a. Pause JS execution
+//   b. Recalculate Layout for the whole page (or subtree)
+//   c. Return the value
+console.log(div.offsetWidth); // << FORCED SYNCHRONOUS LAYOUT
 
-// WRITE AGAIN
+// 3. WRITE AGAIN
+// The previous calculation is now wasted.
 div.style.height = '100px';</pre>
             </div>
 
@@ -88,6 +97,54 @@ div.style.height = '100px';</pre>
                 <li><strong>Macrotasks (Plebs):</strong> <code>setTimeout</code>, <code>I/O</code>. Выполняется ТОЛЬКО
                     ОДНА за раз, после рендера.</li>
             </ol>
+
+            <h3>8.3. Секрет Скорости: Hidden Classes (Shapes)</h3>
+            <p>
+                JavaScript — динамический язык. Вы можете добавить поле <code>obj.newProp = 1</code> в любой момент.
+                В C++ это невозможно, так как смещение (offset) полей в памяти фиксировано.
+                Чтобы JS работал быстро, V8 "притворяется", что он C++.
+            </p>
+
+            <div class="mermaid">
+                graph TD
+                Obj["Object: {x, y}"]
+
+                Map0["Map 0: Empty"]
+                Map1["Map 1: +x (offset 0)"]
+                Map2["Map 2: +y (offset 1)"]
+
+                Obj -.-> Map2
+                Map0 -- "obj.x = 1" --> Map1
+                Map1 -- "obj.y = 2" --> Map2
+
+                style Map2 fill:#818cf8,color:#fff
+            </div>
+
+            <div class="deep-dive">
+                <h4>INLINE CACHING (IC) STATES</h4>
+                <p>
+                    V8 оптимизирует доступ к свойствам, патча байт-код. У IC есть 3 состояния:
+                </p>
+                <ul>
+                    <li><strong>Monomorphic (Fastest):</strong> Функция видела только ОДНУ shape. Генерируется прямой
+                        доступ по смещению.</li>
+                    <li><strong>Polymorphic (Medium):</strong> Функция видела 2-4 разных shape. Генерируется
+                        <code>if-else</code> цепочка.</li>
+                    <li><strong>Megamorphic (Slow):</strong> Функция видела >4 shape. V8 сдается и использует
+                        хеш-таблицу (Global Dictionary Lookup).</li>
+                </ul>
+                <p>
+                    Когда вы пишете <code>function getX(o) { return o.x }</code>, V8 в первый раз делает долгий поиск
+                    "где лежит x?".
+                    Но затем он <strong>патчит байт-код</strong> прямо в памяти:
+                </p>
+                <code style="display:block; margin-top: 10px; color: #f43f5e;">
+                    // BEFORE:<br>
+                    LoadProperty(obj, "x")<br><br>
+                    // AFTER (Monomorphic):<br>
+                    if (obj.map == Map123) return memory[offset + 0]
+                </code>
+            </div>
         </section>
 
         <div class="chapter-nav">

@@ -26,18 +26,37 @@
                 В Linux это не магия ядра, это обычная библиотека (glibc), работающая в User Space.
             </p>
 
-            <h3>5.1. System Call: getaddrinfo</h3>
+            <h3>5.1. Системный Вызов: getaddrinfo</h3>
             <p>
                 Когда ваш код вызывает <code>getaddrinfo("google.com", ...)</code>, происходят следующие события:
             </p>
             <ol>
                 <li><strong>Config Parsing:</strong> Glibc (функция <code>__libc_res_nquery</code>) читает
-                    <code>/etc/resolv.conf</code> для получения списка nameservers.</li>
+                    <code>/etc/resolv.conf</code> для получения списка nameservers.
+                </li>
                 <li><strong>Kernel Transition:</strong> Создается UDP сокет через
-                    <code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)</code>.</li>
+                    <code>socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)</code>.
+                </li>
                 <li><strong>Packet Assembly:</strong> Библиотека формирует буфер байтов. В файле
-                    <code>resolv/res_send.c</code> это функция <code>__res_context_send</code>.</li>
+                    <code>resolv/res_send.c</code> это функция <code>__res_context_send</code>.
+                </li>
             </ol>
+
+            <div class="mermaid">
+                graph TD
+                App["Application"] -- "getaddrinfo()" --> GLIBC["Glibc (User Space)"]
+                GLIBC -- "Reads" --> NSS["/etc/nsswitch.conf"]
+                NSS -- "hosts: files dns" --> CheckFiles{"Check Files?"}
+                CheckFiles -- "Yes (files)" --> Hosts["/etc/hosts"]
+                Hosts -- "Found?" --> Result{"Success?"}
+                Result -- "Yes" --> Return["Return IP"]
+                Result -- "No" --> DNS["DNS Query"]
+                DNS -- "Reads" --> ResolvConf["/etc/resolv.conf"]
+                ResolvConf -- "nameserver 8.8.8.8" --> UDP["socket(UDP)"]
+
+                style GLIBC fill:#1e293b,stroke:#3b82f6
+                style Hosts fill:#1e293b,stroke:#10b981
+            </div>
 
             <div class="deep-dive">
                 <h4>НУКЛЕОЛЯРНЫЙ УРОВЕНЬ: ЗАГОЛОВОК DNS</h4>
@@ -45,22 +64,22 @@
                 </p>
                 <pre data-lang="LIBC SOURCE">
 struct dns_header {
-    uint16_t id;      // 16 bit: Random ID (e.g., 0x1A2B) to match Response
+    uint16_t id;      // 16 бит: Случайный ID (напр. 0x1A2B) для связи с ответом
     
-    // Flags (16 bit total) - Let's dissect them:
-    uint16_t qr : 1;  // Query(0) vs Response(1)
-    uint16_t opcode:4;// 0=Standard, 4=Notify
-    uint16_t aa : 1;  // Authoritative Answer (Is this THE server?)
-    uint16_t tc : 1;  // Truncated (Packet > 512 bytes? Switch to TCP)
-    uint16_t rd : 1;  // Recursion Desired (Client: "Please do the work")
-    uint16_t ra : 1;  // Recursion Available (Server: "I can dig for you")
-    uint16_t z  : 3;  // Reserved (Zero)
-    uint16_t rcode:4; // Return Code (0=OK, 3=NXDOMAIN - No Such Domain)
-
-    uint16_t q_count; // Number of Questions
-    uint16_t ans_count; // Number of Answer RRs
-    uint16_t auth_count;// Number of Authority RRs
-    uint16_t add_count; // Number of Additional RRs
+    // Флаги (всего 16 бит) - Разберем по частям:
+    uint16_t qr : 1;  // Запрос (0) или Ответ (1)
+    uint16_t opcode:4;// 0=Стандарт, 4=Notify
+    uint16_t aa : 1;  // Authoritative Answer (Это ответ от "главного" сервера?)
+    uint16_t tc : 1;  // Truncated (Пакет > 512 байт? Иди в TCP)
+    uint16_t rd : 1;  // Recursion Desired (Клиент: "Сделай все сам, плз")
+    uint16_t ra : 1;  // Recursion Available (Сервер: "Могу копать")
+    uint16_t z  : 3;  // Reserved (Нули)
+    uint16_t rcode:4; // Return Code (0=ОК, 3=NXDOMAIN - Нет такого домена)
+    
+    uint16_t q_count; // Кол-во вопросов
+    uint16_t ans_count; // Кол-во ответов (Resource Records)
+    uint16_t auth_count;// Кол-во Authority RRs
+    uint16_t add_count; // Кол-во Additional RRs
 };</pre>
                 <p>
                     Бит <strong>RD (Recursion Desired)</strong> — самый важный для клиента.
@@ -81,7 +100,7 @@ struct dns_header {
                 <p>Это позволяет парсить имя без сканирования на наличие точек.</p>
             </div>
 
-            <h3>5.2. UDP vs TCP Logic</h3>
+            <h3>5.2. Логика UDP vs TCP</h3>
             <p>
                 Glibc отправляет пакет через <code>sendto()</code>. Если в ответ придет пакет с флагом <code>TC=1</code>
                 (Truncated),
@@ -98,6 +117,34 @@ struct dns_header {
                 <li>Резолвер спрашивает сервер Verisign. Тот посылает на <code>ns1.google.com</code>.</li>
                 <li>Наконец, <code>ns1.google.com</code> отдает заветный IP.</li>
             </ol>
+
+            <div class="anim-container">
+                <div id="anim-dns"></div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">INTERACTIVE: RECURSIVE TRACE</p>
+            </div>
+
+            <div class="mermaid">
+                sequenceDiagram
+                participant PC as Client (Stub)
+                participant R as Resolver (8.8.8.8)
+                participant Root as "Root (.)"
+                participant TLD as "TLD (.com)"
+                participant Auth as "Auth (ns1.google.com)"
+
+                PC->>R: Query: "google.com?" (RD=1)
+                note right of PC: Recursion Desired
+
+                R->>Root: Query: "google.com?" (iterative)
+                Root-->>R: Refer: "Verisign Servers"
+
+                R->>TLD: Query: "google.com?"
+                TLD-->>R: Refer: "Go to ns1.google.com"
+
+                R->>Auth: Query: "google.com?"
+                Auth-->>R: Answer: "142.250.74.46" (A Record)
+
+                R-->>PC: Answer: "142.250.74.46"
+            </div>
         </section>
 
         <div class="chapter-nav">

@@ -25,6 +25,31 @@
                 <code>sk_buff</code>.
             </p>
 
+            <div class="deep-dive">
+                <h4>НУКЛЕОЛЯРНЫЙ УРОВЕНЬ: STRUCT SK_BUFF</h4>
+                <p>Эта структура — сердце стека. Она определяет границы данных в памяти.</p>
+                <pre data-lang="KERNEL SOURCE"><span class="kw">struct</span> sk_buff {
+    <span class="kw">struct</span> sk_buff  *next;      <span class="comment">// Следующий пакет в очереди</span>
+    <span class="kw">struct</span> sk_buff  *prev;      <span class="comment">// Предыдущий пакет</span>
+    
+    <span class="kw">struct</span> sock     *sk;        <span class="comment">// Владелец сокета (кто ждет данные?)</span>
+    ktime_t         tstamp;     <span class="comment">// Время прибытия (для TCP RTT)</span>
+    
+    <span class="comment">/* 4 Указателя Памяти: */</span>
+    <span class="type">unsigned char</span>   *head;      <span class="comment">// Начало выделенного буфера (RAM)</span>
+    <span class="type">unsigned char</span>   *data;      <span class="comment">// Начало полезной нагрузки (L2/L3 Header)</span>
+    <span class="type">unsigned char</span>   *tail;      <span class="comment">// Конец полезной нагрузки</span>
+    <span class="type">unsigned char</span>   *end;       <span class="comment">// Конец выделенного буфера</span>
+    
+    <span class="type">unsigned int</span>    len;        <span class="comment">// Длина данных (tail - data)</span>
+    <span class="type">unsigned int</span>    truesize;   <span class="comment">// Реально занятая память (вкл. struct)</span>
+};</pre>
+                <p>
+                    Движение по стеку (IP -> TCP -> App) — это просто увеличение <code>skb->data</code>. Без
+                    копирования.
+                </p>
+            </div>
+
             <h3>2.1. Ассемблерная Реальность</h3>
 
             <div class="anim-container">

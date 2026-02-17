@@ -33,19 +33,30 @@
             </p>
             <pre data-lang="KERNEL SOURCE">
 struct task_struct {
-    ...
-    /* Namespaces */
+    /* ... other fields ... */
+    
+    /* 
+     * Pointers to the namespaces that this process sees.
+     * nsproxy is shared if processes share namespaces (e.g. threads).
+     */
     struct nsproxy *nsproxy;
-    ...
+    
+    /* ... other fields ... */
 };
 
 struct nsproxy {
     atomic_t count;
-    struct uts_namespace *uts_ns;
-    struct ipc_namespace *ipc_ns;
-    struct mnt_namespace *mnt_ns;
+    struct uts_namespace *uts_ns;  /* Hostname, uname */
+    struct ipc_namespace *ipc_ns;  /* IPC Message Queues */
+    struct mnt_namespace *mnt_ns;  /* Mount points (Filesystem) */
     struct pid_namespace *pid_ns_for_children;
-    struct net           *net_ns; /* THIS IS THE KEY */
+    
+    /* 
+     * THIS IS THE NETWORK NAMESPACE.
+     * All network interfaces (eth0, lo, veth0) live inside this struct.
+     * If you change this pointer, you change the visible "internet".
+     */
+    struct net           *net_ns; 
 };</pre>
             <p>
                 Когда вы делаете <code>ip link add</code>, ядро не добавляет интерфейс в какой-то глобальный список.
@@ -53,50 +64,59 @@ struct nsproxy {
                 именно к этому namespace.
             </p>
 
+            <div class="anim-container">
+                <div id="anim-ns"></div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">SIMULATION: PID NAMESPACE MAPPING</p>
+            </div>
+
             <div class="deep-dive">
-                <h4>ТРАССИРОВКА СИСТЕМНОГО ВЫЗОВА: CLONE_NEWNET</h4>
-                <p>
-                    Когда демон Docker запускает контейнер, он вызывает системный вызов <code>clone()</code> (или
-                    <code>unshare()</code>) с флагом <strong>CLONE_NEWNET</strong>.
-                </p>
-                <ol>
-                    <li>Ядро видит флаг <code>CLONE_NEWNET</code>.</li>
-                    <li>Оно выделяет новую структуру <code>struct net</code> в памяти ядра (отдельную от
-                        <code>init_net</code>).</li>
-                    <li>В этой новой структуре создается свой пустой список сетевых интерфейсов, своя таблица
-                        маршрутизации (FIB) и свои правила iptables.</li>
-                    <li>В новой структуре автоматически создается только <code>lo</code> (loopback) интерфейс.</li>
-                    <li>Поле <code>nsproxy->net_ns</code> нового процесса начинает указывать на эту новую структуру.
-                    </li>
-                </ol>
-                <p>
-                    <strong>Результат:</strong> Процесс физически не может "увидеть" <code>eth0</code> хоста, потому что
-                    в его "вселенной" (struct net) этого указателя просто не существует.
-                </p>
-            </div>
 
-            <h3>3.2. Причинно-следственная изоляция</h3>
-            <div class="mermaid">
-                graph TD
-                Root[Generic Kernel Space]
-                InitTask[Process: Init (PID 1)]
-                DockerTask[Process: Nginx Container]
+                <div class="deep-dive">
+                    <h4>ТРАССИРОВКА СИСТЕМНОГО ВЫЗОВА: CLONE_NEWNET</h4>
+                    <p>
+                        Когда демон Docker запускает контейнер, он вызывает системный вызов <code>clone()</code> (или
+                        <code>unshare()</code>) с флагом <strong>CLONE_NEWNET</strong>.
+                    </p>
+                    <ol>
+                        <li>Ядро видит флаг <code>CLONE_NEWNET</code>.</li>
+                        <li>Оно выделяет новую структуру <code>struct net</code> в памяти ядра (отдельную от
+                            <code>init_net</code>).
+                        </li>
+                        <li>В этой новой структуре создается свой пустой список сетевых интерфейсов, своя таблица
+                            маршрутизации (FIB) и свои правила iptables.</li>
+                        <li>В новой структуре автоматически создается только <code>lo</code> (loopback) интерфейс.</li>
+                        <li>Поле <code>nsproxy->net_ns</code> нового процесса начинает указывать на эту новую структуру.
+                        </li>
+                    </ol>
+                    <p>
+                        <strong>Результат:</strong> Процесс физически не может "увидеть" <code>eth0</code> хоста, потому
+                        что
+                        в его "вселенной" (struct net) этого указателя просто не существует.
+                    </p>
+                </div>
 
-                InitNS[struct net (Host)]
-                DockerNS[struct net (Container)]
+                <h3>3.2. Причинно-следственная изоляция</h3>
+                <div class="mermaid">
+                    graph TD
+                    Root[Generic Kernel Space]
+                    InitTask["Process: Init (PID 1)"]
+                    DockerTask["Process: Nginx Container"]
 
-                Eth0[Device: eth0]
-                Veth[Device: eth0 (inside container)]
+                    InitNS["struct net (Host)"]
+                    DockerNS["struct net (Container)"]
 
-                InitTask -->|nsproxy->net_ns| InitNS
-                DockerTask -->|nsproxy->net_ns| DockerNS
+                    Eth0["Device: eth0"]
+                    Veth["Device: eth0 (inside container)"]
 
-                InitNS --> Eth0
-                DockerNS --> Veth
+                    InitTask -- "nsproxy->net_ns" --> InitNS
+                    DockerTask -- "nsproxy->net_ns" --> DockerNS
 
-                style InitNS fill:#e0e7ff,stroke:#3b82f6
-                style DockerNS fill:#fef3c7,stroke:#d97706
-            </div>
+                    InitNS --> Eth0
+                    DockerNS --> Veth
+
+                    style InitNS fill:#1e3a8a,stroke:#3b82f6,color:#fff
+                    style DockerNS fill:#78350f,stroke:#d97706,color:#fff
+                </div>
         </section>
 
         <div class="chapter-nav">

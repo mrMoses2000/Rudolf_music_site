@@ -78,6 +78,57 @@
                 Это уравнение позволяет CUBIC быстро восстанавливать скорость (крутой подъем), аккуратно подходить к
                 пределу (плато), и затем агрессивно искать новую пропускную способность (новый резкий рост).
             </p>
+
+            <h3>6.4. Selective Invincibility: SACK (RFC 2018)</h3>
+            <p>
+                Что если из 100 пакетов потерялся только 57-й? Без SACK серверу пришлось бы пересылать
+                <strong>всё</strong>, начиная с 57-го (Go-Back-N).
+                SACK позволяет сказать: "Я получил всё до 57, а также кусок с 58 по 90".
+            </p>
+
+            <div class="mermaid">
+                graph LR
+                Stream[Packet Stream]
+                55[Pkt 55]
+                56[Pkt 56]
+                57[LOST 57]
+                58[Pkt 58]
+                59[Pkt 59]
+
+                Stream --> 55
+                55 --> 56
+                style 56 fill:#22c55e,color:#fff
+                56 -.-> 57
+                style 57 fill:#ef4444,stroke-dasharray: 5 5,color:#fff
+                57 -.-> 58
+                style 58 fill:#22c55e,color:#fff
+                58 --> 59
+                style 59 fill:#22c55e,color:#fff
+
+                Ack[ACK: 57]
+                Sack[SACK Block: 58-60]
+
+                56 --> Ack
+                59 --> Sack
+            </div>
+
+            <div class="deep-dive">
+                <h4>TCP OPTION: SACK BLOCK LAYOUT</h4>
+                <p>
+                    В TCP-заголовке это выглядит как опция (Kind=5).
+                </p>
+                <div
+                    style="font-family: monospace; border: 1px solid #334155; padding: 10px; background: #0f172a; color: #94a3b8;">
+                    <span style="color: #f43f5e;">| Kind=5 (1B) |</span>
+                    <span style="color: #f43f5e;">| Len=10 (1B) |</span>
+                    <span style="color: #38bdf8;">| Left Edge (4B) |</span>
+                    <span style="color: #38bdf8;">| Right Edge (4B) |</span>
+                </div>
+                <p style="margin-top: 10px;">
+                    Один блок SACK занимает 8 байт (+2 байта заголовка). Поскольку TCP Options ограничены 40 байтами, вы
+                    можете передать максимум 4 дырки (блока) за раз.
+                </p>
+            </div>
         </section>
 
         <div class="chapter-nav">

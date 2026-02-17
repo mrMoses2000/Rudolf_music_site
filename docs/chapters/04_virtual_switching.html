@@ -34,17 +34,17 @@
             <div class="mermaid">
                 graph LR
                 Packet[Incoming Packet]
-                Eth0[eth0 Driver]
-                NetifRx[netif_receive_skb]
-                Check{Has rx_handler?}
-                IPStack[IP Stack (Layer 3)]
-                Bridge[br_handle_frame (Layer 2)]
+                Eth0["eth0 Driver"]
+                NetifRx["netif_receive_skb"]
+                Check{"Has rx_handler?"}
+                IPStack["IP Stack (Layer 3)"]
+                Bridge["br_handle_frame (Layer 2)"]
 
                 Packet --> Eth0
                 Eth0 --> NetifRx
                 NetifRx --> Check
-                Check -- No (NULL) --> IPStack
-                Check -- Yes (ptr) --> Bridge
+                Check -- "No (NULL)" --> IPStack
+                Check -- "Yes (ptr)" --> Bridge
             </div>
 
             <h3>4.2. Обучение: Forwarding Database (FDB)</h3>
@@ -52,46 +52,68 @@
                 Бридж работает как Ethernet-свитч. Он должен знать, на каком порту находится какой MAC-адрес.
                 Это делается в функции <code>br_fdb_update</code>.
             </p>
+
+            <div class="anim-container">
+                <div id="anim-bridge" style="width: 100%;"></div>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #64748b;">VISUALIZATION: MAC LEARNING TABLE</p>
+            </div>
+
             <div class="deep-dive">
-                <h4>АНАЛИЗ ИСХОДНОГО КОДА ЯДРА: MAC LEARNING</h4>
-                <p>Когда пакет приходит на порт, бридж смотрит на <strong>Source MAC</strong>:</p>
-                <ol>
-                    <li>Берет Source MAC (например, <code>AA:BB:CC:DD:EE:FF</code>) и делает хеш.</li>
-                    <li>Ищет этот хеш в хеш-таблице <code>br->fdb</code>.</li>
-                    <li>Если записи нет — создает новую: "MAC ...FF доступен через порт VethA".</li>
-                    <li>Если запись есть — обновляет timestamp (чтобы она не устарела).</li>
-                </ol>
-                <pre data-lang="KERNEL SOURCE">
+                <div class="deep-dive">
+                    <h4>АНАЛИЗ ИСХОДНОГО КОДА ЯДРА: MAC LEARNING</h4>
+                    <p>Когда пакет приходит на порт, бридж смотрит на <strong>Source MAC</strong>:</p>
+                    <ol>
+                        <li>Берет Source MAC (например, <code>AA:BB:CC:DD:EE:FF</code>) и делает хеш.</li>
+                        <li>Ищет этот хеш в хеш-таблице <code>br->fdb</code>.</li>
+                        <li>Если записи нет — создает новую: "MAC ...FF доступен через порт VethA".</li>
+                        <li>Если запись есть — обновляет timestamp (чтобы она не устарела).</li>
+                    </ol>
+                    <pre data-lang="KERNEL SOURCE">
 void br_fdb_update(struct net_bridge *br, struct net_bridge_port *source,
                    const unsigned char *addr, u16 vid, unsigned long flags)
 {
-    /* Calculate Hash of MAC Address */
+    /* 
+     * 1. Hashing: Convert 6-byte MAC to a 32-bit hash index.
+     * Use this index to find the bucket in the hash table.
+     */
     struct hlist_head *head = &br->hash[br_mac_hash(addr, vid)];
     struct net_bridge_fdb_entry *fdb;
 
-    /* Look for existing entry */
+    /* 
+     * 2. Search: Iterate the linked list at this hash bucket
+     * to see if we already know this MAC address.
+     */
     fdb = fdb_find(head, addr, vid);
     
     if (likely(fdb)) {
-        /* Update timestamp - device is alive */
+        /* 
+         * 3. Refresh: We saw this MAC again!
+         * Update 'updated' timestamp to 'jiffies' (current kernel time).
+         * This prevents the Garbage Collector from deleting it.
+         */
         fdb->updated = jiffies;
     } else {
-        /* Create NEW entry (Learning) */
+        /* 
+         * 4. Learn: First time seeing this MAC.
+         * Allocate memory for a new FDB entry and link it to 'source' port.
+         */
         fdb = fdb_create(head, source, addr, vid, flags);
     }
 }</pre>
-            </div>
+                </div>
 
-            <h3>4.3. Решение: Flood или Forward</h3>
-            <p>
-                Далее бридж смотрит на <strong>Destination MAC</strong>:
-            </p>
-            <ul>
-                <li>Если MAC есть в FDB (и он на другом порту) -> <strong>Forward</strong> (отправить только туда).</li>
-                <li>Если MAC нет в FDB (неизвестен) -> <strong>Flood</strong> (отправить на ВСЕ порты, кроме входящего).
-                </li>
-                <li>Если MAC - Broadcast (FF:FF:FF:FF:FF:FF) -> <strong>Flood</strong>.</li>
-            </ul>
+                <h3>4.3. Решение: Flood или Forward</h3>
+                <p>
+                    Далее бридж смотрит на <strong>Destination MAC</strong>:
+                </p>
+                <ul>
+                    <li>Если MAC есть в FDB (и он на другом порту) -> <strong>Forward</strong> (отправить только туда).
+                    </li>
+                    <li>Если MAC нет в FDB (неизвестен) -> <strong>Flood</strong> (отправить на ВСЕ порты, кроме
+                        входящего).
+                    </li>
+                    <li>Если MAC - Broadcast (FF:FF:FF:FF:FF:FF) -> <strong>Flood</strong>.</li>
+                </ul>
         </section>
 
         <div class="chapter-nav">
