@@ -57,7 +57,15 @@ export function extractChatResponse(stdout: string): string {
   // Strip ANSI escape codes
   const clean = stdout.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '').trim();
 
-  const lines = clean.split('\n').filter((line) => {
+  // Remove well-known Gemini CLI noise lines before splitting
+  const denoised = clean
+    .replace(/YOLO mode is enabled[^\n]*/g, '')
+    .replace(/Loaded cached credentials[^\n]*/g, '')
+    .replace(/Keychain initialization[^\n]*/g, '')
+    .replace(/Using FileKeychain[^\n]*/g, '')
+    .replace(/\n{3,}/g, '\n\n');
+
+  const lines = denoised.split('\n').filter((line) => {
     const t = line.trim();
     if (!t) return false;
     // Skip spinner / progress glyphs emitted by Gemini CLI
@@ -67,7 +75,7 @@ export function extractChatResponse(stdout: string): string {
     return true;
   });
 
-  return lines.join('\n').trim();
+  return lines.join('\n').trim().slice(0, 4000);
 }
 
 /**
