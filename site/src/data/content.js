@@ -6,8 +6,8 @@ export const content = {
         "acronym": "CMS"
     },
     "hero": {
-        "title": "Christliche Musikschule Bielefeld",
-        "subtitle": "Hallo und herzlich willkommen auf unserer Homepage",
+        "title": "Willkommen in unserer Welt der Klänge und Farben!",
+        "subtitle": "Schön, dass Sie zu uns gefunden haben. Ob Instrumentaltechnik, Gesang oder künstlerischer Ausdruck – wir bieten Ihnen professionellen Unterricht an verschiedenen Standorten. Entdecken Sie unser vielseitiges Angebot und lassen Sie sich inspirieren. Wir freuen uns darauf, Sie persönlich kennenzulernen!",
         "psalm": "\"Lobe den Herrn meine Seele und vergiss nicht, was er dir Gutes getan hat...\" Psalm 103",
         "offerBtn": "Angebot",
         "aboutBtn": "Über uns"
@@ -258,12 +258,9 @@ export const content = {
         "start": {
             "title": "Start",
             "blocks": [
-                { "type": "h1", "text": "Hallo und herzlich willkommen auf unserer Homepage" },
-                { "type": "h1", "text": "Christliche Musikschule Bielefeld" },
-                { "type": "h1", "text": "Wir freuen uns, dass Sie uns im Internet besuchen!" },
-                { "type": "p", "text": "Unsere Musikschule erteilt Musikunterricht, Gesangunterricht und Kunstunterricht an verschiedenen Unterrichtsorten." },
-                { "type": "p", "text": "Informieren Sie sich auf unserer Website über uns und unser Angebot." },
-                { "type": "h2", "text": "Viel Spaß beim Stöbern!" }
+                { "type": "h1", "text": "Willkommen in unserer Welt der Klänge und Farben!" },
+                { "type": "p", "text": "Schön, dass Sie zu uns gefunden haben. Ob Instrumentaltechnik, Gesang oder künstlerischer Ausdruck – wir bieten Ihnen professionellen Unterricht an verschiedenen Standorten." },
+                { "type": "p", "text": "Entdecken Sie unser vielseitiges Angebot und lassen Sie sich inspirieren. Wir freuen uns darauf, Sie persönlich kennenzulernen!" }
             ],
             "videoEmbedId": "fmzshAW74VY",
             "videoTitle": "Gemeinsames Konzert der JeKiTS-Kurse in der Grundschule der GMS-Bielefeld",
