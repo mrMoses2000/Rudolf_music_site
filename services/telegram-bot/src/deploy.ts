@@ -12,6 +12,19 @@ import { config } from './config.ts';
 const REPO = config.siteRepoPath;
 const CONTENT = config.contentFile;
 
+/**
+ * Files the admin bot is allowed to modify via Gemini.
+ * Everything else is rejected to protect the site from accidental breakage.
+ */
+const ALLOWED_FILES: readonly string[] = [
+  'site/src/data/content.js',       // text content
+  'site/src/index.css',             // global CSS, fonts, CSS variables
+  'site/tailwind.config.js',        // Tailwind theme: colors, fonts
+  'site/src/components/Blocks.jsx', // TAG_CLASSES — heading/text styling
+  'site/src/pages/Home.jsx',        // Hero section layout + inline classes
+  'site/src/components/Layout.jsx', // Header / navigation styling
+];
+
 // When running as root (systemd), git refuses to operate in repos owned by other users.
 // This is safe here because we intentionally manage this specific repo.
 const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', HOME: process.env.HOME ?? '/root' };
@@ -25,24 +38,24 @@ function git(args: string): string {
 
 // ── Git helpers ───────────────────────────────────────────────────────────────
 
-/** Returns the git diff of content.js, or empty string if no changes. */
+/** Returns the git diff for all allowed files, or empty string if no changes. */
 export function getDiff(): string {
   try {
-    return git(`diff -- "${CONTENT}"`).trim();
+    return git('diff').trim();
   } catch {
     return '';
   }
 }
 
 /**
- * Check that ONLY content.js was modified.
+ * Check that ONLY allowed files were modified.
  * Extra safety: if Gemini touched other files we roll back and reject.
  */
-export function onlyContentChanged(): boolean {
+export function onlyAllowedFilesChanged(): boolean {
   try {
     const changed = git('diff --name-only').trim();
     const files = changed.split('\n').filter(Boolean);
-    return files.length > 0 && files.every((f) => f === CONTENT);
+    return files.length > 0 && files.every((f) => ALLOWED_FILES.includes(f));
   } catch {
     return false;
   }
@@ -70,11 +83,14 @@ export async function commitAndRebuild(
   userMessage: string,
   onProgress: (msg: string) => Promise<void>,
 ): Promise<void> {
-  // 1. Commit
+  // 1. Commit all changed allowed files
   await onProgress('📝 Commit wird erstellt…');
-  git(`add "${CONTENT}"`);
+  const changed = git('diff --name-only').trim().split('\n').filter(Boolean);
+  for (const f of changed) {
+    if (ALLOWED_FILES.includes(f)) git(`add "${f}"`);
+  }
   git(`commit -m "TG Bot: ${sanitizeCommitMsg(userMessage)}"`);
-  console.log('[deploy] Committed content change');
+  console.log('[deploy] Committed changes:', changed.join(', '));
 
   // 2. Rebuild
   await onProgress('🏗️ Website wird neu gebaut… (dauert ~2-4 Minuten)');

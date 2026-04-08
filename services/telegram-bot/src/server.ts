@@ -19,7 +19,7 @@ import { IncomingMessage, ServerResponse } from 'node:http';
 import { config } from './config.ts';
 import * as bot from './bot.ts';
 import { buildPrompt, runGemini, extractChatResponse } from './gemini.ts';
-import { getDiff, onlyContentChanged, rollback, commitAndRebuild, getRecentLog } from './deploy.ts';
+import { getDiff, onlyAllowedFilesChanged, rollback, commitAndRebuild, getRecentLog } from './deploy.ts';
 import { transcribeAudio } from './transcribe.ts';
 import { addMessage, getHistory, clearHistory } from './history.ts';
 import type { TelegramUpdate, PendingChange } from './types.ts';
@@ -381,7 +381,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
 
     // ── Path A: Gemini made a content change → show diff for confirmation ────
     if (diff) {
-      if (!onlyContentChanged()) {
+      if (!onlyAllowedFilesChanged()) {
         await bot.sendMessage(
           chatId,
           '⚠️ Der KI-Agent hat versucht, andere Dateien zu ändern. Die Änderungen wurden verworfen.',
