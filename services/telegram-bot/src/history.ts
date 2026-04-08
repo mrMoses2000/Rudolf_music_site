@@ -1,30 +1,60 @@
 /**
- * In-memory conversation history per chat.
- * Messages older than MAX_AGE_MS are pruned on read.
+ * Persistent conversation history backed by SQLite.
+ * Replaces the previous in-memory Map — history survives bot restarts.
+ *
+ * Keeps the last MAX_MESSAGES messages per chat, no older than MAX_AGE_DAYS.
+ * Public interface (addMessage / getHistory / formatHistory / clearHistory)
+ * is identical to the old in-memory version — no changes needed in callers.
  */
+import db from './db.ts';
 import type { HistoryMessage } from './types.ts';
 
-const MAX_MESSAGES = 10;
-const MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
+const MAX_MESSAGES = 20;
+const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-const histories = new Map<number, HistoryMessage[]>();
+// ── Prepared statements (compiled once, reused on every call) ─────────────────
+
+const stmtInsert = db.prepare(
+  'INSERT INTO messages (chat_id, role, text, created_at) VALUES (?, ?, ?, ?)',
+);
+
+const stmtSelect = db.prepare(`
+  SELECT role, text, created_at
+  FROM messages
+  WHERE chat_id = ? AND created_at > ?
+  ORDER BY created_at DESC
+  LIMIT ?
+`);
+
+const stmtDelete = db.prepare(
+  'DELETE FROM messages WHERE chat_id = ?',
+);
+
+// Prune rows older than MAX_AGE_MS for all chats (run occasionally)
+const stmtPrune = db.prepare(
+  'DELETE FROM messages WHERE created_at < ?',
+);
+
+// ── Public API ────────────────────────────────────────────────────────────────
 
 export function addMessage(chatId: number, role: 'user' | 'assistant', text: string): void {
-  const history = histories.get(chatId) ?? [];
-  history.push({ role, text, timestamp: Date.now() });
-  if (history.length > MAX_MESSAGES) {
-    history.splice(0, history.length - MAX_MESSAGES);
-  }
-  histories.set(chatId, history);
+  stmtInsert.run(chatId, role, text, Date.now());
 }
 
-/** Returns fresh (non-expired) messages for this chat */
+/** Returns the last MAX_MESSAGES messages for this chat in chronological order */
 export function getHistory(chatId: number): HistoryMessage[] {
-  const history = histories.get(chatId) ?? [];
   const cutoff = Date.now() - MAX_AGE_MS;
-  const fresh = history.filter((m) => m.timestamp > cutoff);
-  histories.set(chatId, fresh);
-  return fresh;
+  const rows = stmtSelect.all(chatId, cutoff, MAX_MESSAGES) as Array<{
+    role: string;
+    text: string;
+    created_at: number;
+  }>;
+  // Query returns newest-first; reverse to get oldest-first (chronological)
+  return rows.reverse().map((r) => ({
+    role: r.role as 'user' | 'assistant',
+    text: r.text,
+    timestamp: r.created_at,
+  }));
 }
 
 /** Format history as a readable block for Gemini's context */
@@ -35,6 +65,13 @@ export function formatHistory(history: HistoryMessage[]): string {
     .join('\n');
 }
 
+/** Delete all messages for this chat (e.g. on /clear command) */
 export function clearHistory(chatId: number): void {
-  histories.delete(chatId);
+  stmtDelete.run(chatId);
+}
+
+/** Prune all messages older than MAX_AGE_MS across all chats */
+export function pruneOldMessages(): number {
+  const result = stmtPrune.run(Date.now() - MAX_AGE_MS) as { changes: number };
+  return result.changes;
 }
