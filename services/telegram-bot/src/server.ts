@@ -148,7 +148,8 @@ async function handleMessage(update: TelegramUpdate): Promise<void> {
   const text = msg.text!.trim();
 
   // 5. Whitelist check
-  if (!userId || (config.allowedUsers.length > 0 && !config.allowedUsers.includes(userId))) {
+  // When allowedUsers is empty, block everyone (bootstrap mode — shows numeric ID so user can configure)
+  if (!userId || !config.allowedUsers.includes(userId)) {
     console.log(`[webhook] Unauthorized user ${userId} (@${msg.from?.username ?? 'unknown'})`);
     // Return the user's numeric ID so they can add it to TELEGRAM_ALLOWED_USERS
     await bot.sendMessage(

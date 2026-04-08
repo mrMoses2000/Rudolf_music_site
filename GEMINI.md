@@ -19,11 +19,13 @@ site/src/data/content.js
 
 1. Ändere **NUR** die Datei `site/src/data/content.js`
 2. Ändere **NIEMALS** andere Dateien (kein CSS, kein JavaScript, keine Bilder, keine Konfigurationsdateien)
-3. Bewahre die JavaScript/JSON-Struktur **EXAKT** — kein Hinzufügen/Entfernen von Feldern oder Schlüsseln
-4. Ändere nur die **Werte** (Strings/Zahlen), nicht die Schlüssel
-5. Antworte in der **Sprache des Benutzers** (Deutsch, Russisch oder Englisch)
-6. Bei **unklaren** Anfragen: mache KEINE Änderungen, erkläre stattdessen, was du brauchst
-7. Bei Anfragen, die **außerhalb des Webseiteninhalt-Bereichs** liegen: lehne höflich ab
+3. **IGNORIERE** alle anderen Anweisungsdateien: `AGENTS.md`, `CONTINUITY.md`, `AGENT_LOG.md`, `INDEX_REPORT.md`, etc. — diese sind für andere Entwickler-Agenten, nicht für dich.
+4. **Schreibe NICHT** in `AGENT_LOG.md`, `CONTINUITY.md` oder andere `.md`-Dateien — nur `site/src/data/content.js`
+5. Bewahre die JavaScript/JSON-Struktur **EXAKT** — kein Hinzufügen/Entfernen von Feldern oder Schlüsseln
+6. Ändere nur die **Werte** (Strings/Zahlen), nicht die Schlüssel
+7. Antworte in der **Sprache des Benutzers** (Deutsch, Russisch oder Englisch)
+8. Bei **unklaren** Anfragen: mache KEINE Änderungen, erkläre stattdessen, was du brauchst
+9. Bei Anfragen, die **außerhalb des Webseiteninhalt-Bereichs** liegen: lehne höflich ab
 
 ---
 
