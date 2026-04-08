@@ -4,6 +4,7 @@
  */
 import https from 'node:https';
 import { config } from './config.ts';
+import type { TelegramFile } from './types.ts';
 
 const API_BASE = `https://api.telegram.org/bot${config.botToken}`;
 const MAX_MESSAGE_LEN = 4096;
@@ -51,6 +52,11 @@ export async function sendTyping(chatId: number): Promise<void> {
   await apiCall('sendChatAction', { chat_id: chatId, action: 'typing' });
 }
 
+/** Show "recording voice…" indicator (used while transcribing) */
+export async function sendRecordingTyping(chatId: number): Promise<void> {
+  await apiCall('sendChatAction', { chat_id: chatId, action: 'record_voice' });
+}
+
 /** Send a plain text message, returns message_id (0 on failure) */
 export async function sendMessage(chatId: number, text: string): Promise<number> {
   const truncated = text.length > MAX_MESSAGE_LEN ? text.slice(0, MAX_MESSAGE_LEN - 30) + '\n…(abgeschnitten)' : text;
@@ -58,21 +64,35 @@ export async function sendMessage(chatId: number, text: string): Promise<number>
     chat_id: chatId,
     text: truncated,
     parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
   })) as { message_id: number } | undefined;
   return result?.message_id ?? 0;
 }
 
-/** Send a diff preview with Bestätigen / Abbrechen inline buttons */
-export async function sendDiffPreview(chatId: number, diff: string): Promise<number> {
+/**
+ * Send a diff preview with Bestätigen / Abbrechen inline buttons.
+ * Optional assistantNote is shown above the diff (Gemini's explanation).
+ */
+export async function sendDiffPreview(
+  chatId: number,
+  diff: string,
+  assistantNote?: string,
+): Promise<number> {
   const diffBlock = formatDiff(diff);
+  const noteBlock = assistantNote ? `${escapeHtml(assistantNote)}\n\n` : '';
   const text =
-    `📋 <b>Vorgeschlagene Änderung:</b>\n\n` +
+    `${noteBlock}📋 <b>Vorgeschlagene Änderung:</b>\n\n` +
     `<pre>${diffBlock}</pre>\n\n` +
     `Soll diese Änderung übernommen werden?`;
 
+  const safeText =
+    text.length > MAX_MESSAGE_LEN
+      ? text.slice(0, MAX_MESSAGE_LEN - 60) + '\n…</pre>\n\nSoll diese Änderung übernommen werden?'
+      : text;
+
   const result = (await apiCall('sendMessage', {
     chat_id: chatId,
-    text: text.length > MAX_MESSAGE_LEN ? text.slice(0, MAX_MESSAGE_LEN - 30) + '\n…</pre>\n\nSoll diese Änderung übernommen werden?' : text,
+    text: safeText,
     parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
@@ -115,7 +135,7 @@ export async function answerCallback(callbackQueryId: string, text?: string): Pr
   });
 }
 
-/** Register the webhook with Telegram (call once on startup) */
+/** Register the webhook with Telegram (call once on startup or setup) */
 export async function setWebhook(webhookUrl: string): Promise<void> {
   const result = await apiCall('setWebhook', {
     url: webhookUrl,
@@ -124,6 +144,26 @@ export async function setWebhook(webhookUrl: string): Promise<void> {
     max_connections: 10,
   });
   console.log('[bot] setWebhook result:', JSON.stringify(result));
+}
+
+/** Get file metadata from Telegram (needed to build download URL) */
+export async function getFile(fileId: string): Promise<TelegramFile> {
+  const result = (await apiCall('getFile', { file_id: fileId })) as TelegramFile | undefined;
+  if (!result?.file_path) throw new Error(`getFile returned no file_path for file_id=${fileId}`);
+  return result;
+}
+
+/** Download raw file bytes from Telegram's CDN */
+export async function downloadFile(filePath: string): Promise<Buffer> {
+  const url = `https://api.telegram.org/file/bot${config.botToken}/${filePath}`;
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (chunk: Buffer) => chunks.push(chunk));
+      res.on('end', () => resolve(Buffer.concat(chunks)));
+      res.on('error', reject);
+    }).on('error', reject);
+  });
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

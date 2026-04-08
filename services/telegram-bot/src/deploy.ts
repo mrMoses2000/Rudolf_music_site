@@ -82,6 +82,11 @@ export async function commitAndRebuild(
   console.log('[deploy] Rebuild complete');
 }
 
+/** Returns the last N git log entries as a formatted string */
+export function getRecentLog(n = 5): string {
+  return git(`log --oneline -${n}`).trim();
+}
+
 function sanitizeCommitMsg(msg: string): string {
   // Strip newlines and limit length for a clean commit message
   return msg.replace(/\n/g, ' ').slice(0, 72);
