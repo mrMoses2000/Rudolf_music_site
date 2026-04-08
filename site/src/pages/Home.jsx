@@ -93,9 +93,6 @@ const Home = () => {
         return startBlocks.filter((block) => !(block.type === "h1" && heroTexts.has(block.text)));
     }, [startBlocks, content.hero.subtitle, content.hero.title]);
     const offerIntro = content.offer?.blocks?.[0]?.text || content.offer?.title;
-    const titleWords = content.hero.title.split(" ");
-    const primaryWords = titleWords.slice(0, 3);
-    const secondaryWords = titleWords.slice(3).join(" ");
 
     return (
         <div className="text-ink">
@@ -159,39 +156,21 @@ const Home = () => {
 
                         <div className="space-y-4">
                             {/* Main Title - First */}
-                            <h1 className="text-[clamp(2.4rem,6.2vw,4.8rem)] font-cinzel font-black leading-[1.05] tracking-tighter uppercase max-w-5xl text-ink break-normal hyphens-none">
-                                {primaryWords.map((word, i) => (
-                                    <motion.span
-                                        key={i}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
-                                        className="inline-block mr-4"
-                                    >
-                                        {word}
-                                    </motion.span>
-                                ))}
-                                {secondaryWords && (
-                                    <>
-                                        <br />
-                                        <motion.span
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.9, duration: 1 }}
-                                            className="text-gold inline-block"
-                                        >
-                                            {secondaryWords}
-                                        </motion.span>
-                                    </>
-                                )}
-                            </h1>
+                            <motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="text-[clamp(2.4rem,6.2vw,4.8rem)] font-cinzel font-black leading-[1.05] tracking-tighter uppercase max-w-5xl text-ink break-normal hyphens-none"
+                            >
+                                {content.hero.title}
+                            </motion.h1>
 
                             {/* Welcome Text - Second */}
                             <motion.p
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 1, duration: 0.8 }}
-                                className="text-xs sm:text-sm md:text-base text-ink tracking-[0.12em] font-black uppercase"
+                                className="text-base sm:text-lg md:text-xl text-ink tracking-[0.12em] uppercase"
                             >
                                 {content.hero.subtitle}
                             </motion.p>
