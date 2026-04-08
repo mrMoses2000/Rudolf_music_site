@@ -27,7 +27,7 @@ export const config = {
   allowedUsers: parseAllowedUsers(optionalEnv('TELEGRAM_ALLOWED_USERS', '')),
 
   // ── Gemini CLI ────────────────────────────────────────────
-  geminiModel: optionalEnv('GEMINI_MODEL', 'gemini-3-flash-preview'),
+  geminiModel: optionalEnv('GEMINI_MODEL', 'gemini-2.5-pro'),
   /** ms before Gemini CLI child process is killed */
   geminiTimeoutMs: parseInt(optionalEnv('GEMINI_TIMEOUT_MS', '120000'), 10),
 
@@ -44,4 +44,13 @@ export const config = {
   // ── UX ───────────────────────────────────────────────────
   /** ms user has to confirm/cancel before auto-rollback */
   confirmTimeoutMs: parseInt(optionalEnv('CONFIRM_TIMEOUT_MS', '300000'), 10),
+
+  // ── AssemblyAI (voice transcription) ─────────────────────
+  /** Leave empty to disable voice transcription */
+  assemblyAiKey: optionalEnv('ASSEMBLYAI_API_KEY', ''),
+  /** 'ru' | 'de' | 'en' | 'auto' (automatic detection) */
+  transcriptionLanguage: optionalEnv('TRANSCRIPTION_LANGUAGE', 'ru'),
+
+  // ── Media processing ──────────────────────────────────────
+  ffmpegPath: optionalEnv('FFMPEG_PATH', 'ffmpeg'),
 } as const;
