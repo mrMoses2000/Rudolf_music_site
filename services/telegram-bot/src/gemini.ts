@@ -73,11 +73,15 @@ ${imageSection}
 [RULES]
 1. Reply in ${langHint} with Telegram HTML formatting and emojis
 2. If the admin is asking a question or chatting → respond with text only, do NOT touch any files
-3. If the admin wants to change site content → edit ONLY \`site/src/data/content.js\`
+3. If the admin wants to change site content:
+   a. FIRST read \`site/src/data/content.js\` to find the exact field(s) to change
+   b. In your reply, announce the specific change in ONE sentence (e.g. "Меняю номер телефона с +49 521 … на +49 521 …")
+   c. THEN make the edit to \`site/src/data/content.js\`
 4. Never modify any file other than \`site/src/data/content.js\`
-5. Preserve the JavaScript structure exactly — no adding or removing keys
-6. If the request is ambiguous → ask a clarifying question, make NO changes
-7. You may read \`site/src/data/content.js\` to answer questions about current content
+5. Preserve the JavaScript structure exactly — no adding, removing, or reordering keys; no reformatting
+6. Be SURGICAL — change only the exact field(s) the admin specified; never change adjacent text
+7. If the request is ambiguous or could match multiple fields → ask a clarifying question (list the options), make NO changes at all
+8. You may read \`site/src/data/content.js\` to answer questions about current content
 `.trim();
 }
 

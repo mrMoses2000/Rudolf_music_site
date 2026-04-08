@@ -95,16 +95,31 @@ function sanitizeCommitMsg(msg: string): string {
 function runRebuild(): Promise<void> {
   return new Promise((resolve, reject) => {
     console.log('[deploy] Running run.sh…');
+
+    // Systemd gives a minimal environment — ensure common tool paths are present.
+    const fullPath = [
+      '/usr/local/sbin', '/usr/local/bin',
+      '/usr/sbin', '/usr/bin', '/sbin', '/bin',
+      '/snap/bin',                   // snap-installed docker on Ubuntu
+    ].join(':');
+
     const child = spawn('bash', ['run.sh'], {
       cwd: REPO,
+      env: { ...process.env, PATH: fullPath },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
 
+    const outputChunks: string[] = [];
+
     child.stdout.on('data', (chunk: Buffer) => {
-      process.stdout.write('[run.sh] ' + chunk.toString());
+      const text = chunk.toString();
+      process.stdout.write('[run.sh] ' + text);
+      outputChunks.push(text);
     });
     child.stderr.on('data', (chunk: Buffer) => {
-      process.stderr.write('[run.sh] ' + chunk.toString());
+      const text = chunk.toString();
+      process.stderr.write('[run.sh] ' + text);
+      outputChunks.push(text);
     });
 
     // run.sh can take several minutes — give it 10 minutes max
@@ -118,7 +133,14 @@ function runRebuild(): Promise<void> {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`run.sh exited with code ${code}`));
+        // Include last 20 lines of output so user can see what failed
+        const tail = outputChunks
+          .join('')
+          .split('\n')
+          .filter(Boolean)
+          .slice(-20)
+          .join('\n');
+        reject(new Error(`run.sh exited with code ${code}\n\nПоследние строки вывода:\n${tail}`));
       }
     });
 
