@@ -11,20 +11,27 @@ import { formatHistory } from './history.ts';
 import type { GeminiResult, HistoryMessage } from './types.ts';
 
 /**
- * Simple language detection based on Unicode ranges.
- * Checks the current message first, then falls back to conversation history.
+ * Detect the admin's conversation language from the current message and history.
+ * Returns the language of the most recent user message that has clear markers.
+ * If the user switches language, subsequent replies follow the new language.
  */
 function detectLanguage(text: string, history: HistoryMessage[]): string {
-  const cyrillicRe = /[\u0400-\u04FF]/;
-  // Check current message first
-  if (cyrillicRe.test(text)) return 'Russian';
-  // Check recent user messages in history
+  const hasCyrillic = /[\u0400-\u04FF]/.test(text);
+  const hasUmlauts = /[äöüßÄÖÜ]/.test(text);
+
+  // Current message takes priority (allows switching)
+  if (hasCyrillic) return 'Russian';
+  if (hasUmlauts) return 'German';
+
+  // No clear markers in current message — check recent user messages (newest first)
   for (let i = history.length - 1; i >= 0; i--) {
-    if (history[i].role === 'user' && cyrillicRe.test(history[i].text)) return 'Russian';
+    if (history[i].role !== 'user') continue;
+    if (/[\u0400-\u04FF]/.test(history[i].text)) return 'Russian';
+    if (/[äöüßÄÖÜ]/.test(history[i].text)) return 'German';
   }
-  // Default: if admin started in German/English, keep that
-  if (/[äöüßÄÖÜ]/.test(text)) return 'German';
-  return 'Russian'; // default for this admin
+
+  // No markers found at all — respond in whatever language the message appears to be
+  return 'the same language the admin is writing in';
 }
 
 /**

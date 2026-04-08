@@ -95,9 +95,8 @@ echo "🧹 Тотальная очистка старых контейнеров
 # Удаляем docker-compose.yml если он есть, чтобы он случайно не вызвался
 rm -f docker-compose.yml site/docker-compose.yml 2>/dev/null || true
 
-# Останавливаем вообще всё, что может занять 80 порт или иметь имя 'site'
-sudo docker stop music_school_app site_site_1 2>/dev/null || true
-sudo docker rm -f music_school_app site_site_1 2>/dev/null || true
+# Удаляем мёртвые контейнеры (НЕ трогаем работающий music_school_app — он будет заменён позже)
+sudo docker rm -f site_site_1 2>/dev/null || true
 
 # Получение сертификатов (если настроен DOMAIN)
 ensure_certificates
@@ -275,15 +274,15 @@ server {
 EOF
 fi
 
-# 5. Прямой запуск через Docker (без Compose!)
-echo "🏗️ Сборка образа (direct build)..."
+# 5. Blue-green deploy: build FIRST, then swap containers (~2s downtime instead of ~3min)
+echo "🏗️ Сборка нового образа (сайт работает во время сборки)..."
 sudo docker build \
     --build-arg VITE_WEB3FORMS_KEY="${VITE_WEB3FORMS_KEY:-}" \
     --build-arg VITE_ACCESS_WEB3FORMS_KEY="${VITE_ACCESS_WEB3FORMS_KEY:-}" \
     --build-arg VITE_WEB3FORMS_TO_EMAIL="${VITE_WEB3FORMS_TO_EMAIL:-}" \
-    -t music_school_site .
+    -t music_school_site:new .
 
-echo "🚀 Запуск нового контейнера (direct run)..."
+echo "🔄 Замена контейнера (старый → новый)..."
 DOCKER_PORTS="-p 80:80"
 DOCKER_VOLUMES=""
 if [ "$ENABLE_HTTPS" -eq 1 ]; then
@@ -291,13 +290,22 @@ if [ "$ENABLE_HTTPS" -eq 1 ]; then
     DOCKER_VOLUMES="-v /etc/letsencrypt:/etc/letsencrypt:ro"
 fi
 
+# Stop+remove old container only AFTER new image is built
+sudo docker stop music_school_app 2>/dev/null || true
+sudo docker rm -f music_school_app 2>/dev/null || true
+
+# Tag the new image as :latest and start
+sudo docker tag music_school_site:new music_school_site:latest
 sudo docker run -d \
     --name music_school_app \
     --restart always \
     $DOCKER_PORTS \
     $DOCKER_VOLUMES \
-    music_school_site
+    music_school_site:latest
 
-echo "✨ Готово! Сайт запущен напрямую через Docker."
+# Cleanup
+sudo docker rmi music_school_site:new 2>/dev/null || true
+
+echo "✨ Готово! Сайт обновлён (blue-green deploy)."
 echo "🔗 Проверь статус: sudo docker ps"
 echo "📝 Логи: sudo docker logs -f music_school_app"
