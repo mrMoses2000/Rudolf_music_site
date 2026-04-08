@@ -53,4 +53,8 @@ export const config = {
 
   // ── Media processing ──────────────────────────────────────
   ffmpegPath: optionalEnv('FFMPEG_PATH', 'ffmpeg'),
+
+  // ── Database ──────────────────────────────────────────────
+  /** Path to the SQLite database file (relative to WorkingDirectory or absolute) */
+  dbPath: optionalEnv('DB_PATH', 'data/bot.db'),
 } as const;
