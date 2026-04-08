@@ -12,16 +12,13 @@ import type { GeminiResult, HistoryMessage } from './types.ts';
 
 /**
  * Detect the admin's conversation language from the current message and history.
- * Returns the language of the most recent user message that has clear markers.
- * If the user switches language, subsequent replies follow the new language.
+ * Checks the current message first; if no clear markers, looks back through history.
+ * Switching language mid-conversation is supported — the latest message wins.
  */
 function detectLanguage(text: string, history: HistoryMessage[]): string {
-  const hasCyrillic = /[\u0400-\u04FF]/.test(text);
-  const hasUmlauts = /[äöüßÄÖÜ]/.test(text);
-
   // Current message takes priority (allows switching)
-  if (hasCyrillic) return 'Russian';
-  if (hasUmlauts) return 'German';
+  if (/[\u0400-\u04FF]/.test(text)) return 'Russian';
+  if (/[äöüßÄÖÜ]/.test(text)) return 'German';
 
   // No clear markers in current message — check recent user messages (newest first)
   for (let i = history.length - 1; i >= 0; i--) {
@@ -30,7 +27,6 @@ function detectLanguage(text: string, history: HistoryMessage[]): string {
     if (/[äöüßÄÖÜ]/.test(history[i].text)) return 'German';
   }
 
-  // No markers found at all — respond in whatever language the message appears to be
   return 'the same language the admin is writing in';
 }
 
@@ -44,24 +40,29 @@ export function buildPrompt(
   imagePath?: string,
 ): string {
   const historyText = formatHistory(history);
-
-  // Reference image inline using @filepath syntax (Gemini CLI reads it natively)
   const imageSection = imagePath
     ? `\n[SCREENSHOT]\nThe admin sent a screenshot. File: @${imagePath}\nUse it to understand the visual context of their request.\n`
     : '';
-
-  // Detect the admin's language from the current message and history
   const langHint = detectLanguage(userMessage, history);
 
   return `
-You are the personal admin assistant for the website "Christliche Musikschule Bielefeld" (musikschule-cms-bielefeld.de).
-You help the admin manage site content through a Telegram chat interface.
+You are the personal admin assistant for the website "Christliche Musikschule Bielefeld".
+You communicate with the admin via Telegram.
 
 CRITICAL — RESPONSE LANGUAGE:
-You MUST respond in ${langHint}. The admin communicates in ${langHint}.
-The website content is in German — but that is the SITE language, NOT your conversation language.
-Never switch to German just because you read German text from content.js.
-Always reply in the same language the admin uses in their messages.
+Always reply in ${langHint}. The admin writes in ${langHint}, so you must too.
+The site content is in German — that is the SITE language, not your chat language.
+Never switch language just because you read German in content.js.
+
+CRITICAL — MESSAGE FORMATTING (Telegram HTML):
+Your messages are sent via Telegram with parse_mode HTML.
+Rules:
+- Use <b>text</b> for bold — NEVER use **text**
+- Use <i>text</i> for italic — NEVER use *text* or _text_
+- Use emojis naturally and warmly to make conversation pleasant 😊
+- Use bullet points with • or relevant emojis for lists
+- Keep messages short and conversational — no walls of text
+- No markdown syntax at all (no **, *, _, #, ---)
 
 [CONVERSATION HISTORY]
 ${historyText}
@@ -70,9 +71,9 @@ ${historyText}
 "${userMessage}"
 ${imageSection}
 [RULES]
-1. Reply in ${langHint} — this is the admin's language, not the site language
-2. If the admin is asking a question, chatting, or needs clarification → respond with TEXT ONLY, do NOT touch any files
-3. If the admin wants to change website content → edit ONLY \`site/src/data/content.js\`
+1. Reply in ${langHint} with Telegram HTML formatting and emojis
+2. If the admin is asking a question or chatting → respond with text only, do NOT touch any files
+3. If the admin wants to change site content → edit ONLY \`site/src/data/content.js\`
 4. Never modify any file other than \`site/src/data/content.js\`
 5. Preserve the JavaScript structure exactly — no adding or removing keys
 6. If the request is ambiguous → ask a clarifying question, make NO changes
@@ -81,39 +82,67 @@ ${imageSection}
 }
 
 /**
+ * Convert Gemini's markdown output to Telegram HTML.
+ * Gemini sometimes ignores the formatting instruction and outputs markdown —
+ * this catches it as a fallback.
+ */
+function markdownToTelegramHtml(text: string): string {
+  // Escape raw HTML special chars first (before adding our own tags)
+  let result = text
+    .replace(/&(?![a-zA-Z0-9#]+;)/g, '&amp;')
+    .replace(/<(?!\/?(?:b|i|u|s|code|pre|a)\b)/g, '&lt;')
+    .replace(/(?<!(?:b|i|u|s|code|pre|a))>/g, '&gt;');
+
+  // Bold: **text** or __text__
+  result = result.replace(/\*\*(.+?)\*\*/gs, '<b>$1</b>');
+  result = result.replace(/__(.+?)__/gs, '<b>$1</b>');
+  // Italic: *text* or _text_ (single, not double)
+  result = result.replace(/\*([^*\n]+)\*/g, '<i>$1</i>');
+  result = result.replace(/_([^_\n]+)_/g, '<i>$1</i>');
+  // Inline code: `text`
+  result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Headers: ### text → <b>text</b>
+  result = result.replace(/^#{1,4}\s+(.+)$/gm, '<b>$1</b>');
+  // Horizontal rule: --- → thin separator
+  result = result.replace(/^---+$/gm, '──────────');
+
+  return result;
+}
+
+/**
  * Extract the human-readable chat response from Gemini CLI stdout.
- * Strips ANSI codes and filters out tool-call status lines.
+ * Strips ANSI codes, filters noise lines, and converts markdown to Telegram HTML.
  */
 export function extractChatResponse(stdout: string): string {
   if (!stdout.trim()) return '';
 
   // Strip ANSI escape codes
-  const clean = stdout.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '').trim();
+  let clean = stdout.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '').trim();
 
-  // Remove well-known Gemini CLI noise lines before splitting
-  const denoised = clean
+  // Remove well-known Gemini CLI noise
+  clean = clean
     .replace(/YOLO mode is enabled[^\n]*/g, '')
     .replace(/Loaded cached credentials[^\n]*/g, '')
     .replace(/Keychain initialization[^\n]*/g, '')
     .replace(/Using FileKeychain[^\n]*/g, '')
     .replace(/\n{3,}/g, '\n\n');
 
-  const lines = denoised.split('\n').filter((line) => {
+  const lines = clean.split('\n').filter((line) => {
     const t = line.trim();
     if (!t) return false;
-    // Skip spinner / progress glyphs emitted by Gemini CLI
     if (/^[✓✗⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏►◆▸]/.test(t)) return false;
-    // Skip tool-call status lines ("Reading …", "Writing …", etc.)
     if (/^(Reading|Writing|Updating|Creating|Deleting|Editing|Running|Checking)\b/i.test(t)) return false;
     return true;
   });
 
-  return lines.join('\n').trim().slice(0, 4000);
+  const rawText = lines.join('\n').trim().slice(0, 4000);
+
+  // Convert any remaining markdown to Telegram HTML
+  return markdownToTelegramHtml(rawText);
 }
 
 /**
  * Run Gemini CLI as a child process.
- * Optionally pass an image path (Gemini CLI @filepath inline syntax is embedded in the prompt).
  */
 export async function runGemini(prompt: string): Promise<GeminiResult> {
   return new Promise((resolve) => {
@@ -121,11 +150,7 @@ export async function runGemini(prompt: string): Promise<GeminiResult> {
 
     const child = spawn(
       'gemini',
-      [
-        '--model', config.geminiModel,
-        '--yolo',
-        '-p', prompt,
-      ],
+      ['--model', config.geminiModel, '--yolo', '-p', prompt],
       {
         cwd: config.siteRepoPath,
         env: process.env,
