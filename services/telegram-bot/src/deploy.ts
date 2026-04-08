@@ -12,15 +12,23 @@ import { config } from './config.ts';
 const REPO = config.siteRepoPath;
 const CONTENT = config.contentFile;
 
+// When running as root (systemd), git refuses to operate in repos owned by other users.
+// This is safe here because we intentionally manage this specific repo.
+const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', HOME: process.env.HOME ?? '/root' };
+
+function git(args: string): string {
+  return execSync(`git -C "${REPO}" -c safe.directory="${REPO}" ${args}`, {
+    encoding: 'utf8',
+    env: GIT_ENV,
+  });
+}
+
 // ── Git helpers ───────────────────────────────────────────────────────────────
 
 /** Returns the git diff of content.js, or empty string if no changes. */
 export function getDiff(): string {
   try {
-    return execSync(`git diff -- "${CONTENT}"`, {
-      cwd: REPO,
-      encoding: 'utf8',
-    }).trim();
+    return git(`diff -- "${CONTENT}"`).trim();
   } catch {
     return '';
   }
@@ -32,10 +40,7 @@ export function getDiff(): string {
  */
 export function onlyContentChanged(): boolean {
   try {
-    const changed = execSync('git diff --name-only', {
-      cwd: REPO,
-      encoding: 'utf8',
-    }).trim();
+    const changed = git('diff --name-only').trim();
     const files = changed.split('\n').filter(Boolean);
     return files.length > 0 && files.every((f) => f === CONTENT);
   } catch {
@@ -46,7 +51,7 @@ export function onlyContentChanged(): boolean {
 /** Discard all uncommitted changes in the working tree (rollback). */
 export function rollback(): void {
   try {
-    execSync('git checkout -- .', { cwd: REPO });
+    git('checkout -- .');
     console.log('[deploy] Rollback complete');
   } catch (err) {
     console.error('[deploy] Rollback failed:', err);
@@ -67,11 +72,8 @@ export async function commitAndRebuild(
 ): Promise<void> {
   // 1. Commit
   await onProgress('📝 Commit wird erstellt…');
-  execSync(`git add "${CONTENT}"`, { cwd: REPO });
-  execSync(
-    `git commit -m "TG Bot: ${sanitizeCommitMsg(userMessage)}"`,
-    { cwd: REPO },
-  );
+  git(`add "${CONTENT}"`);
+  git(`commit -m "TG Bot: ${sanitizeCommitMsg(userMessage)}"`);
   console.log('[deploy] Committed content change');
 
   // 2. Rebuild

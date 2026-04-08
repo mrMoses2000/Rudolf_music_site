@@ -51,15 +51,15 @@ export async function sendTyping(chatId: number): Promise<void> {
   await apiCall('sendChatAction', { chat_id: chatId, action: 'typing' });
 }
 
-/** Send a plain text message, returns message_id */
+/** Send a plain text message, returns message_id (0 on failure) */
 export async function sendMessage(chatId: number, text: string): Promise<number> {
   const truncated = text.length > MAX_MESSAGE_LEN ? text.slice(0, MAX_MESSAGE_LEN - 30) + '\n…(abgeschnitten)' : text;
   const result = (await apiCall('sendMessage', {
     chat_id: chatId,
     text: truncated,
     parse_mode: 'HTML',
-  })) as { message_id: number };
-  return result.message_id;
+  })) as { message_id: number } | undefined;
+  return result?.message_id ?? 0;
 }
 
 /** Send a diff preview with Bestätigen / Abbrechen inline buttons */
@@ -82,8 +82,8 @@ export async function sendDiffPreview(chatId: number, diff: string): Promise<num
         ],
       ],
     },
-  })) as { message_id: number };
-  return result.message_id;
+  })) as { message_id: number } | undefined;
+  return result?.message_id ?? 0;
 }
 
 /** Edit an existing message (used to update status: pending → done) */
