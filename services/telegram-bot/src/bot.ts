@@ -70,24 +70,21 @@ export async function sendMessage(chatId: number, text: string): Promise<number>
 }
 
 /**
- * Send a diff preview with Bestätigen / Abbrechen inline buttons.
- * Optional assistantNote is shown above the diff (Gemini's explanation).
+ * Send a human-readable change preview with confirm/cancel inline buttons.
+ * Shows extracted text content (not raw JSON) grouped into Removed/Added.
  */
 export async function sendDiffPreview(
   chatId: number,
   diff: string,
   assistantNote?: string,
 ): Promise<number> {
-  const diffBlock = formatDiff(diff);
+  const humanDiff = formatDiffHumanReadable(diff);
   const noteBlock = assistantNote ? `${escapeHtml(assistantNote)}\n\n` : '';
-  const text =
-    `${noteBlock}📋 <b>Vorgeschlagene Änderung:</b>\n\n` +
-    `<pre>${diffBlock}</pre>\n\n` +
-    `Soll diese Änderung übernommen werden?`;
+  const text = `${noteBlock}${humanDiff}\n\nПодтвердить изменение?`;
 
   const safeText =
     text.length > MAX_MESSAGE_LEN
-      ? text.slice(0, MAX_MESSAGE_LEN - 60) + '\n…</pre>\n\nSoll diese Änderung übernommen werden?'
+      ? text.slice(0, MAX_MESSAGE_LEN - 40) + '\n…\n\nПодтвердить изменение?'
       : text;
 
   const result = (await apiCall('sendMessage', {
@@ -97,8 +94,8 @@ export async function sendDiffPreview(
     reply_markup: {
       inline_keyboard: [
         [
-          { text: '✅ Bestätigen', callback_data: 'confirm' },
-          { text: '❌ Abbrechen', callback_data: 'cancel' },
+          { text: '✅ Подтвердить', callback_data: 'confirm' },
+          { text: '❌ Отменить', callback_data: 'cancel' },
         ],
       ],
     },
@@ -168,23 +165,72 @@ export async function downloadFile(filePath: string): Promise<Buffer> {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+const MAX_PREVIEW_ITEMS = 6;
+
 /**
- * Turn a raw git diff into a readable short summary for Telegram.
- * Shows only the +/- lines (context removed), max 80 chars per line.
+ * Turn a raw git diff of content.js into a human-readable summary.
+ * Extracts "text": "..." values from JSON objects and groups them
+ * into Removed / Added sections — no raw JSON shown to the user.
  */
-function formatDiff(raw: string): string {
-  const lines = raw.split('\n');
-  const relevant = lines
-    .filter((l) => l.startsWith('+') || l.startsWith('-'))
-    .filter((l) => !l.startsWith('+++') && !l.startsWith('---'))
-    .map((l) => {
-      const truncated = l.length > 80 ? l.slice(0, 77) + '…' : l;
-      return escapeHtml(truncated);
-    });
+function formatDiffHumanReadable(raw: string): string {
+  const removed: string[] = [];
+  const added: string[] = [];
 
-  if (relevant.length === 0) return escapeHtml(raw.slice(0, 500));
+  for (const line of raw.split('\n')) {
+    if (line.startsWith('+++') || line.startsWith('---') || line.startsWith('@@')) continue;
+    if (!line.startsWith('+') && !line.startsWith('-')) continue;
 
-  return relevant.join('\n');
+    const isRemoved = line.startsWith('-');
+    const content = line.slice(1).trim();
+    if (!content) continue;
+
+    // Extract "text": "..." from content.js block objects
+    const textMatch = content.match(/"text"\s*:\s*"([^"]+)"/);
+    if (textMatch) {
+      const val = textMatch[1].length > 70 ? textMatch[1].slice(0, 67) + '…' : textMatch[1];
+      (isRemoved ? removed : added).push(val);
+      continue;
+    }
+
+    // Extract any standalone string value change (phone, email, title, etc.)
+    // Matches patterns like:   phone: "+49...",   or   title: "New title",
+    const kvMatch = content.match(/(\w+)\s*:\s*"([^"]+)"/);
+    if (kvMatch) {
+      const key = kvMatch[1];
+      const val = kvMatch[2].length > 60 ? kvMatch[2].slice(0, 57) + '…' : kvMatch[2];
+      (isRemoved ? removed : added).push(`${key}: ${val}`);
+    }
+  }
+
+  const parts: string[] = [];
+
+  if (removed.length > 0) {
+    parts.push('🔴 <b>Удалено:</b>');
+    for (const t of removed.slice(0, MAX_PREVIEW_ITEMS)) {
+      parts.push(`  • ${escapeHtml(t)}`);
+    }
+    if (removed.length > MAX_PREVIEW_ITEMS) {
+      parts.push(`  <i>…и ещё ${removed.length - MAX_PREVIEW_ITEMS}</i>`);
+    }
+  }
+
+  if (added.length > 0) {
+    if (parts.length > 0) parts.push('');
+    parts.push('🟢 <b>Добавлено:</b>');
+    for (const t of added.slice(0, MAX_PREVIEW_ITEMS)) {
+      parts.push(`  • ${escapeHtml(t)}`);
+    }
+    if (added.length > MAX_PREVIEW_ITEMS) {
+      parts.push(`  <i>…и ещё ${added.length - MAX_PREVIEW_ITEMS}</i>`);
+    }
+  }
+
+  if (parts.length === 0) {
+    // Fallback: couldn't parse structured content, show raw snippet
+    return `📋 <b>Изменения:</b>\n<pre>${escapeHtml(raw.slice(0, 600))}</pre>`;
+  }
+
+  return `📋 <b>Предлагаемые изменения:</b>\n\n${parts.join('\n')}`;
 }
 
 function escapeHtml(s: string): string {
