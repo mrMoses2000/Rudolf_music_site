@@ -11,6 +11,23 @@ import { formatHistory } from './history.ts';
 import type { GeminiResult, HistoryMessage } from './types.ts';
 
 /**
+ * Simple language detection based on Unicode ranges.
+ * Checks the current message first, then falls back to conversation history.
+ */
+function detectLanguage(text: string, history: HistoryMessage[]): string {
+  const cyrillicRe = /[\u0400-\u04FF]/;
+  // Check current message first
+  if (cyrillicRe.test(text)) return 'Russian';
+  // Check recent user messages in history
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].role === 'user' && cyrillicRe.test(history[i].text)) return 'Russian';
+  }
+  // Default: if admin started in German/English, keep that
+  if (/[äöüßÄÖÜ]/.test(text)) return 'German';
+  return 'Russian'; // default for this admin
+}
+
+/**
  * Build the prompt sent to Gemini CLI.
  * Includes conversation history and optional image reference.
  */
@@ -26,9 +43,18 @@ export function buildPrompt(
     ? `\n[SCREENSHOT]\nThe admin sent a screenshot. File: @${imagePath}\nUse it to understand the visual context of their request.\n`
     : '';
 
+  // Detect the admin's language from the current message and history
+  const langHint = detectLanguage(userMessage, history);
+
   return `
 You are the personal admin assistant for the website "Christliche Musikschule Bielefeld" (musikschule-cms-bielefeld.de).
 You help the admin manage site content through a Telegram chat interface.
+
+CRITICAL — RESPONSE LANGUAGE:
+You MUST respond in ${langHint}. The admin communicates in ${langHint}.
+The website content is in German — but that is the SITE language, NOT your conversation language.
+Never switch to German just because you read German text from content.js.
+Always reply in the same language the admin uses in their messages.
 
 [CONVERSATION HISTORY]
 ${historyText}
@@ -37,11 +63,11 @@ ${historyText}
 "${userMessage}"
 ${imageSection}
 [RULES]
-1. If the admin is asking a question, chatting, or needs clarification → respond with TEXT ONLY, do NOT touch any files
-2. If the admin wants to change website content → edit ONLY \`site/src/data/content.js\`
-3. Never modify any file other than \`site/src/data/content.js\`
-4. Preserve the JavaScript structure exactly — no adding or removing keys
-5. Respond in the admin's language (Russian, German, or English — match what they write)
+1. Reply in ${langHint} — this is the admin's language, not the site language
+2. If the admin is asking a question, chatting, or needs clarification → respond with TEXT ONLY, do NOT touch any files
+3. If the admin wants to change website content → edit ONLY \`site/src/data/content.js\`
+4. Never modify any file other than \`site/src/data/content.js\`
+5. Preserve the JavaScript structure exactly — no adding or removing keys
 6. If the request is ambiguous → ask a clarifying question, make NO changes
 7. You may read \`site/src/data/content.js\` to answer questions about current content
 `.trim();
