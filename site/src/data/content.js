@@ -245,7 +245,7 @@ export const content = {
             "33719 Bielefeld"
         ],
         "phone": "+49 521 3367416",
-        "email": "info@musikschule-cms-bielefeld.de",
+        "email": "juri.klassen@gmx.de",
         "form": {
             "nameLabel": "Ihr Name *",
             "emailLabel": "Ihre E-Mail-Adresse *",
