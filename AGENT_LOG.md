@@ -270,3 +270,16 @@
     - site/src/pages/Home.jsx
     - site/src/pages/Offer.jsx
   notes: "Migrated Telegram bot from Gemini CLI to Codex CLI, added phone contact self-authorization for two German numbers, updated Aktuelles from DOCX, fixed Web3Forms false-success handling, fixed lint/dependency/audit issues, added bot restart to SSL renew, deployed on Ubuntu server, and verified site routes, bot health, Codex smoke, webhook endpoint, and renewal script."
+- timestamp_utc: 2026-07-05T17:59:44Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: local and server sync verification
+  git_branch: main
+  git_head: f78def5
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Verified local and server tracked trees matched at f78def5 before writing this sync note; server retained only expected untracked env/artifact files."

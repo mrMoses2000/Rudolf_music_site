@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-05T17:50:01Z
-- Last Agent Stamp: 2026-07-05T17:50:01Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+- Last Updated (UTC): 2026-07-05T17:59:44Z
+- Last Agent Stamp: 2026-07-05T17:59:44Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
 
 - Goal (incl. success criteria):
   - Реализовать исправления после диагностики: мигрировать Telegram-бота с Gemini CLI на Codex CLI, сделать webhook устойчивым к renew TLS, починить проверки сайта и форму.
@@ -106,15 +106,16 @@
   - SEO:
     - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
-    - Задача реализована, проверена локально/на сервере и задеплоена.
-    - Серверный commit `b85223c` создан; локальный `main` fast-forward синхронизирован с сервером.
+    - Пользователь попросил синхронизировать локальный проект и сервер перед передачей инструкции заказчику.
+    - Проверено: локальный и серверный tracked `main` совпадали на `f78def5`; сервер имел только ожидаемые untracked `.env`, `site/.env`, `photo.jpg`, `music_school_site/`.
   - Next:
-    - Сообщить пользователю итог, commit hash и остаточный вопрос по push в `origin/main`.
+    - Зафиксировать sync-note commit на сервере и локально.
+    - Сообщить пользователю итоговый hash и что можно говорить заказчику.
 
 - Open questions (UNCONFIRMED if needed):
   - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
   - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
-  - UNCONFIRMED: нужно ли пушить 5 серверных коммитов (`TG Bot:*` + `b85223c`) обратно в `origin/main` до дальнейшей разработки.
+  - UNCONFIRMED: нужно ли пушить серверные коммиты обратно в `origin/main` до дальнейшей разработки.
   - Working set (files/ids/commands):
   - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `INDEX_REPORT.md`, `COMMIT_MESSAGE.md`, `services/telegram-bot/`, `site/`.
   - Commands: `git fetch ssh://aws-shermos1-frankfurt/home/ubuntu/Rudolf_music_site main:refs/remotes/server/main`, `git merge --ff-only server/main`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm audit`, `ssh aws-shermos1-frankfurt`, `systemctl restart musikschule-tg-bot.service`, `./run.sh`, `codex exec`, `curl https://musikschule-cms-bielefeld.de:8443/health`.
