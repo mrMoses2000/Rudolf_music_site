@@ -106,17 +106,15 @@
   - SEO:
     - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
-    - Задача реализована и проверена локально/на сервере.
-    - Нужно зафиксировать изменения в git на сервере, чтобы bot не работал поверх dirty tree.
+    - Задача реализована, проверена локально/на сервере и задеплоена.
+    - Серверный commit `b85223c` создан; локальный `main` fast-forward синхронизирован с сервером.
   - Next:
-    - Скопировать финальные служебные md на сервер.
-    - Сделать серверный commit и синхронизировать локальный `main` с серверным commit.
-    - Сообщить пользователю итог и проверочные команды.
+    - Сообщить пользователю итог, commit hash и остаточный вопрос по push в `origin/main`.
 
 - Open questions (UNCONFIRMED if needed):
   - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
   - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
-  - UNCONFIRMED: нужно ли пушить серверные коммиты `TG Bot:*` и текущий deploy commit обратно в `origin/main` до дальнейшей разработки.
+  - UNCONFIRMED: нужно ли пушить 5 серверных коммитов (`TG Bot:*` + `b85223c`) обратно в `origin/main` до дальнейшей разработки.
   - Working set (files/ids/commands):
   - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `INDEX_REPORT.md`, `COMMIT_MESSAGE.md`, `services/telegram-bot/`, `site/`.
   - Commands: `git fetch ssh://aws-shermos1-frankfurt/home/ubuntu/Rudolf_music_site main:refs/remotes/server/main`, `git merge --ff-only server/main`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm audit`, `ssh aws-shermos1-frankfurt`, `systemctl restart musikschule-tg-bot.service`, `./run.sh`, `codex exec`, `curl https://musikschule-cms-bielefeld.de:8443/health`.
