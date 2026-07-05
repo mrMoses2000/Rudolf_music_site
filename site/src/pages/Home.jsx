@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useRef, useState, useMemo, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { content } from "../data/content";
 import Blocks from "../components/Blocks";
 import SmartImage from "../components/SmartImage";
@@ -25,8 +25,11 @@ const Home = () => {
         .replace(/\s*Psalm\s*103\s*$/i, "")
         .trim();
     const psalmQuote = psalmText ? `„${psalmText}“` : "";
-    const [typedPsalm, setTypedPsalm] = useState(psalmQuote);
-    const [isPsalmDone, setIsPsalmDone] = useState(true);
+    const shouldTypePsalm = Boolean(psalmQuote) && !reduceMotion;
+    const [typedPsalm, setTypedPsalm] = useState("");
+    const [isPsalmDone, setIsPsalmDone] = useState(false);
+    const displayedPsalm = shouldTypePsalm ? typedPsalm : psalmQuote;
+    const isPsalmBadgeVisible = !shouldTypePsalm || isPsalmDone;
 
     const handleMouseMove = (e) => {
         const { clientX, clientY, currentTarget } = e;
@@ -35,22 +38,10 @@ const Home = () => {
     };
 
     useEffect(() => {
-        if (!psalmQuote) {
-            setTypedPsalm("");
-            setIsPsalmDone(true);
-            return;
-        }
-        if (reduceMotion) {
-            setTypedPsalm(psalmQuote);
-            setIsPsalmDone(true);
-            return;
-        }
+        if (!shouldTypePsalm) return;
 
         let index = 0;
         let timeoutId;
-
-        setTypedPsalm("");
-        setIsPsalmDone(false);
 
         const tick = () => {
             index += 1;
@@ -67,7 +58,7 @@ const Home = () => {
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [psalmQuote, reduceMotion]);
+    }, [psalmQuote, shouldTypePsalm]);
 
     useEffect(() => {
         const urls = content.categories
@@ -88,10 +79,8 @@ const Home = () => {
     }, []);
 
     const startBlocks = content.pages?.start?.blocks || [];
-    const startMainBlocks = useMemo(() => {
-        const heroTexts = new Set([content.hero.subtitle, content.hero.title].filter(Boolean));
-        return startBlocks.filter((block) => !(block.type === "h1" && heroTexts.has(block.text)));
-    }, [startBlocks, content.hero.subtitle, content.hero.title]);
+    const heroTexts = new Set([content.hero.subtitle, content.hero.title].filter(Boolean));
+    const startMainBlocks = startBlocks.filter((block) => !(block.type === "h1" && heroTexts.has(block.text)));
     const offerIntro = content.offer?.blocks?.[0]?.text || content.offer?.title;
 
     return (
@@ -132,8 +121,8 @@ const Home = () => {
                         >
                             {/* Quote Text */}
                             <p className="font-libre text-base sm:text-lg md:text-xl text-ink italic leading-relaxed flex-1">
-                                {typedPsalm}
-                                {!reduceMotion && typedPsalm.length < psalmQuote.length && (
+                                {displayedPsalm}
+                                {shouldTypePsalm && typedPsalm.length < psalmQuote.length && (
                                     <span className="typewriter-caret" aria-hidden="true">
                                         |
                                     </span>
@@ -143,7 +132,7 @@ const Home = () => {
                             {/* Psalm 103 Badge - On the Right */}
                             <motion.div
                                 initial={{ opacity: 0, y: 8 }}
-                                animate={isPsalmDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                                animate={isPsalmBadgeVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                                 transition={{ duration: 0.6 }}
                                 className="flex items-center gap-3 shrink-0"
                             >

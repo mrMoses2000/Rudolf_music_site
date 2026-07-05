@@ -5,10 +5,10 @@
  * Uses the same Let's Encrypt certs as the main nginx site.
  *
  * Flow overview:
- *   text message   → history-aware Gemini call → chat reply OR diff+confirm
+ *   text message   → history-aware Codex call → chat reply OR diff+confirm
  *   voice message  → AssemblyAI transcription → show transcript → same as text
  *   photo message  → download → save temp → same as text (image referenced in prompt)
- *   /command       → instant handler (no Gemini)
+ *   /command       → instant handler (no Codex)
  *   callback_query → confirm (deploy) or cancel (rollback)
  */
 import https from 'node:https';
@@ -18,10 +18,11 @@ import { join, extname } from 'node:path';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { config } from './config.ts';
 import * as bot from './bot.ts';
-import { buildPrompt, runGemini, extractChatResponse } from './gemini.ts';
+import { buildPrompt, runCodex, extractChatResponse } from './codex.ts';
 import { getDiff, onlyAllowedFilesChanged, rollback, commitAndRebuild, getRecentLog } from './deploy.ts';
 import { transcribeAudio } from './transcribe.ts';
 import { addMessage, getHistory, clearHistory } from './history.ts';
+import { authorizeFromContact, isUserAuthorized } from './auth.ts';
 import type { TelegramUpdate, PendingChange } from './types.ts';
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -51,6 +52,7 @@ function startServer(): void {
   server.listen(config.port, config.host, () => {
     console.log(`[server] Listening on https://${config.host}:${config.port}`);
     console.log(`[server] Allowed users: ${config.allowedUsers.join(', ') || 'NONE — check TELEGRAM_ALLOWED_USERS!'}`);
+    console.log(`[server] Allowed phone self-auth entries: ${config.allowedPhones.length}`);
     console.log(`[server] AssemblyAI: ${config.assemblyAiKey ? 'configured ✓' : 'not set (voice disabled)'}`);
   });
 
@@ -120,20 +122,16 @@ async function parseAndProcess(rawBody: string): Promise<void> {
   const msg = update.message;
   if (msg) {
     const chatId = msg.chat.id;
-    const userId = msg.from?.id;
 
-    // Whitelist check (applies to all message types)
-    if (!userId || !config.allowedUsers.includes(userId)) {
-      console.log(`[webhook] Unauthorized user ${userId}`);
-      await bot.sendMessage(
-        chatId,
-        `🚫 Zugang verweigert.\n\nDeine numerische ID: <code>${userId}</code>\n` +
-          `Füge diese in TELEGRAM_ALLOWED_USERS in der .env-Datei hinzu.`,
-      );
+    if (!(await ensureAuthorizedMessage(msg))) {
       return;
     }
 
-    if (msg.text?.startsWith('/')) {
+    if (msg.contact) {
+      await bot.sendMessage(chatId, '✅ Zugang ist bereits aktiv. Schreib mir einfach, was ich an der Website ändern soll.', {
+        remove_keyboard: true,
+      });
+    } else if (msg.text?.startsWith('/')) {
       await handleCommand(msg.text, chatId);
     } else if (msg.voice || msg.audio) {
       await handleVoice(chatId, msg.voice?.file_id ?? msg.audio!.file_id, msg.voice?.mime_type ?? msg.audio?.mime_type);
@@ -146,6 +144,43 @@ async function parseAndProcess(rawBody: string): Promise<void> {
   } else if (update.callback_query) {
     await handleCallback(update);
   }
+}
+
+async function ensureAuthorizedMessage(msg: NonNullable<TelegramUpdate['message']>): Promise<boolean> {
+  const chatId = msg.chat.id;
+  const userId = msg.from?.id;
+
+  if (!userId) {
+    await bot.sendContactAuthPrompt(chatId);
+    return false;
+  }
+
+  if (isUserAuthorized(userId)) return true;
+
+  if (msg.contact) {
+    const result = authorizeFromContact(userId, msg.contact);
+    if (result.ok) {
+      console.log(`[auth] User ${userId} authorized through allowed phone contact`);
+      await bot.sendMessage(
+        chatId,
+        '✅ Zugang freigeschaltet. Schreib mir jetzt einfach, was ich an der Website ändern soll.',
+        { remove_keyboard: true },
+      );
+      return false;
+    }
+
+    console.log(`[auth] Contact auth rejected for user ${userId}: ${result.reason}`);
+    const reason =
+      result.reason === 'contact_not_self'
+        ? 'Bitte teile deinen eigenen Telegram-Kontakt über den Button, nicht einen gespeicherten Kontakt.'
+        : 'Diese Telefonnummer ist nicht für den Website-Bot freigeschaltet.';
+    await bot.sendMessage(chatId, `🚫 Zugang verweigert.\n\n${reason}`, { remove_keyboard: true });
+    return false;
+  }
+
+  console.log(`[webhook] Unauthorized user ${userId}`);
+  await bot.sendContactAuthPrompt(chatId, userId);
+  return false;
 }
 
 // ── Command handler ───────────────────────────────────────────────────────────
@@ -304,7 +339,7 @@ async function handlePhoto(
     const fileInfo = await bot.getFile(largest.file_id);
     const imageBuffer = await bot.downloadFile(fileInfo.file_path);
 
-    // Save to temp file inside the repo so Gemini's file tools can access it
+    // Save to temp file inside the repo so Codex can receive it as an image attachment
     const adminTmpDir = join(config.siteRepoPath, '.admin_tmp');
     const tmpPath = join(adminTmpDir, `photo_${Date.now()}.jpg`);
     try {
@@ -338,7 +373,7 @@ async function handlePhoto(
 
 /**
  * Shared processing pipeline for text, voice transcript, and photo+caption.
- * Runs Gemini → if diff found: show for confirmation; otherwise: show chat reply.
+ * Runs Codex → if diff found: show for confirmation; otherwise: show chat reply.
  */
 async function processRequest(chatId: number, userText: string, imagePath?: string): Promise<void> {
   if (isBusy) {
@@ -364,10 +399,10 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
 
     const history = getHistory(chatId);
     const prompt = buildPrompt(userText, history, imagePath);
-    const geminiResult = await runGemini(prompt);
+    const agentResult = await runCodex(prompt, imagePath);
 
-    if (!geminiResult.success) {
-      const errText = geminiResult.stderr.slice(0, 300);
+    if (!agentResult.success) {
+      const errText = agentResult.stderr.slice(0, 300);
       await bot.sendMessage(
         chatId,
         `❌ <b>KI-Fehler:</b>\n<pre>${escapeHtml(errText)}</pre>`,
@@ -376,10 +411,10 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
       return;
     }
 
-    const chatResponse = extractChatResponse(geminiResult.stdout);
+    const chatResponse = extractChatResponse(agentResult.stdout);
     const diff = getDiff();
 
-    // ── Path A: Gemini made a content change → show diff for confirmation ────
+    // ── Path A: Codex made a content change → show diff for confirmation ─────
     if (diff) {
       if (!onlyAllowedFilesChanged()) {
         await bot.sendMessage(
@@ -409,7 +444,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
       // Store assistant's response in history
       addMessage(chatId, 'assistant', chatResponse || 'Änderung vorbereitet. Bitte bestätigen.');
 
-    // ── Path B: Gemini just chatted → show its text reply ────────────────────
+    // ── Path B: Codex just chatted → show its text reply ─────────────────────
     } else {
       const reply = chatResponse || '✅ Erledigt.';
       await bot.sendMessage(chatId, reply);
@@ -435,7 +470,7 @@ async function handleCallback(update: TelegramUpdate): Promise<void> {
 
   if (!chatId || !msgId) return;
 
-  if (!config.allowedUsers.includes(userId)) {
+  if (!isUserAuthorized(userId)) {
     await bot.answerCallback(cb.id, '🚫 Zugang verweigert');
     return;
   }
@@ -499,5 +534,6 @@ function escapeHtml(s: string): string {
 // ── Entry point ───────────────────────────────────────────────────────────────
 
 console.log('[server] Starting Musikschule Telegram Admin Bot…');
-console.log(`[server] Model: ${config.geminiModel}`);
+console.log(`[server] Codex binary: ${config.codexBin}`);
+console.log(`[server] Codex model: ${config.codexModel || '(default)'}`);
 startServer();

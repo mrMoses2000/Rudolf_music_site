@@ -13,6 +13,7 @@ export interface TelegramMessage {
   audio?: TelegramAudio;
   document?: TelegramDocument;
   photo?: TelegramPhotoSize[];
+  contact?: TelegramContact;
   caption?: string;
 }
 
@@ -20,6 +21,7 @@ export interface TelegramUser {
   id: number;
   username?: string;
   first_name?: string;
+  last_name?: string;
 }
 
 export interface TelegramChat {
@@ -59,6 +61,13 @@ export interface TelegramPhotoSize {
   file_size?: number;
 }
 
+export interface TelegramContact {
+  phone_number: string;
+  first_name: string;
+  last_name?: string;
+  user_id?: number;
+}
+
 export interface TelegramCallbackQuery {
   id: string;
   from: TelegramUser;
@@ -78,7 +87,7 @@ export interface PendingChange {
   userMessage: string;
 }
 
-export interface GeminiResult {
+export interface AgentResult {
   success: boolean;
   stdout: string;
   stderr: string;

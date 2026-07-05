@@ -352,13 +352,19 @@ export const content = {
             "title": "Aktuelles",
             "headerImage": "/images/Aktuelles.webp",
             "blocks": [
-                { "type": "h2", "text": "Nach dem „Jungen Podium 2026“: Wir freuen uns auf Sie!" },
-                { "type": "p", "text": "Unsere Vorspielwochen in Leopoldshöhe und Bielefeld-Heepen sind erfolgreich zu Ende gegangen. Es war wunderbar zu sehen, mit wie viel Freude und Fleiß unsere Schülerinnen und Schüler ihre Instrumente auf die Bühne gebracht haben. Ein herzliches Dankeschön an alle Beteiligten und das aufmerksame Publikum!" },
-                { "type": "h2", "text": "Wie geht es weiter?" },
-                { "type": "p", "text": "Auch nach dem „Jungen Podium“ herrscht bei uns reger Betrieb. Wir freuen uns jederzeit über Ihren Besuch – egal, ob Sie zum regulären Unterricht kommen oder sich einfach über unser Angebot informieren möchten." },
-                { "type": "h2", "text": "Immer auf dem Laufenden bleiben" },
-                { "type": "p", "text": "Auf dieser Seite finden Sie ab sofort regelmäßig unsere aktuellsten Nachrichten, Ankündigungen und Termine. Schauen Sie gerne öfter vorbei, um zu erfahren, was in Leopoldshöhe und Bielefeld-Heepen als Nächstes geplant ist." },
-                { "type": "p", "text": "Wir freuen uns darauf, Sie bald wiederzusehen!" }
+                { "type": "h2", "text": "Bühne frei: Unsere Abschlussprüfungen 2025–2026" },
+                { "type": "p", "text": "„Dein Glaube, dein Klang, deine Musik“ – unter diesem Motto steht die diesjährige Zeit der Abschlussprüfungen. Es ist die Phase, in der unsere Schülerinnen und Schüler das Ergebnis ihrer harten Arbeit, Leidenschaft und musikalischen Entwicklung individuell präsentieren." },
+                { "type": "h2", "text": "Musikalische Meilensteine persönlich erleben" },
+                { "type": "p", "text": "Die Abschlussprüfung ist für unsere Schülerinnen und Schüler ein besonderer Moment, um über sich hinauszuwachsen, Nervenstärke zu beweisen und das Gelernte in einer persönlichen Prüfungssituation zu zeigen. Bitte beachtet, dass diese Termine als interne Leistungsprüfungen konzipiert sind, in denen jeder Einzelne im Mittelpunkt steht." },
+                { "type": "h2", "text": "Terminübersicht" },
+                { "type": "p", "text": "Die Prüfungen finden in den Kalenderwochen 28 und 29 statt:" },
+                { "type": "p", "text": "Hauptzeitraum: 13.07.2026 bis 17.07.2026 (Montag, Dienstag, Donnerstag und Freitag)" },
+                { "type": "p", "text": "Vorverlegter Termin: Mittwoch, 08.07.2026 (aufgrund des JeKits-Abschlusskonzerts am 15.07.2026)" },
+                { "type": "h2", "text": "Wichtige Hinweise für Schüler und Eltern" },
+                { "type": "p", "text": "Unterricht: An den Prüfungstagen entfällt der reguläre Unterricht zugunsten der individuellen Prüfung." },
+                { "type": "p", "text": "Zeitplanung: Die Prüfungen finden, wo möglich, an den gewohnten Unterrichtstagen und zu den vertrauten Zeiten statt." },
+                { "type": "p", "text": "Fokus: Unsere Lehrkräfte schaffen eine konzentrierte Atmosphäre, in der sich jeder Schüler wohlfühlen kann, um sein Bestes zu geben." },
+                { "type": "p", "text": "Wir freuen uns darauf, euch wachsen zu sehen und eure Musik zu hören! Viel Erfolg an alle – ihr schafft das!" }
             ]
 
         },

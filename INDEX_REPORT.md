@@ -1,12 +1,12 @@
 # INDEX_REPORT.md — отчёт индексирования проекта
 
 ## Metadata
-- generated_at_utc: 2026-01-20T06:22:56Z
-- agent_model: GPT-5_Codex
+- generated_at_utc: 2026-07-05T17:50:01Z
+- agent_model: GPT-5 (Codex)
 - agent_account: unknown
 - agent_session_id: unknown
 - git_branch: main
-- git_head: 38443a5
+- git_head: c31662f
 - output_path: INDEX_REPORT.md
 - scope: full index
 
@@ -18,43 +18,54 @@
 - крупная реорганизация структуры
 
 ## Сводка
-- total_files: 365
+- total_files: 373
 - inventory_source: rg --files
 - notes: отчёт включает полный список файлов проекта
 
 ## Полный список файлов
 ```
-Лого.svg
-AGENT_LOG.md
 AGENTS.md
+AGENT_LOG.md
 BROWSER_UNDER_THE_HOOD.md
-ChatGPT Image 3. Jan. 2026, 14_47_48.png
-ChatGPT_Image_3._Jan._2026_14_47_48.svg
 COMMIT_MESSAGE.md
 CONTINUITY.md
+ChatGPT Image 3. Jan. 2026, 14_47_48.png
+ChatGPT_Image_3._Jan._2026_14_47_48.svg
 DNS_TLS_CERTS_DEEP_DIVE.md
-future/meta/AGENT_LOG.md
-future/meta/AGENTS.md
-future/meta/COMMIT_MESSAGE.md
-future/meta/CONTINUITY.md
-future/meta/INDEX_REPORT.md
-future/meta/Info.md
-future/README.md
-future/scripts/generate_index_report.sh
-future/USAGE.md
+GEMINI.md
 INDEX_REPORT.md
 Info.md
-n8n_doc_base/n8n_справочник_workflow_json_и_ноды_AI_Agent.pdf
+NGINX_UNDER_THE_HOOD.md
+README.md
+SSL_GUIDE.md
+SSL_OS_DEEP_DIVE.md
+TLS_CERT_UNDER_THE_HOOD.md
+docs/SYSTEMS_INTERNALS_BOOK.html
+docs/SYSTEMS_INTERNALS_BOOK.md
 n8n_doc_base/n8n_ai_agent_doc.txt
 n8n_doc_base/n8n_nodes_analysis.json
 n8n_doc_base/n8n_nodes_base_1.113.2_credentials_catalog.csv
 n8n_doc_base/n8n_nodes_base_1.113.2_credentials_known.json
 n8n_doc_base/n8n_nodes_base_1.113.2_nodes_catalog.csv
 n8n_doc_base/n8n_nodes_base_1.113.2_nodes_known.json
-NGINX_UNDER_THE_HOOD.md
-README.md
+n8n_doc_base/n8n_справочник_workflow_json_и_ноды_AI_Agent.pdf
 run.sh
 scripts/generate_index_report.sh
+services/telegram-bot/package-lock.json
+services/telegram-bot/package.json
+services/telegram-bot/src/auth.ts
+services/telegram-bot/src/bot.ts
+services/telegram-bot/src/codex.ts
+services/telegram-bot/src/config.ts
+services/telegram-bot/src/db.ts
+services/telegram-bot/src/deploy.ts
+services/telegram-bot/src/history.ts
+services/telegram-bot/src/server.ts
+services/telegram-bot/src/transcribe.ts
+services/telegram-bot/src/types.ts
+services/telegram-bot/tsconfig.json
+site/AGENTS.md
+site/README.md
 site/eslint.config.js
 site/index.html
 site/package-lock.json
@@ -107,11 +118,6 @@ site/public/images/8456442b2aa8f5b22c877a3fb7612916_fit-768.avif
 site/public/images/8456442b2aa8f5b22c877a3fb7612916_fit-768.webp
 site/public/images/8456442b2aa8f5b22c877a3fb7612916_fit.avif
 site/public/images/8456442b2aa8f5b22c877a3fb7612916_fit.webp
-site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit-512.avif
-site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit-512.webp
-site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit.avif
-site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit.webp
-site/public/images/a7d59964eab3dcf99e07407b12211b73_fit6eb1.webp
 site/public/images/Akkordeon-1280.avif
 site/public/images/Akkordeon-1280.webp
 site/public/images/Akkordeon-1920.webp
@@ -126,19 +132,6 @@ site/public/images/Aktuelles-768.avif
 site/public/images/Aktuelles-768.webp
 site/public/images/Aktuelles.avif
 site/public/images/Aktuelles.webp
-site/public/images/attachments-Image-IMG_11926eb1-1280.avif
-site/public/images/attachments-Image-IMG_11926eb1-1280.webp
-site/public/images/attachments-Image-IMG_11926eb1-1920.webp
-site/public/images/attachments-Image-IMG_11926eb1-768.avif
-site/public/images/attachments-Image-IMG_11926eb1-768.webp
-site/public/images/attachments-Image-IMG_11926eb1.avif
-site/public/images/attachments-Image-IMG_11926eb1.webp
-site/public/images/blechblasinstrumente_1767156191476-512.avif
-site/public/images/blechblasinstrumente_1767156191476-512.webp
-site/public/images/blechblasinstrumente_1767156191476-768.avif
-site/public/images/blechblasinstrumente_1767156191476-768.webp
-site/public/images/blechblasinstrumente_1767156191476.avif
-site/public/images/blechblasinstrumente_1767156191476.webp
 site/public/images/Bratsche-1280.avif
 site/public/images/Bratsche-1280.webp
 site/public/images/Bratsche-1920.webp
@@ -160,6 +153,90 @@ site/public/images/Clarinet-768.avif
 site/public/images/Clarinet-768.webp
 site/public/images/Clarinet.avif
 site/public/images/Clarinet.webp
+site/public/images/Gebuehren-1280.avif
+site/public/images/Gebuehren-1280.webp
+site/public/images/Gebuehren-1920.webp
+site/public/images/Gebuehren-768.avif
+site/public/images/Gebuehren-768.webp
+site/public/images/Gebuehren.avif
+site/public/images/Gebuehren.webp
+site/public/images/Horn-1280.avif
+site/public/images/Horn-1280.webp
+site/public/images/Horn-1920.webp
+site/public/images/Horn-768.avif
+site/public/images/Horn-768.webp
+site/public/images/Horn.avif
+site/public/images/Horn.webp
+site/public/images/JeKits-1280.avif
+site/public/images/JeKits-1280.webp
+site/public/images/JeKits-1920.webp
+site/public/images/JeKits-768.avif
+site/public/images/JeKits-768.webp
+site/public/images/JeKits.avif
+site/public/images/JeKits.webp
+site/public/images/Jekitz-ts16957280966eb1-400.avif
+site/public/images/Jekitz-ts16957280966eb1-400.webp
+site/public/images/Jekitz-ts16957280966eb1-600.avif
+site/public/images/Jekitz-ts16957280966eb1-600.webp
+site/public/images/Jekitz-ts16957280966eb1-700.avif
+site/public/images/Jekitz-ts16957280966eb1-700.webp
+site/public/images/Jekitz-ts16957280966eb1.avif
+site/public/images/Jekitz-ts16957280966eb1.webp
+site/public/images/Keyboard-1280.avif
+site/public/images/Keyboard-1280.webp
+site/public/images/Keyboard-1920.webp
+site/public/images/Keyboard-768.avif
+site/public/images/Keyboard-768.webp
+site/public/images/Keyboard.avif
+site/public/images/Keyboard.webp
+site/public/images/Kunstunterricht-1280.avif
+site/public/images/Kunstunterricht-1280.webp
+site/public/images/Kunstunterricht-1920.webp
+site/public/images/Kunstunterricht-768.avif
+site/public/images/Kunstunterricht-768.webp
+site/public/images/Kunstunterricht.avif
+site/public/images/Kunstunterricht.webp
+site/public/images/Saxophon-1280.avif
+site/public/images/Saxophon-1280.webp
+site/public/images/Saxophon-1920.webp
+site/public/images/Saxophon-768.avif
+site/public/images/Saxophon-768.webp
+site/public/images/Saxophon.avif
+site/public/images/Saxophon.webp
+site/public/images/Screenshot 2024-03-23 at 12.02.036eb1.webp
+site/public/images/Screenshot 2024-03-23 at 12.04.586eb1.webp
+site/public/images/Stellenangebote-1280.avif
+site/public/images/Stellenangebote-1280.webp
+site/public/images/Stellenangebote-1920.webp
+site/public/images/Stellenangebote-768.avif
+site/public/images/Stellenangebote-768.webp
+site/public/images/Stellenangebote.avif
+site/public/images/Stellenangebote.webp
+site/public/images/Trompete-1280.avif
+site/public/images/Trompete-1280.webp
+site/public/images/Trompete-1920.webp
+site/public/images/Trompete-768.avif
+site/public/images/Trompete-768.webp
+site/public/images/Trompete.avif
+site/public/images/Trompete.webp
+site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit-512.avif
+site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit-512.webp
+site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit.avif
+site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit.webp
+site/public/images/a7d59964eab3dcf99e07407b12211b73_fit6eb1.webp
+site/public/images/attachments-Image-IMG_11926eb1-1280.avif
+site/public/images/attachments-Image-IMG_11926eb1-1280.webp
+site/public/images/attachments-Image-IMG_11926eb1-1920.webp
+site/public/images/attachments-Image-IMG_11926eb1-768.avif
+site/public/images/attachments-Image-IMG_11926eb1-768.webp
+site/public/images/attachments-Image-IMG_11926eb1.avif
+site/public/images/attachments-Image-IMG_11926eb1.webp
+site/public/images/blechblasinstrumente_1767156191476-512.avif
+site/public/images/blechblasinstrumente_1767156191476-512.webp
+site/public/images/blechblasinstrumente_1767156191476-768.avif
+site/public/images/blechblasinstrumente_1767156191476-768.webp
+site/public/images/blechblasinstrumente_1767156191476.avif
+site/public/images/blechblasinstrumente_1767156191476.webp
 site/public/images/cms-logo.svg
 site/public/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1-1280.avif
 site/public/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1-1280.webp
@@ -176,13 +253,6 @@ site/public/images/dcdade3ee948f10294535505b95fc5b7_fit.webp
 site/public/images/dd198ee7c706c70ab6b727e335260b9d_fit.webp
 site/public/images/f46f616520f38e9455117294cd1cc70a_400x82_fit6eb1.webp
 site/public/images/fees_hero_upscale_1767157346173.webp
-site/public/images/Gebuehren-1280.avif
-site/public/images/Gebuehren-1280.webp
-site/public/images/Gebuehren-1920.webp
-site/public/images/Gebuehren-768.avif
-site/public/images/Gebuehren-768.webp
-site/public/images/Gebuehren.avif
-site/public/images/Gebuehren.webp
 site/public/images/gesang_1767156238520-512.avif
 site/public/images/gesang_1767156238520-512.webp
 site/public/images/gesang_1767156238520-768.avif
@@ -249,48 +319,12 @@ site/public/images/holzblasinstrumente_1767156168170-768.avif
 site/public/images/holzblasinstrumente_1767156168170-768.webp
 site/public/images/holzblasinstrumente_1767156168170.avif
 site/public/images/holzblasinstrumente_1767156168170.webp
-site/public/images/Horn-1280.avif
-site/public/images/Horn-1280.webp
-site/public/images/Horn-1920.webp
-site/public/images/Horn-768.avif
-site/public/images/Horn-768.webp
-site/public/images/Horn.avif
-site/public/images/Horn.webp
 site/public/images/jekits_unique_1767157360834-512.avif
 site/public/images/jekits_unique_1767157360834-512.webp
 site/public/images/jekits_unique_1767157360834-768.avif
 site/public/images/jekits_unique_1767157360834-768.webp
 site/public/images/jekits_unique_1767157360834.avif
 site/public/images/jekits_unique_1767157360834.webp
-site/public/images/JeKits-1280.avif
-site/public/images/JeKits-1280.webp
-site/public/images/JeKits-1920.webp
-site/public/images/JeKits-768.avif
-site/public/images/JeKits-768.webp
-site/public/images/JeKits.avif
-site/public/images/JeKits.webp
-site/public/images/Jekitz-ts16957280966eb1-400.avif
-site/public/images/Jekitz-ts16957280966eb1-400.webp
-site/public/images/Jekitz-ts16957280966eb1-600.avif
-site/public/images/Jekitz-ts16957280966eb1-600.webp
-site/public/images/Jekitz-ts16957280966eb1-700.avif
-site/public/images/Jekitz-ts16957280966eb1-700.webp
-site/public/images/Jekitz-ts16957280966eb1.avif
-site/public/images/Jekitz-ts16957280966eb1.webp
-site/public/images/Keyboard-1280.avif
-site/public/images/Keyboard-1280.webp
-site/public/images/Keyboard-1920.webp
-site/public/images/Keyboard-768.avif
-site/public/images/Keyboard-768.webp
-site/public/images/Keyboard.avif
-site/public/images/Keyboard.webp
-site/public/images/Kunstunterricht-1280.avif
-site/public/images/Kunstunterricht-1280.webp
-site/public/images/Kunstunterricht-1920.webp
-site/public/images/Kunstunterricht-768.avif
-site/public/images/Kunstunterricht-768.webp
-site/public/images/Kunstunterricht.avif
-site/public/images/Kunstunterricht.webp
 site/public/images/logo.svg
 site/public/images/music_school_hero_1766743329644.webp
 site/public/images/offer_button_jobs_1767157417216-512.avif
@@ -305,28 +339,12 @@ site/public/images/offer_button_kunst_1767157402302-768.avif
 site/public/images/offer_button_kunst_1767157402302-768.webp
 site/public/images/offer_button_kunst_1767157402302.avif
 site/public/images/offer_button_kunst_1767157402302.webp
-site/public/images/Saxophon-1280.avif
-site/public/images/Saxophon-1280.webp
-site/public/images/Saxophon-1920.webp
-site/public/images/Saxophon-768.avif
-site/public/images/Saxophon-768.webp
-site/public/images/Saxophon.avif
-site/public/images/Saxophon.webp
 site/public/images/schlaginstrumente_1767156223197-512.avif
 site/public/images/schlaginstrumente_1767156223197-512.webp
 site/public/images/schlaginstrumente_1767156223197-768.avif
 site/public/images/schlaginstrumente_1767156223197-768.webp
 site/public/images/schlaginstrumente_1767156223197.avif
 site/public/images/schlaginstrumente_1767156223197.webp
-site/public/images/Screenshot 2024-03-23 at 12.02.036eb1.webp
-site/public/images/Screenshot 2024-03-23 at 12.04.586eb1.webp
-site/public/images/Stellenangebote-1280.avif
-site/public/images/Stellenangebote-1280.webp
-site/public/images/Stellenangebote-1920.webp
-site/public/images/Stellenangebote-768.avif
-site/public/images/Stellenangebote-768.webp
-site/public/images/Stellenangebote.avif
-site/public/images/Stellenangebote.webp
 site/public/images/streichinstrumente_1767156138943-512.avif
 site/public/images/streichinstrumente_1767156138943-512.webp
 site/public/images/streichinstrumente_1767156138943-768.avif
@@ -339,13 +357,6 @@ site/public/images/tasteninstrumente_1767156206992-768.avif
 site/public/images/tasteninstrumente_1767156206992-768.webp
 site/public/images/tasteninstrumente_1767156206992.avif
 site/public/images/tasteninstrumente_1767156206992.webp
-site/public/images/Trompete-1280.avif
-site/public/images/Trompete-1280.webp
-site/public/images/Trompete-1920.webp
-site/public/images/Trompete-768.avif
-site/public/images/Trompete-768.webp
-site/public/images/Trompete.avif
-site/public/images/Trompete.webp
 site/public/images/zupfinstrumente_1767156152934-512.avif
 site/public/images/zupfinstrumente_1767156152934-512.webp
 site/public/images/zupfinstrumente_1767156152934-768.avif
@@ -356,7 +367,6 @@ site/public/music_school_hero_1766743329644.png
 site/public/robots.txt
 site/public/sitemap.xml
 site/public/vite.svg
-site/README.md
 site/src/App.css
 site/src/App.jsx
 site/src/assets/react.svg
@@ -368,8 +378,8 @@ site/src/components/SmartImage.jsx
 site/src/data/content.js
 site/src/index.css
 site/src/main.jsx
-site/src/pages/About.jsx
 site/src/pages/AGB.jsx
+site/src/pages/About.jsx
 site/src/pages/Aktuelles.jsx
 site/src/pages/Contact.jsx
 site/src/pages/Datenschutz.jsx
@@ -386,7 +396,5 @@ site/src/pages/Standorte.jsx
 site/src/utils/imageVariants.js
 site/tailwind.config.js
 site/vite.config.js
-SSL_GUIDE.md
-SSL_OS_DEEP_DIVE.md
-TLS_CERT_UNDER_THE_HOOD.md
+Лого.svg
 ```

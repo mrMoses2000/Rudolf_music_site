@@ -53,8 +53,12 @@ const Offer = () => {
     ];
 
     useEffect(() => {
-        const urls = offerMainButtons
-            .map((btn) => btn.image)
+        const urls = [
+            "/images/streichinstrumente_1767156138943.webp",
+            "/images/jekits_unique_1767157360834.webp",
+            "/images/offer_button_kunst_1767157402302.webp",
+            "/images/offer_button_jobs_1767157417216.webp"
+        ]
             .filter(Boolean)
             .map((src) => src.replace(/\.webp$/i, "-768.avif"));
 
@@ -67,7 +71,7 @@ const Offer = () => {
             link.href = href;
             document.head.appendChild(link);
         });
-    }, [offerMainButtons]);
+    }, []);
 
     return (
         <div className="min-h-screen bg-paper pb-32">

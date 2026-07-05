@@ -1,23 +1,29 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-01-20T10:50:32Z
-- Last Agent Stamp: 2026-01-20T10:50:32Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+- Last Updated (UTC): 2026-07-05T17:50:01Z
+- Last Agent Stamp: 2026-07-05T17:50:01Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
 
 - Goal (incl. success criteria):
-  - Сделать блок "Unsere Standorte" более выразительным и читабельным (карточки с адресами).
-  - Исправить проблему с отправкой писем (Web3Forms) на неправильный email.
-  - Завершить merge ветки `shera` без потери контента, сохранить 1:1 миграцию из `music_site_copy/`, держать HTTPS и производительность под контролем.
+  - Реализовать исправления после диагностики: мигрировать Telegram-бота с Gemini CLI на Codex CLI, сделать webhook устойчивым к renew TLS, починить проверки сайта и форму.
+  - Добавить текст из `/Users/mosesvasilenko/Downloads/Bühne frei. Abschlussprüfung.docx` в `Aktuelles` через `site/src/data/content.js`.
+  - Добавить доступ к Telegram-боту для номеров `+49 1577 6346909` и `+49 163 1595757` максимально безопасно с учётом ограничений Bot API.
+  - Проверить локально и на сервере: build/lint/typecheck, webhook health, Codex smoke, deploy/service status.
 - Constraints/Assumptions:
   - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
   - Language rule: communicate in Russian.
   - Sandbox: danger-full-access; network enabled; approval_policy never.
-- Key decisions:
+  - SSH доступ: `ssh aws-shermos1-frankfurt`; сервер Ubuntu 24.04 AWS.
+  - Codex CLI установлен на сервере, но не попадает в обычный PATH; рабочий путь: `/home/ubuntu/.nvm/versions/node/v24.14.1/bin/codex`.
+  - DOCX файл существует в Downloads.
+  - Telegram Bot API не даёт найти user_id по номеру телефона; номера можно использовать только через flow "пользователь делится контактом -> бот сохраняет user_id".
+  - Key decisions:
   - Используем `SmartImage` + WebP (`imageVariants`) для всех изображений.
   - В `run.sh` встроены certbot, cron‑продление и генерация nginx.conf с HTTPS.
   - В nginx включены gzip и cache headers для `/assets` и `/images`.
   - Контент 1:1 сверяется с `music_site_copy/` и переносится через `content.js`.
   - AVIF предпочтителен, WebP используется как fallback.
   - В верхнем меню оставить "Unsere Standorte", убрать AGB/Impressum и оставить их в футере.
+  - Миграция CLI сохраняет существующий flow подтверждения через git diff; Codex запускается из `site/` с вложенным `site/AGENTS.md`, чтобы ограничить Telegram-автоматизацию только runtime-файлами сайта.
 - State:
   - Done:
     - Коммит: `ui: поменяли местами логотип и текст`.
@@ -73,6 +79,20 @@
     - Добавлена политика использования чата в `AGENTS.md` и `future/meta/AGENTS.md`.
     - Обновлён `future/USAGE.md` под копирование файлов в корень нового проекта.
     - Добавлено правило русского языка для коммитов в `AGENTS.md` и `future/meta/AGENTS.md`.
+    - Локальный `main` синхронизирован fast-forward с серверным `main` до `c31662f`; серверные правки `TG Bot:*` сохранены.
+    - `Aktuelles` обновлён текстом из `/Users/mosesvasilenko/Downloads/Bühne frei. Abschlussprüfung.docx`.
+    - Telegram-бот переведён с Gemini CLI на Codex CLI (`services/telegram-bot/src/codex.ts`), старый `gemini.ts` удалён.
+    - Добавлен Telegram phone self-authorization через contact sharing: `+49 1577 6346909` и `+49 163 1595757` настроены в `TELEGRAM_ALLOWED_PHONES` на сервере.
+    - Добавлена таблица SQLite `authorized_users` и общий auth-layer для сообщений и callback-кнопок.
+    - Добавлен `site/AGENTS.md` для ограничения Codex, запущенного ботом из `site/`.
+    - Исправлен Web3Forms false-success fallback: успех показывается только при успешном ответе API.
+    - Исправлены lint-предупреждения/ошибки и npm audit: React Router lock обновлён до 7.18.1, `tsx` до 4.23.0 / `esbuild` до 0.28.1.
+    - `run.sh` обновлён: renew script перезапускает `musikschule-tg-bot.service`; Docker build больше не печатает `VITE_*` значения в build step.
+    - Локально прошли: `site npm run lint`, `site npm run build`, `site npm audit`, `telegram-bot npm run typecheck`, `telegram-bot npm audit`.
+    - На сервере прошли: `site npm run lint`, `site npm run build`, `site npm audit`, `telegram-bot npm run typecheck`, `telegram-bot npm audit`.
+    - Production deploy выполнен через `./run.sh`; `music_school_app` running, `musikschule-tg-bot.service` active.
+    - Проверены production routes `/`, `/aktuelles`, `/contact`, `/offer`, `/fees`, `/standorte`, `/impressum` -> HTTP 200.
+    - Проверены bot `/health`, external `:8443/health`, webhook POST с secret header, Codex smoke через `runCodex()`, phone-auth smoke с временным `DB_PATH`.
   - Infra:
     - Сервер: Ubuntu VPS, деплой через Docker (`./run.sh`).
     - Домены: `musikschule-cms-bielefeld.de` и `www` → A‑записи на IP сервера.
@@ -86,18 +106,17 @@
   - SEO:
     - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
   - Now:
-    - Подтвердить, что заголовок и карточки выглядят логично.
-    - Исправление Web3Forms (ожидание нового ключа от пользователя).
-    - Перепроверить скорость первой загрузки и LCP после srcset/ленивого YouTube.
-    - Держать контент 1:1 с `music_site_copy/`.
-    - Сверить, что все страницы используют `SmartImage`.
+    - Задача реализована и проверена локально/на сервере.
+    - Нужно зафиксировать изменения в git на сервере, чтобы bot не работал поверх dirty tree.
   - Next:
-    - Внести точечные правки по замечаниям пользователя.
-    - При необходимости: code splitting и self‑host шрифтов для ускорения first‑load.
+    - Скопировать финальные служебные md на сервер.
+    - Сделать серверный commit и синхронизировать локальный `main` с серверным commit.
+    - Сообщить пользователю итог и проверочные команды.
 
 - Open questions (UNCONFIRMED if needed):
   - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
   - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
-- Working set (files/ids/commands):
-  - Files: `site/src/pages/Standorte.jsx`, `site/src/pages/Contact.jsx`, `site/src/data/content.js`, `site/src/pages/Offer.jsx`, `site/src/utils/imageVariants.js`, `CONTINUITY.md`.
-  - Commands: `rg -n "Kleebring|Kleebrink" site/src/data/content.js`, `rg --files`, `./run.sh`.
+  - UNCONFIRMED: нужно ли пушить серверные коммиты `TG Bot:*` и текущий deploy commit обратно в `origin/main` до дальнейшей разработки.
+  - Working set (files/ids/commands):
+  - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `INDEX_REPORT.md`, `COMMIT_MESSAGE.md`, `services/telegram-bot/`, `site/`.
+  - Commands: `git fetch ssh://aws-shermos1-frankfurt/home/ubuntu/Rudolf_music_site main:refs/remotes/server/main`, `git merge --ff-only server/main`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm audit`, `ssh aws-shermos1-frankfurt`, `systemctl restart musikschule-tg-bot.service`, `./run.sh`, `codex exec`, `curl https://musikschule-cms-bielefeld.de:8443/health`.

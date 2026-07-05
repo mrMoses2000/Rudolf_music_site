@@ -20,16 +20,50 @@ function parseAllowedUsers(raw: string): number[] {
     });
 }
 
+export function normalizePhone(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return '';
+
+  const digits = trimmed.replace(/[^\d]/g, '');
+  if (!digits) return '';
+
+  if (digits.startsWith('00')) return `+${digits.slice(2)}`;
+  return `+${digits}`;
+}
+
+function parseAllowedPhones(raw: string): string[] {
+  return Array.from(new Set(
+    raw
+      .split(',')
+      .map(normalizePhone)
+      .filter(Boolean),
+  ));
+}
+
+function parseCodexSandbox(raw: string): 'read-only' | 'workspace-write' | 'danger-full-access' {
+  if (raw === 'read-only' || raw === 'workspace-write' || raw === 'danger-full-access') {
+    return raw;
+  }
+  throw new Error(`CODEX_SANDBOX: "${raw}" is not a supported sandbox mode`);
+}
+
+const siteRepoPath = requireEnv('SITE_REPO_PATH').replace(/\/$/, '');
+
 export const config = {
   // ── Telegram ──────────────────────────────────────────────
   botToken: requireEnv('TELEGRAM_BOT_TOKEN'),
   webhookSecret: requireEnv('TELEGRAM_WEBHOOK_SECRET'),
   allowedUsers: parseAllowedUsers(optionalEnv('TELEGRAM_ALLOWED_USERS', '')),
+  allowedPhones: parseAllowedPhones(optionalEnv('TELEGRAM_ALLOWED_PHONES', '')),
 
-  // ── Gemini CLI ────────────────────────────────────────────
-  geminiModel: optionalEnv('GEMINI_MODEL', 'gemini-2.5-pro'),
-  /** ms before Gemini CLI child process is killed */
-  geminiTimeoutMs: parseInt(optionalEnv('GEMINI_TIMEOUT_MS', '120000'), 10),
+  // ── Codex CLI ─────────────────────────────────────────────
+  codexBin: optionalEnv('CODEX_BIN', 'codex'),
+  codexModel: optionalEnv('CODEX_MODEL', ''),
+  codexHome: optionalEnv('CODEX_HOME', process.env.CODEX_HOME || ''),
+  codexWorkdir: optionalEnv('CODEX_WORKDIR', `${siteRepoPath}/site`),
+  codexSandbox: parseCodexSandbox(optionalEnv('CODEX_SANDBOX', 'workspace-write')),
+  /** ms before Codex CLI child process is killed */
+  codexTimeoutMs: parseInt(optionalEnv('CODEX_TIMEOUT_MS', '180000'), 10),
 
   // ── HTTPS server ──────────────────────────────────────────
   port: parseInt(optionalEnv('BOT_PORT', '8443'), 10),
@@ -38,7 +72,7 @@ export const config = {
   sslKey: optionalEnv('SSL_KEY', '/etc/letsencrypt/live/musikschule-cms-bielefeld.de/privkey.pem'),
 
   // ── Site ──────────────────────────────────────────────────
-  siteRepoPath: requireEnv('SITE_REPO_PATH'),
+  siteRepoPath,
   contentFile: optionalEnv('SITE_CONTENT_FILE', 'site/src/data/content.js'),
 
   // ── UX ───────────────────────────────────────────────────

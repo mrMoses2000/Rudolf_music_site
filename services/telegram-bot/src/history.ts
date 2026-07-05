@@ -57,7 +57,7 @@ export function getHistory(chatId: number): HistoryMessage[] {
   }));
 }
 
-/** Format history as a readable block for Gemini's context */
+/** Format history as a readable block for Codex's context */
 export function formatHistory(history: HistoryMessage[]): string {
   if (history.length === 0) return '(no prior conversation)';
   return history

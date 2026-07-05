@@ -3,7 +3,7 @@
  *
  * Flow:
  *   getDiff()    → show diff to user for confirmation
- *   rollback()   → git checkout (user cancelled or Gemini failed)
+ *   rollback()   → git checkout (user cancelled or Codex failed)
  *   commitAndRebuild() → git commit + bash run.sh (user confirmed)
  */
 import { execSync, spawn } from 'node:child_process';
@@ -13,7 +13,7 @@ const REPO = config.siteRepoPath;
 const CONTENT = config.contentFile;
 
 /**
- * Files the admin bot is allowed to modify via Gemini.
+ * Files the admin bot is allowed to modify via Codex.
  * Everything else is rejected to protect the site from accidental breakage.
  */
 const ALLOWED_FILES: readonly string[] = [
@@ -49,7 +49,7 @@ export function getDiff(): string {
 
 /**
  * Check that ONLY allowed files were modified.
- * Extra safety: if Gemini touched other files we roll back and reject.
+   * Extra safety: if Codex touched other files we roll back and reject.
  */
 export function onlyAllowedFilesChanged(): boolean {
   try {

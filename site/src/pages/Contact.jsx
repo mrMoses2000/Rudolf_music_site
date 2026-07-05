@@ -1,52 +1,36 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { content } from "../data/content";
 import SmartImage from "../components/SmartImage";
 
+const getInitialSubject = (location) => {
+    const params = new URLSearchParams(location.search);
+    const querySubject = params.get("subject");
+
+    if (location.state?.subject) return location.state.subject;
+    if (location.state?.instrument) return `Anmeldung für: ${location.state.instrument}`;
+    if (querySubject) return querySubject;
+    return "";
+};
+
 const Contact = () => {
     const location = useLocation();
+    const initialSubject = useMemo(() => getInitialSubject(location), [location]);
     const [status, setStatus] = useState(""); // "", "sending", "success", "error"
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(() => ({
         name: "",
         email: "",
-        subject: "",
+        subject: initialSubject,
         message: ""
-    });
+    }));
     const web3formsKey =
         import.meta.env.VITE_WEB3FORMS_KEY || import.meta.env.VITE_ACCESS_WEB3FORMS_KEY;
     const web3formsToEmail = import.meta.env.VITE_WEB3FORMS_TO_EMAIL || content.contact.email;
 
-    useEffect(() => {
-        // Check for subject in location state (nav state) OR query params
-        const params = new URLSearchParams(location.search);
-        const querySubject = params.get("subject");
-
-        let initialSubject = "";
-
-        if (location.state?.subject) {
-            initialSubject = location.state.subject;
-        } else if (location.state?.instrument) {
-            initialSubject = `Anmeldung für: ${location.state.instrument}`;
-        } else if (querySubject) {
-            initialSubject = querySubject;
-        }
-
-        if (initialSubject) {
-            setFormData(prev => ({
-                ...prev,
-                subject: initialSubject
-            }));
-        }
-    }, [location.state, location.search]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus("sending");
-
-        // We will use a flexible approach: 
-        // 1. Web3Forms (easy start) OR 
-        // 2. n8n Webhook (for the planned CMS integration)
 
         try {
             if (!web3formsKey) {
@@ -54,9 +38,6 @@ const Contact = () => {
                 setStatus("error");
                 return;
             }
-            // For now, let's use Web3Forms as a solid bridge
-            // USER: Replace YOUR_ACCESS_KEY_HERE with your key from web3forms.com
-            // Or replace this URL with your n8n webhook once ready!
             const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
                 headers: {
@@ -71,19 +52,15 @@ const Contact = () => {
                 })
             });
 
-            const result = await response.json();
-            if (result.success) {
-                setStatus("success");
-                setFormData({ name: "", email: "", subject: "", message: "" });
-            } else {
-                // If the key is missing (like now), we'll show a "developer success" for demonstration
-                // but in production it would be an error.
-                if (formData.name && formData.email) {
-                    setStatus("success");
-                } else {
-                    setStatus("error");
-                }
+            const result = await response.json().catch(() => ({ success: false }));
+            if (!response.ok || !result.success) {
+                console.error("Web3Forms error:", result);
+                setStatus("error");
+                return;
             }
+
+            setStatus("success");
+            setFormData({ name: "", email: "", subject: "", message: "" });
         } catch (error) {
             console.error("Submission error:", error);
             setStatus("error");

@@ -58,15 +58,35 @@ export async function sendRecordingTyping(chatId: number): Promise<void> {
 }
 
 /** Send a plain text message, returns message_id (0 on failure) */
-export async function sendMessage(chatId: number, text: string): Promise<number> {
+export async function sendMessage(
+  chatId: number,
+  text: string,
+  replyMarkup?: Record<string, unknown>,
+): Promise<number> {
   const truncated = text.length > MAX_MESSAGE_LEN ? text.slice(0, MAX_MESSAGE_LEN - 30) + '\n…(abgeschnitten)' : text;
   const result = (await apiCall('sendMessage', {
     chat_id: chatId,
     text: truncated,
     parse_mode: 'HTML',
     link_preview_options: { is_disabled: true },
+    ...(replyMarkup ? { reply_markup: replyMarkup } : {}),
   })) as { message_id: number } | undefined;
   return result?.message_id ?? 0;
+}
+
+export async function sendContactAuthPrompt(chatId: number, userId?: number): Promise<number> {
+  return sendMessage(
+    chatId,
+    `🚫 Zugang verweigert.\n\n` +
+      `Deine numerische ID: <code>${userId ?? 'unbekannt'}</code>\n\n` +
+      `Wenn deine Telefonnummer freigeschaltet ist, drücke unten auf ` +
+      `<b>Kontakt freigeben</b>. Bitte sende deinen eigenen Telegram-Kontakt, keinen gespeicherten Kontakt.`,
+    {
+      keyboard: [[{ text: '📱 Kontakt freigeben', request_contact: true }]],
+      resize_keyboard: true,
+      one_time_keyboard: true,
+    },
+  );
 }
 
 /**

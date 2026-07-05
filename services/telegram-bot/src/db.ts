@@ -5,6 +5,7 @@
  *
  * Schema:
  *   messages — persistent conversation history per chat
+ *   authorized_users — Telegram users self-authorized through allowed phone contacts
  */
 import Database from 'better-sqlite3';
 import { mkdirSync, existsSync } from 'node:fs';
@@ -35,6 +36,17 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_messages_chat
     ON messages (chat_id, created_at);
+
+  CREATE TABLE IF NOT EXISTS authorized_users (
+    user_id       INTEGER PRIMARY KEY,
+    phone         TEXT    NOT NULL,
+    first_name    TEXT,
+    last_name     TEXT,
+    authorized_at INTEGER NOT NULL
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_authorized_users_phone
+    ON authorized_users (phone);
 `);
 
 console.log(`[db] SQLite opened: ${config.dbPath}`);

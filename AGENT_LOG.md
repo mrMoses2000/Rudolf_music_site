@@ -220,3 +220,53 @@
     - AGENTS.md
     - AGENT_LOG.md
   notes: Fixed env key lookup and added visible submit status
+- timestamp_utc: 2026-07-05T17:06:26Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: diagnose telegram bot and codex migration
+  git_branch: main
+  git_head: 8632ad7
+  touched_files:
+    - AGENTS.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+  notes: "Ran full sync/index protocol, checked local build/lint/typecheck, verified live site routes, restored webhook TLS by restarting bot service, and identified Gemini CLI IneligibleTierError as remaining bot blocker."
+- timestamp_utc: 2026-07-05T17:50:01Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: codex bot migration, aktuelles update, production verification
+  git_branch: main
+  git_head: c31662f
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+    - run.sh
+    - services/telegram-bot/.env.example
+    - services/telegram-bot/package.json
+    - services/telegram-bot/package-lock.json
+    - services/telegram-bot/src/auth.ts
+    - services/telegram-bot/src/bot.ts
+    - services/telegram-bot/src/codex.ts
+    - services/telegram-bot/src/config.ts
+    - services/telegram-bot/src/db.ts
+    - services/telegram-bot/src/deploy.ts
+    - services/telegram-bot/src/gemini.ts
+    - services/telegram-bot/src/history.ts
+    - services/telegram-bot/src/server.ts
+    - services/telegram-bot/src/types.ts
+    - site/AGENTS.md
+    - site/eslint.config.js
+    - site/package-lock.json
+    - site/src/components/Layout.jsx
+    - site/src/data/content.js
+    - site/src/pages/Contact.jsx
+    - site/src/pages/Home.jsx
+    - site/src/pages/Offer.jsx
+  notes: "Migrated Telegram bot from Gemini CLI to Codex CLI, added phone contact self-authorization for two German numbers, updated Aktuelles from DOCX, fixed Web3Forms false-success handling, fixed lint/dependency/audit issues, added bot restart to SSL renew, deployed on Ubuntu server, and verified site routes, bot health, Codex smoke, webhook endpoint, and renewal script."

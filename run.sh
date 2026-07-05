@@ -127,6 +127,7 @@ else
         -d "\$DOMAIN" -d "\$WWW_DOMAIN" --keep-until-expiring
 fi
 
+systemctl restart musikschule-tg-bot.service 2>/dev/null || true
 docker start music_school_app 2>/dev/null || true
 EOF
 
@@ -156,6 +157,18 @@ fi
 # 4. Генерация только нужных файлов конфигурации
 echo "📝 Подготовка чистых конфигов Docker..."
 
+BUILD_ENV_FILE=".env.production.local"
+cleanup_build_env() {
+    rm -f "$BUILD_ENV_FILE"
+}
+trap cleanup_build_env EXIT
+
+cat <<EOF > "$BUILD_ENV_FILE"
+VITE_WEB3FORMS_KEY=${VITE_WEB3FORMS_KEY:-}
+VITE_ACCESS_WEB3FORMS_KEY=${VITE_ACCESS_WEB3FORMS_KEY:-}
+VITE_WEB3FORMS_TO_EMAIL=${VITE_WEB3FORMS_TO_EMAIL:-}
+EOF
+
 cat <<EOF > Dockerfile
 # Build stage
 FROM node:20-alpine as build
@@ -163,12 +176,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-ARG VITE_WEB3FORMS_KEY
-ARG VITE_ACCESS_WEB3FORMS_KEY
-ARG VITE_WEB3FORMS_TO_EMAIL
-ENV VITE_WEB3FORMS_KEY=$VITE_WEB3FORMS_KEY
-ENV VITE_ACCESS_WEB3FORMS_KEY=$VITE_ACCESS_WEB3FORMS_KEY
-ENV VITE_WEB3FORMS_TO_EMAIL=$VITE_WEB3FORMS_TO_EMAIL
 RUN npm run build
 
 # Production stage
@@ -276,11 +283,7 @@ fi
 
 # 5. Blue-green deploy: build FIRST, then swap containers (~2s downtime instead of ~3min)
 echo "🏗️ Сборка нового образа (сайт работает во время сборки)..."
-sudo docker build \
-    --build-arg VITE_WEB3FORMS_KEY="${VITE_WEB3FORMS_KEY:-}" \
-    --build-arg VITE_ACCESS_WEB3FORMS_KEY="${VITE_ACCESS_WEB3FORMS_KEY:-}" \
-    --build-arg VITE_WEB3FORMS_TO_EMAIL="${VITE_WEB3FORMS_TO_EMAIL:-}" \
-    -t music_school_site:new .
+sudo docker build -t music_school_site:new .
 
 echo "🔄 Замена контейнера (старый → новый)..."
 DOCKER_PORTS="-p 80:80"
