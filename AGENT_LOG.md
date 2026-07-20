@@ -336,3 +336,15 @@
     - COMMIT_MESSAGE.md
     - CONTINUITY.md
   notes: "Created snap-0378a5fa71981ed04 before stopping existing SherMos2 containers; deployed music_school_app from updated GitHub main, attached EIP 63.186.147.213, switched only 1blu web A records, issued Lets Encrypt TLS, created Cloudflare zone with preserved mail/MX/SPF/DKIM records, enabled Full (strict), and submitted nameserver delegation to felipe.ns.cloudflare.com/frida.ns.cloudflare.com. Registrar propagation remains pending."
+- timestamp_utc: 2026-07-20T18:40:20Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: verify completed emergency production migration
+  git_branch: main
+  git_head: 45cdd92
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - CONTINUITY.md
+  notes: "Cloudflare confirmed active protection. Public NS resolve to felipe.ns.cloudflare.com and frida.ns.cloudflare.com. Direct Cloudflare edge probes for apex and www returned HTTP 200 with server: cloudflare/cf-ray; mail A, MX, SPF and DKIM records were verified unchanged."

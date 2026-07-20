@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-20T18:35:25Z
-- Last Agent Stamp: 2026-07-20T18:35:25Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-07-20T18:40:20Z
+- Last Agent Stamp: 2026-07-20T18:40:20Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Срочно восстановить актуальную React/Vite-версию `musikschule-cms-bielefeld.de` на доступном EC2 `SherMos2`, сохранить 1blu-почту и передать DNS-управление новому Cloudflare-аккаунту.
@@ -27,16 +27,15 @@
     - В 1blu изменены только A-записи `@` и `www` на `63.186.147.213`; почтовые записи не менялись.
     - Выпущен сертификат Let’s Encrypt для `musikschule-cms-bielefeld.de`, срок до 2026-10-18; настроен cron renewal.
     - В новом Cloudflare account создана зона `musikschule-cms-bielefeld.de`, перенесены A, CNAME, MX, SPF и DKIM; Full (strict) включён.
-    - В 1blu отправлена смена authoritative nameservers на `felipe.ns.cloudflare.com` и `frida.ns.cloudflare.com`; панель 1blu ещё показывает асинхронную обработку.
+    - Делегация в 1blu завершена на `felipe.ns.cloudflare.com` и `frida.ns.cloudflare.com`; Cloudflare подтвердил, что домен защищён и проксируется.
+    - Проверены публичные NS, Cloudflare HTTPS (HTTP 200, `server: cloudflare`, `cf-ray`) и DNS-записи почты.
   - Now:
-    - Ожидается публикация NS у регистратора: пока авторитетны `ns01.1blu.de`/`ns02.1blu.de`; Cloudflare показывает `Waiting for your registrar to propagate your new nameservers`.
-    - HTTPS origin и маршруты проверены напрямую с `--resolve`; на сервере открыты только SSH, 80 и 443 на уровне процессов.
+    - Production восстановлен: authoritative DNS — Cloudflare; HTTPS origin и SPA-маршруты проверены напрямую, Cloudflare-edge проверен отдельно.
+    - На сервере на уровне процессов открыты только SSH, 80 и 443. У старых публичных DNS-кэшей может кратко сохраняться прежняя A-запись, но она уже указывает на тот же новый origin.
   - Next:
-    - Дождаться делегации на NS Cloudflare, подтвердить активность зоны, Cloudflare headers и публичный HTTPS для apex/www; проверить MX, SPF и DKIM через авторитетный DNS.
     - Восстановить `VITE_WEB3FORMS_KEY`/`VITE_WEB3FORMS_TO_EMAIL` и отдельно Telegram/Codex bot, когда найдутся секреты.
     - После стабилизации сузить AWS security group (убрать неиспользуемые ingress 3000/8080/9443; SSH ограничивать только после фиксации допустимого IP).
 - Open questions (UNCONFIRMED):
-  - Когда 1blu завершит смену NS (обычно минуты–часы; Cloudflare допускает до 24 часов).
   - Где безопасно хранятся актуальные Web3Forms и Telegram/AssemblyAI secrets.
   - Сколько времени сохранять остановленные приложения SherMos2 после подтверждённого восстановления.
 - Working set:
