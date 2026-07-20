@@ -283,3 +283,56 @@
     - COMMIT_MESSAGE.md
     - CONTINUITY.md
   notes: "Verified local and server tracked trees matched at f78def5 before writing this sync note; server retained only expected untracked env/artifact files."
+- timestamp_utc: 2026-07-20T17:20:34Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: AWS/1blu/Cloudflare production incident diagnosis
+  git_branch: main
+  git_head: 39a8ab9eaf4a981d5180246b77bd50ccdbf16c00
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Read-only diagnosis confirmed EC2 is user-stopped with no Elastic IP, AWS has no amount due, 1blu authoritative DNS points web traffic to legacy /www, Cloudflare records are currently non-authoritative, and the attached EBS root volume likely preserves the modern deployment."
+- timestamp_utc: 2026-07-20T17:40:50Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: restore SSH aliases and distinguish AWS accounts
+  git_branch: main
+  git_head: 39a8ab9eaf4a981d5180246b77bd50ccdbf16c00
+  touched_files:
+    - /Users/mosesvasilenko/.ssh/config
+    - AGENTS.md
+    - AGENT_LOG.md
+    - CONTINUITY.md
+  notes: "Verified new IP 3.121.233.244 accepts shermos-frankfurt-2.pem and belongs to the SherMos2 finance server, not the music-school server. Updated aws-shermos2-frankfurt, restored aws-shermos1-frankfurt to its original IP/key mapping, and identified the need to switch to the correct AWS account to recover the actual site server."
+- timestamp_utc: 2026-07-20T17:55:47Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: plan emergency migration to SherMos2
+  git_branch: main
+  git_head: 39a8ab9eaf4a981d5180246b77bd50ccdbf16c00
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Architecture-only planning: confirmed SherMos2 capacity, port/storage conflicts, missing production secrets, and proposed snapshot-first deployment with fast 1blu A-record cutover followed by a separate Cloudflare migration. No server, DNS, or Cloudflare mutations were performed."
+- timestamp_utc: 2026-07-20T18:35:25Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: emergency production restoration to SherMos2 and Cloudflare
+  git_branch: main
+  git_head: 39a8ab9eaf4a981d5180246b77bd50ccdbf16c00
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Created snap-0378a5fa71981ed04 before stopping existing SherMos2 containers; deployed music_school_app from updated GitHub main, attached EIP 63.186.147.213, switched only 1blu web A records, issued Lets Encrypt TLS, created Cloudflare zone with preserved mail/MX/SPF/DKIM records, enabled Full (strict), and submitted nameserver delegation to felipe.ns.cloudflare.com/frida.ns.cloudflare.com. Registrar propagation remains pending."

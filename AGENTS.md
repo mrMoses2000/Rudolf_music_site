@@ -40,7 +40,7 @@ Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The l
 - Working set files ids commands
 
 ## Agent Stamp (обновляется агентом)
-Last agent stamp: 2026-07-05T17:59:44Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=local and server sync verification
+Last agent stamp: 2026-07-20T18:35:25Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=emergency migration to SherMos2 and Cloudflare
 
 ## Базовые правила
 - **Язык общения: только русский.**

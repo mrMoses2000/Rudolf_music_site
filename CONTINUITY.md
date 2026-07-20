@@ -1,121 +1,44 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-05T17:59:44Z
-- Last Agent Stamp: 2026-07-05T17:59:44Z | GPT-5 (Codex) | account=unknown (см. `AGENT_LOG.md`)
+- Last Updated (UTC): 2026-07-20T18:35:25Z
+- Last Agent Stamp: 2026-07-20T18:35:25Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
-  - Реализовать исправления после диагностики: мигрировать Telegram-бота с Gemini CLI на Codex CLI, сделать webhook устойчивым к renew TLS, починить проверки сайта и форму.
-  - Добавить текст из `/Users/mosesvasilenko/Downloads/Bühne frei. Abschlussprüfung.docx` в `Aktuelles` через `site/src/data/content.js`.
-  - Добавить доступ к Telegram-боту для номеров `+49 1577 6346909` и `+49 163 1595757` максимально безопасно с учётом ограничений Bot API.
-  - Проверить локально и на сервере: build/lint/typecheck, webhook health, Codex smoke, deploy/service status.
+  - Срочно восстановить актуальную React/Vite-версию `musikschule-cms-bielefeld.de` на доступном EC2 `SherMos2`, сохранить 1blu-почту и передать DNS-управление новому Cloudflare-аккаунту.
+  - Success: публичный сайт и `www` работают через HTTPS/Cloudflare на новом origin; MX/SPF/DKIM/mail не изменены; старые приложения не уничтожены.
 - Constraints/Assumptions:
-  - Follow AGENTS.md; content source of truth is `music_site_copy/`; edit text/images via `site/src/data/content.js`.
-  - Language rule: communicate in Russian.
-  - Sandbox: danger-full-access; network enabled; approval_policy never.
-  - SSH доступ: `ssh aws-shermos1-frankfurt`; сервер Ubuntu 24.04 AWS.
-  - Codex CLI установлен на сервере, но не попадает в обычный PATH; рабочий путь: `/home/ubuntu/.nvm/versions/node/v24.14.1/bin/codex`.
-  - DOCX файл существует в Downloads.
-  - Telegram Bot API не даёт найти user_id по номеру телефона; номера можно использовать только через flow "пользователь делится контактом -> бот сохраняет user_id".
-  - Key decisions:
-  - Используем `SmartImage` + WebP (`imageVariants`) для всех изображений.
-  - В `run.sh` встроены certbot, cron‑продление и генерация nginx.conf с HTTPS.
-  - В nginx включены gzip и cache headers для `/assets` и `/images`.
-  - Контент 1:1 сверяется с `music_site_copy/` и переносится через `content.js`.
-  - AVIF предпочтителен, WebP используется как fallback.
-  - В верхнем меню оставить "Unsere Standorte", убрать AGB/Impressum и оставить их в футере.
-  - Миграция CLI сохраняет существующий flow подтверждения через git diff; Codex запускается из `site/` с вложенным `site/AGENTS.md`, чтобы ограничить Telegram-автоматизацию только runtime-файлами сайта.
+  - Язык общения и коммитов — русский. Контент — `site/src/data/content.js`; source of truth — `music_site_copy/`.
+  - Не удалять старые данные SherMos2: перед вмешательством создан EBS snapshot.
+  - Production secrets отсутствуют в Git: Web3Forms и Telegram/Codex bot нельзя считать восстановленными без отдельных секретов.
+- Key decisions:
+  - Современный сайт — SPA React/Vite в Docker/nginx; WordPress/MySQL из webspace 1blu к нему не относятся.
+  - Временный/новый origin: EC2 `i-0faf9efc1b3f85145` (Frankfurt), EIP `63.186.147.213`; доступ `ssh aws-shermos2-frankfurt`.
+  - Почта остаётся на 1blu (`mail`/MX/SPF/DKIM/autoconfig), в Cloudflare эти записи DNS-only. Веб `@` и `www` проксируются Cloudflare.
+  - Cloudflare origin encryption — Full (strict); сертификат Let’s Encrypt выпущен на origin.
 - State:
   - Done:
-    - Коммит: `ui: поменяли местами логотип и текст`.
-    - В шапке добавлен пункт "Unsere Standorte", AGB/Impressum убраны из верхнего меню (desktop + mobile).
-    - Обновлен контент `pages.standorte` под 3 адреса клиента.
-    - Исправлен синтаксис строк адресов в `site/src/data/content.js` (переносы строки через `\n`).
-    - Страница `/standorte` переведена на карточки адресов (grid).
-    - Убрано дублирование заголовка "Unsere Standorte" на странице.
-    - Исправлен ключ Web3Forms в `Contact.jsx` (VITE_WEB3FORMS_KEY с fallback) и добавлены статусы отправки.
-    - Синхронизация контента с легаси, исправления блоков/страниц.
-    - Перевод всех изображений на WebP и удаление дублей PNG/JPG.
-    - Автоматизация HTTPS в `run.sh` (certbot + cron + 80→443).
-    - Добавлены `SSL_GUIDE.md` и `SSL_OS_DEEP_DIVE.md`.
-    - Сильно уменьшены большие WebP (макс. 2560px, q=72), восстановлены `Cajon.webp`/`Keyboard.webp`, обновлены размеры в `imageVariants`.
-    - Удалены Musikkurse (страница/контент/кнопка/изображения) по просьбе клиента.
-    - Добавлен lazy‑loading страниц через `React.lazy` и `Suspense` вокруг `Outlet`.
-    - Добавлены preconnect к Google Fonts и корректный preload WebP hero в `index.html`.
-    - Добавлены srcset‑варианты 512/768/1024 для карточек категорий и подключены `useSrcSet`/`sizes` на главной и Offer.
-    - Встроен `LazyYouTube` (ленивая подгрузка iframe по клику) для снижения начальной нагрузки JS.
-    - Исправлены ссылки на устаревшие `.png` в `content.js` на `.webp`.
-    - Подключены self‑host шрифты Inter/Outfit/Libre Baskerville (woff2) и убран Google Fonts import.
-    - Добавлены уменьшенные WebP‑варианты для hero/карточек (Offer/Kunst/Contact/About) и расширены srcset‑списки.
-    - В Kunst‑галерее включены `useSrcSet` + `sizes` для более лёгких превью.
-    - Агрессивно пересжаты WebP (q=60) и уменьшены 2560px базы до 1920px, добавлены/обновлены 768/512 варианты и srcset для header‑изображений и JeKits.
-    - Агрессивно пересжаты карточки (q=50) и включён eager‑loading для ключевых карточек на главной и Offer.
-    - Добавлены AVIF‑варианты и srcset для всех ключевых изображений, SmartImage теперь отдаёт AVIF→WebP.
-    - Включён `content-visibility: auto` для тяжёлых секций и длительный кэш для `/fonts` в nginx.
-    - Прелоад AVIF‑карточек на главной и в Offer, карточки переведены на eager + high priority.
-    - Добавлены meta description, `robots.txt` и `sitemap.xml` для SEO.
-    - Добавлен подробный разбор TLS/сертификатов и роли Cloudflare: `TLS_CERT_UNDER_THE_HOOD.md`.
-    - Повышено качество hero‑изображений (WebP/AVIF) и апскейлнут низкокачественный снимок на JeKits.
-    - Ещё повышено качество hero‑изображений (WebP 75 / AVIF 60) и улучшено превью YouTube (srcset).
-    - Апскейл JeKits‑фото до 1400px и обновление его srcset‑вариантов.
-    - Переведён Web3Forms ключ и адрес получателя в переменные окружения (VITE_WEB3FORMS_KEY, VITE_WEB3FORMS_TO_EMAIL).
-    - Обновлены все .md документы проекта под текущее состояние (AGENTS/README/Info/SSL).
-    - Переписаны гайды по TLS/криптографии с математикой и ОС (SSL_GUIDE/SSL_OS_DEEP_DIVE/TLS_CERT_UNDER_THE_HOOD).
-    - Добавлен раздел Cloudflare (шаг‑за‑шагом) в README.
-    - В `TLS_CERT_UNDER_THE_HOOD.md` добавлено краткое введение в теорию групп и полей.
-    - Добавлены гайды: `DNS_TLS_CERTS_DEEP_DIVE.md`, `BROWSER_UNDER_THE_HOOD.md`, `NGINX_UNDER_THE_HOOD.md`.
-    - Расширен `SSL_OS_DEEP_DIVE.md` (структуры ядра, RX/TX путь, AEAD, page cache).
-    - Обновлён `AGENTS.md` с протоколом индексирования и инфраструктурой.
-    - Добавлены `AGENT_LOG.md` и `COMMIT_MESSAGE.md` для синхронизации агентов и подготовки коммитов.
-    - В `AGENTS.md` добавлены Agent Stamp и протокол синхронизации агентов.
-    - В `AGENTS.md` введены поля session_id и правило первого входа; обновлён формат `AGENT_LOG.md`.
-    - Добавлен `INDEX_REPORT.md` с полным списком файлов и правилами пересоздания.
-    - Добавлен `scripts/generate_index_report.sh` для автоматической генерации INDEX_REPORT.
-    - Добавлена папка `future/` с шаблонами документов для новых проектов.
-    - Добавлен `future/USAGE.md` с инструкцией по применению шаблонов.
-    - В `scripts/generate_index_report.sh` добавлен авто‑выбор пути `meta/INDEX_REPORT.md` при наличии папки `meta/`.
-    - Шаблоны перенесены в `future/meta/`, добавлен `future/scripts/generate_index_report.sh`.
-    - Обновлён `AGENTS.md` с правилом расположения служебных md файлов.
-    - Обновлены правила Continuity Ledger в `AGENTS.md` и `future/meta/AGENTS.md`.
-    - Добавлена политика использования чата в `AGENTS.md` и `future/meta/AGENTS.md`.
-    - Обновлён `future/USAGE.md` под копирование файлов в корень нового проекта.
-    - Добавлено правило русского языка для коммитов в `AGENTS.md` и `future/meta/AGENTS.md`.
-    - Локальный `main` синхронизирован fast-forward с серверным `main` до `c31662f`; серверные правки `TG Bot:*` сохранены.
-    - `Aktuelles` обновлён текстом из `/Users/mosesvasilenko/Downloads/Bühne frei. Abschlussprüfung.docx`.
-    - Telegram-бот переведён с Gemini CLI на Codex CLI (`services/telegram-bot/src/codex.ts`), старый `gemini.ts` удалён.
-    - Добавлен Telegram phone self-authorization через contact sharing: `+49 1577 6346909` и `+49 163 1595757` настроены в `TELEGRAM_ALLOWED_PHONES` на сервере.
-    - Добавлена таблица SQLite `authorized_users` и общий auth-layer для сообщений и callback-кнопок.
-    - Добавлен `site/AGENTS.md` для ограничения Codex, запущенного ботом из `site/`.
-    - Исправлен Web3Forms false-success fallback: успех показывается только при успешном ответе API.
-    - Исправлены lint-предупреждения/ошибки и npm audit: React Router lock обновлён до 7.18.1, `tsx` до 4.23.0 / `esbuild` до 0.28.1.
-    - `run.sh` обновлён: renew script перезапускает `musikschule-tg-bot.service`; Docker build больше не печатает `VITE_*` значения в build step.
-    - Локально прошли: `site npm run lint`, `site npm run build`, `site npm audit`, `telegram-bot npm run typecheck`, `telegram-bot npm audit`.
-    - На сервере прошли: `site npm run lint`, `site npm run build`, `site npm audit`, `telegram-bot npm run typecheck`, `telegram-bot npm audit`.
-    - Production deploy выполнен через `./run.sh`; `music_school_app` running, `musikschule-tg-bot.service` active.
-    - Проверены production routes `/`, `/aktuelles`, `/contact`, `/offer`, `/fees`, `/standorte`, `/impressum` -> HTTP 200.
-    - Проверены bot `/health`, external `:8443/health`, webhook POST с secret header, Codex smoke через `runCodex()`, phone-auth smoke с временным `DB_PATH`.
-  - Infra:
-    - Сервер: Ubuntu VPS, деплой через Docker (`./run.sh`).
-    - Домены: `musikschule-cms-bielefeld.de` и `www` → A‑записи на IP сервера.
-    - HTTPS: certbot + cron, сертификаты в `/etc/letsencrypt/live/<domain>/`.
-    - nginx: HTTP/2, gzip, cache headers для `/assets`, `/images`, `/fonts`.
-    - Cloudflare — опционально (HTTP/3, Brotli, edge‑cache).
-  - Performance/UX:
-    - Изображения: AVIF/WebP + `srcSet`, preload для hero/карточек, eager для ключевых карточек.
-    - Видео: ленивый YouTube (LazyYouTube) для снижения TBT.
-    - Self‑host шрифты (woff2), долгий кэш для `/fonts`.
-  - SEO:
-    - `robots.txt`, `sitemap.xml`, `meta description` в `site/index.html`.
+    - Выполнен полный аудит: старая версия обслуживалась с 1blu `/www` / `178.254.0.76`; она независима от актуального SPA на старом AWS.
+    - Локальный `main` (`39a8ab9`) отправлен в GitHub; серверный клон `/home/ubuntu/Rudolf_music_site` обновлён fast-forward до него.
+    - Создан EBS snapshot `snap-0378a5fa71981ed04` (root `vol-0950920e29474c488`) до миграции.
+    - Прежние контейнеры SherMos2 остановлены с restart=no и сохранены; inspect сохранён в `/home/ubuntu/pre-music-school-containers-2026-07-20.json`.
+    - Созданы 1 GiB swap, очищен только Docker build-cache; пользовательские тома и образы сохранены.
+    - Веб-сайт развёрнут `./run.sh`: контейнер `music_school_app` слушает только 80/443; все SPA-маршруты дают HTTP 200 напрямую на новом origin.
+    - Elastic IP `63.186.147.213` выделен и привязан к инстансу; обновлён SSH alias `aws-shermos2-frankfurt`.
+    - В 1blu изменены только A-записи `@` и `www` на `63.186.147.213`; почтовые записи не менялись.
+    - Выпущен сертификат Let’s Encrypt для `musikschule-cms-bielefeld.de`, срок до 2026-10-18; настроен cron renewal.
+    - В новом Cloudflare account создана зона `musikschule-cms-bielefeld.de`, перенесены A, CNAME, MX, SPF и DKIM; Full (strict) включён.
+    - В 1blu отправлена смена authoritative nameservers на `felipe.ns.cloudflare.com` и `frida.ns.cloudflare.com`; панель 1blu ещё показывает асинхронную обработку.
   - Now:
-    - Пользователь попросил синхронизировать локальный проект и сервер перед передачей инструкции заказчику.
-    - Проверено: локальный и серверный tracked `main` совпадали на `f78def5`; сервер имел только ожидаемые untracked `.env`, `site/.env`, `photo.jpg`, `music_school_site/`.
+    - Ожидается публикация NS у регистратора: пока авторитетны `ns01.1blu.de`/`ns02.1blu.de`; Cloudflare показывает `Waiting for your registrar to propagate your new nameservers`.
+    - HTTPS origin и маршруты проверены напрямую с `--resolve`; на сервере открыты только SSH, 80 и 443 на уровне процессов.
   - Next:
-    - Зафиксировать sync-note commit на сервере и локально.
-    - Сообщить пользователю итоговый hash и что можно говорить заказчику.
-
-- Open questions (UNCONFIRMED if needed):
-  - UNCONFIRMED: написание адреса "Kleebrink" vs "Kleebring".
-  - UNCONFIRMED: оставить AGB/Impressum в мобильном меню или тоже убрать.
-  - UNCONFIRMED: нужно ли пушить серверные коммиты обратно в `origin/main` до дальнейшей разработки.
-  - Working set (files/ids/commands):
-  - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `INDEX_REPORT.md`, `COMMIT_MESSAGE.md`, `services/telegram-bot/`, `site/`.
-  - Commands: `git fetch ssh://aws-shermos1-frankfurt/home/ubuntu/Rudolf_music_site main:refs/remotes/server/main`, `git merge --ff-only server/main`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm audit`, `ssh aws-shermos1-frankfurt`, `systemctl restart musikschule-tg-bot.service`, `./run.sh`, `codex exec`, `curl https://musikschule-cms-bielefeld.de:8443/health`.
+    - Дождаться делегации на NS Cloudflare, подтвердить активность зоны, Cloudflare headers и публичный HTTPS для apex/www; проверить MX, SPF и DKIM через авторитетный DNS.
+    - Восстановить `VITE_WEB3FORMS_KEY`/`VITE_WEB3FORMS_TO_EMAIL` и отдельно Telegram/Codex bot, когда найдутся секреты.
+    - После стабилизации сузить AWS security group (убрать неиспользуемые ingress 3000/8080/9443; SSH ограничивать только после фиксации допустимого IP).
+- Open questions (UNCONFIRMED):
+  - Когда 1blu завершит смену NS (обычно минуты–часы; Cloudflare допускает до 24 часов).
+  - Где безопасно хранятся актуальные Web3Forms и Telegram/AssemblyAI secrets.
+  - Сколько времени сохранять остановленные приложения SherMos2 после подтверждённого восстановления.
+- Working set:
+  - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `COMMIT_MESSAGE.md`, `site/`, `run.sh`.
+  - IDs/commands: `i-0faf9efc1b3f85145`, `eipalloc-0a6d6f78c4c34eddb`, `snap-0378a5fa71981ed04`, `ssh aws-shermos2-frankfurt`, `./run.sh`, `dig NS musikschule-cms-bielefeld.de`.
