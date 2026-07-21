@@ -40,7 +40,7 @@ Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The l
 - Working set files ids commands
 
 ## Agent Stamp (обновляется агентом)
-Last agent stamp: 2026-07-20T18:40:20Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=completed emergency migration to SherMos2 and Cloudflare
+Last agent stamp: 2026-07-21T17:32:40Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=prepare Telegram editor runtime and AWS domain migration
 
 ## Базовые правила
 - **Язык общения: только русский.**

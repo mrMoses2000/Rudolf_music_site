@@ -348,3 +348,17 @@
     - AGENT_LOG.md
     - CONTINUITY.md
   notes: "Cloudflare confirmed active protection. Public NS resolve to felipe.ns.cloudflare.com and frida.ns.cloudflare.com. Direct Cloudflare edge probes for apex and www returned HTTP 200 with server: cloudflare/cf-ray; mail A, MX, SPF and DKIM records were verified unchanged."
+- timestamp_utc: 2026-07-21T17:32:40Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: prepare Telegram editor runtime and plan Route 53 migration
+  git_branch: main
+  git_head: 46824c5
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Added four normalized phone entries to protected server env, generated a webhook secret, installed ffmpeg and bot dependencies, passed typecheck/audit/HTTPS health/Codex/GitHub SSH checks, and prepared a disabled systemd unit. Confirmed Telegram and AssemblyAI keys plus old SQLite DB are absent on accessible hosts. Researched Route 53 .de transfer, Amazon Transcribe, SES mailbox limitations, and WorkMail end-of-support."

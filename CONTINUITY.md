@@ -1,43 +1,46 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-20T18:40:20Z
-- Last Agent Stamp: 2026-07-20T18:40:20Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-07-21T17:32:40Z
+- Last Agent Stamp: 2026-07-21T17:32:40Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
-  - Срочно восстановить актуальную React/Vite-версию `musikschule-cms-bielefeld.de` на доступном EC2 `SherMos2`, сохранить 1blu-почту и передать DNS-управление новому Cloudflare-аккаунту.
-  - Success: публичный сайт и `www` работают через HTTPS/Cloudflare на новом origin; MX/SPF/DKIM/mail не изменены; старые приложения не уничтожены.
+  - Восстановить Telegram-редактор на `SherMos2`: четыре разрешённых телефона, Telegram webhook, Codex-редактирование, подтверждение diff и голосовая транскрибация.
+  - Спроектировать полный уход от 1blu: перенос `.de`-регистратора, DNS, почты и стабильный AWS runtime без простоя.
+  - Success: env/runtime подготовлены без раскрытия секретов; доступные интеграции проверены; блокирующие ключи и провайдеры названы; перенос домена разделён на обратимые фазы.
 - Constraints/Assumptions:
-  - Язык общения и коммитов — русский. Контент — `site/src/data/content.js`; source of truth — `music_site_copy/`.
-  - Не удалять старые данные SherMos2: перед вмешательством создан EBS snapshot.
-  - Production secrets отсутствуют в Git: Web3Forms и Telegram/Codex bot нельзя считать восстановленными без отдельных секретов.
+  - Язык общения и коммитов — русский. Контент сайта — `site/src/data/content.js`.
+  - Значения secrets не выводятся в терминал/чат; проверяются только наличие, формат и API-ответы.
+  - Текущий production DNS/почта не меняются до отдельной согласованной фазы миграции.
+  - Перед каждым нетривиальным выполнением сначала обновлять `functions.update_plan` и этот ledger; план сохраняется через сжатие контекста.
 - Key decisions:
-  - Современный сайт — SPA React/Vite в Docker/nginx; WordPress/MySQL из webspace 1blu к нему не относятся.
-  - Временный/новый origin: EC2 `i-0faf9efc1b3f85145` (Frankfurt), EIP `63.186.147.213`; доступ `ssh aws-shermos2-frankfurt`.
-  - Почта остаётся на 1blu (`mail`/MX/SPF/DKIM/autoconfig), в Cloudflare эти записи DNS-only. Веб `@` и `www` проксируются Cloudflare.
-  - Cloudflare origin encryption — Full (strict); сертификат Let’s Encrypt выпущен на origin.
+  - Текущий Telegram flow: webhook → self-contact auth → SQLite user_id → Codex CLI → разрешённый git diff → подтверждение → commit/rebuild.
+  - Минимальное восстановление транскрибации использует AssemblyAI; вариант полной AWS-консолидации — Amazon Transcribe + EC2 IAM role, без долгоживущего API key.
+  - Практичный уход от 1blu: перенести регистрацию `.de` в Route 53, а DNS можно временно оставить в бесплатном Cloudflare. Полный AWS DNS требует Route 53/CloudFront или прямого EC2 origin.
+  - Amazon WorkMail не выбран: AWS объявил завершение поддержки 2027-03-31. SES не является обычным IMAP/POP mailbox.
 - State:
   - Done:
-    - Выполнен полный аудит: старая версия обслуживалась с 1blu `/www` / `178.254.0.76`; она независима от актуального SPA на старом AWS.
-    - Локальный `main` (`39a8ab9`) отправлен в GitHub; серверный клон `/home/ubuntu/Rudolf_music_site` обновлён fast-forward до него.
-    - Создан EBS snapshot `snap-0378a5fa71981ed04` (root `vol-0950920e29474c488`) до миграции.
-    - Прежние контейнеры SherMos2 остановлены с restart=no и сохранены; inspect сохранён в `/home/ubuntu/pre-music-school-containers-2026-07-20.json`.
-    - Созданы 1 GiB swap, очищен только Docker build-cache; пользовательские тома и образы сохранены.
-    - Веб-сайт развёрнут `./run.sh`: контейнер `music_school_app` слушает только 80/443; все SPA-маршруты дают HTTP 200 напрямую на новом origin.
-    - Elastic IP `63.186.147.213` выделен и привязан к инстансу; обновлён SSH alias `aws-shermos2-frankfurt`.
-    - В 1blu изменены только A-записи `@` и `www` на `63.186.147.213`; почтовые записи не менялись.
-    - Выпущен сертификат Let’s Encrypt для `musikschule-cms-bielefeld.de`, срок до 2026-10-18; настроен cron renewal.
-    - В новом Cloudflare account создана зона `musikschule-cms-bielefeld.de`, перенесены A, CNAME, MX, SPF и DKIM; Full (strict) включён.
-    - Делегация в 1blu завершена на `felipe.ns.cloudflare.com` и `frida.ns.cloudflare.com`; Cloudflare подтвердил, что домен защищён и проксируется.
-    - Проверены публичные NS, Cloudflare HTTPS (HTTP 200, `server: cloudflare`, `cf-ray`) и DNS-записи почты.
+    - Production сайта восстановлен на EC2 `i-0faf9efc1b3f85145`, EIP `63.186.147.213`; Cloudflare активен, почта пока на 1blu.
+    - На SherMos2 создан backup `/etc/music_school.env.bak-20260721-172210`; основной `/etc/music_school.env` сохранён как `root:ubuntu`, mode `640`.
+    - В `TELEGRAM_ALLOWED_PHONES` добавлены четыре нормализованных номера; новый `TELEGRAM_WEBHOOK_SECRET` сгенерирован, но не раскрыт.
+    - Подготовлены остальные env-пути; `TRANSCRIPTION_LANGUAGE=auto`; `TELEGRAM_BOT_TOKEN` и `ASSEMBLYAI_API_KEY` оставлены пустыми как реальные блокеры.
+    - Установлен ffmpeg; Node 20/npm найдены; `npm ci`, `npm audit` (0 vulnerabilities) и `npm run typecheck` прошли.
+    - Создан `/etc/systemd/system/musikschule-tg-bot.service`; unit оставлен disabled/inactive до добавления ключей.
+    - Локальный HTTPS smoke на временном порту прошёл: `/health` → ok, загружены 4 phone entries; порт после теста закрыт.
+    - Codex CLI под `ubuntu` авторизован через ChatGPT; root-wrapper `/usr/local/bin/music-school-codex` проверен; read-only Codex smoke → `OK`.
+    - GitHub SSH пользователя `ubuntu` проверен для `mrMoses2000`; server worktree чистый.
+    - Старый SherMos1 по SSH недоступен; на SherMos2, локально и в Git не найдено копий Telegram/AssemblyAI secrets или прежней SQLite DB.
+    - Подтверждено официальной документацией: Route 53 поддерживает регистрацию/transfer `.de`; нужен AuthInfo, доступ к registrant email и немецкий resident/admin contact; DNS должен пройти DENIC zone check.
   - Now:
-    - Production восстановлен: authoritative DNS — Cloudflare; HTTPS origin и SPA-маршруты проверены напрямую, Cloudflare-edge проверен отдельно.
-    - На сервере на уровне процессов открыты только SSH, 80 и 443. У старых публичных DNS-кэшей может кратко сохраняться прежняя A-запись, но она уже указывает на тот же новый origin.
+    - Telegram runtime подготовлен, но намеренно не запущен без настоящего `TELEGRAM_BOT_TOKEN`; голос выключен без `ASSEMBLYAI_API_KEY` или реализации Amazon Transcribe.
   - Next:
-    - Восстановить `VITE_WEB3FORMS_KEY`/`VITE_WEB3FORMS_TO_EMAIL` и отдельно Telegram/Codex bot, когда найдутся секреты.
-    - После стабилизации сузить AWS security group (убрать неиспользуемые ingress 3000/8080/9443; SSH ограничивать только после фиксации допустимого IP).
+    - Владелец добавляет Telegram token и выбирает AssemblyAI (быстро) либо Amazon Transcribe (полная AWS-консолидация).
+    - После ключей: проверить API без раскрытия, enable/start service, зарегистрировать webhook, выполнить self-contact auth и реальный voice smoke.
+    - Отдельно выбрать почтового провайдера, затем мигрировать `.de`-регистратора и только после проверки отменить контракт 1blu.
 - Open questions (UNCONFIRMED):
-  - Где безопасно хранятся актуальные Web3Forms и Telegram/AssemblyAI secrets.
-  - Сколько времени сохранять остановленные приложения SherMos2 после подтверждённого восстановления.
+  - Есть ли доступ к текущему боту в `@BotFather` и к прежнему AssemblyAI account; иначе нужно выпустить новые ключи.
+  - Нужен ли клиенту полноценный mailbox `info@...`; если да, какой провайдер предпочтителен: Google Workspace, Microsoft 365, mailbox.org или другой.
+  - Выбирать ли быстрый AssemblyAI restore или сразу реализовать Amazon Transcribe с IAM role/S3 lifecycle.
 - Working set:
-  - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `COMMIT_MESSAGE.md`, `site/`, `run.sh`.
-  - IDs/commands: `i-0faf9efc1b3f85145`, `eipalloc-0a6d6f78c4c34eddb`, `snap-0378a5fa71981ed04`, `ssh aws-shermos2-frankfurt`, `./run.sh`, `dig NS musikschule-cms-bielefeld.de`.
+  - Files: `AGENTS.md`, `AGENT_LOG.md`, `CONTINUITY.md`, `COMMIT_MESSAGE.md`, `INDEX_REPORT.md`, `services/telegram-bot/`.
+  - Server: `/etc/music_school.env`, `/etc/systemd/system/musikschule-tg-bot.service`, `/usr/local/bin/music-school-codex`.
+  - Commands: `ssh aws-shermos2-frankfurt`, `systemctl status musikschule-tg-bot`, `npm run typecheck`, `codex login status`.
