@@ -75,7 +75,7 @@ async function submitJob(uploadUrl: string): Promise<string> {
       : { language_code: language }),
     punctuate: true,
     format_text: true,
-    speech_models: ['universal'],
+    speech_models: ['universal-3-5-pro', 'universal-2'],
   });
   const res = await apiRequest('POST', '/v2/transcript', body);
   if (res.error) throw new Error(`AssemblyAI submit: ${res.error}`);

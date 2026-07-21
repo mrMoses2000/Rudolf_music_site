@@ -1,13 +1,15 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-21T17:32:40Z
-- Last Agent Stamp: 2026-07-21T17:32:40Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-07-21T17:55:31Z
+- Last Agent Stamp: 2026-07-21T17:55:31Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
+  - Текущая фаза: безопасно проверить добавленные Telegram/AssemblyAI ключи, запустить Telegram-редактор, зарегистрировать webhook и проверить реальную транскрибацию.
   - Восстановить Telegram-редактор на `SherMos2`: четыре разрешённых телефона, Telegram webhook, Codex-редактирование, подтверждение diff и голосовая транскрибация.
   - Спроектировать полный уход от 1blu: перенос `.de`-регистратора, DNS, почты и стабильный AWS runtime без простоя.
   - Success: env/runtime подготовлены без раскрытия секретов; доступные интеграции проверены; блокирующие ключи и провайдеры названы; перенос домена разделён на обратимые фазы.
 - Constraints/Assumptions:
+  - В этой фазе не менять AWS-регистратора, DNS и схему размещения домена; переход на Amazon отложен по прямому указанию владельца.
   - Язык общения и коммитов — русский. Контент сайта — `site/src/data/content.js`.
   - Значения secrets не выводятся в терминал/чат; проверяются только наличие, формат и API-ответы.
   - Текущий production DNS/почта не меняются до отдельной согласованной фазы миграции.
@@ -31,10 +33,11 @@
     - Старый SherMos1 по SSH недоступен; на SherMos2, локально и в Git не найдено копий Telegram/AssemblyAI secrets или прежней SQLite DB.
     - Подтверждено официальной документацией: Route 53 поддерживает регистрацию/transfer `.de`; нужен AuthInfo, доступ к registrant email и немецкий resident/admin contact; DNS должен пройти DENIC zone check.
   - Now:
-    - Telegram runtime подготовлен, но намеренно не запущен без настоящего `TELEGRAM_BOT_TOKEN`; голос выключен без `ASSEMBLYAI_API_KEY` или реализации Amazon Transcribe.
+    - Владелец сообщил, что Telegram/AssemblyAI токены добавлены; требуется проверить их без вывода значений и активировать подготовленный runtime.
   - Next:
-    - Владелец добавляет Telegram token и выбирает AssemblyAI (быстро) либо Amazon Transcribe (полная AWS-консолидация).
-    - После ключей: проверить API без раскрытия, enable/start service, зарегистрировать webhook, выполнить self-contact auth и реальный voice smoke.
+    - Проверить Telegram `getMe` и AssemblyAI API, затем enable/start service, проверить health и webhook.
+    - Выполнить сквозной voice smoke; после этого владелец проходит self-contact auth в Telegram.
+    - К Amazon-регистрации и DNS вернуться отдельной фазой после подтверждения владельца.
     - Отдельно выбрать почтового провайдера, затем мигрировать `.de`-регистратора и только после проверки отменить контракт 1blu.
 - Open questions (UNCONFIRMED):
   - Есть ли доступ к текущему боту в `@BotFather` и к прежнему AssemblyAI account; иначе нужно выпустить новые ключи.
