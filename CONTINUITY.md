@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-21T17:55:31Z
-- Last Agent Stamp: 2026-07-21T17:55:31Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-07-21T18:03:05Z
+- Last Agent Stamp: 2026-07-21T18:03:05Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Текущая фаза: безопасно проверить добавленные Telegram/AssemblyAI ключи, запустить Telegram-редактор, зарегистрировать webhook и проверить реальную транскрибацию.
@@ -32,15 +32,21 @@
     - GitHub SSH пользователя `ubuntu` проверен для `mrMoses2000`; server worktree чистый.
     - Старый SherMos1 по SSH недоступен; на SherMos2, локально и в Git не найдено копий Telegram/AssemblyAI secrets или прежней SQLite DB.
     - Подтверждено официальной документацией: Route 53 поддерживает регистрацию/transfer `.de`; нужен AuthInfo, доступ к registrant email и немецкий resident/admin contact; DNS должен пройти DENIC zone check.
+    - Добавленные Telegram/AssemblyAI secrets проверены без раскрытия: Telegram `getMe` → HTTP 200 для `@music_site_admin_bot`, AssemblyAI list API → HTTP 200.
+    - `musikschule-tg-bot.service` включён и активен; локальный HTTPS health успешен, порт `0.0.0.0:8443` слушается, загружены 4 phone-auth entries.
+    - Сквозной voice smoke выявил снятую с поддержки модель `universal`; код обновлён на `universal-3-5-pro` с fallback `universal-2`, typecheck прошёл, commit `2cf7dd4` запушен и развёрнут.
+    - Повторный сквозной тест `ffmpeg → AssemblyAI upload/submit/poll → text` успешен: непустой текст, 4951 символ, 26 секунд.
+    - Telegram уже хранит правильный webhook URL `https://musikschule-cms-bielefeld.de:8443/api/telegram/webhook`, pending updates 0, last error отсутствует.
   - Now:
-    - Владелец сообщил, что Telegram/AssemblyAI токены добавлены; требуется проверить их без вывода значений и активировать подготовленный runtime.
+    - Публичный health через Cloudflare возвращает 522, прямой origin `63.186.147.213:8443` timeout; UFW выключен, значит EC2 Security Group `sg-09a42c558c890c532` не пропускает TCP 8443.
+    - AWS Console в Chrome открыта на форме входа; требуется вход владельца и подтверждение добавления одного inbound-правила TCP 8443.
   - Next:
-    - Проверить Telegram `getMe` и AssemblyAI API, затем enable/start service, проверить health и webhook.
-    - Выполнить сквозной voice smoke; после этого владелец проходит self-contact auth в Telegram.
+    - После входа в AWS добавить inbound TCP 8443 для Cloudflare/origin, проверить публичный health и повторно установить/проверить webhook secret.
+    - После публичного health владелец проходит self-contact auth в Telegram и отправляет реальное голосовое сообщение.
     - К Amazon-регистрации и DNS вернуться отдельной фазой после подтверждения владельца.
     - Отдельно выбрать почтового провайдера, затем мигрировать `.de`-регистратора и только после проверки отменить контракт 1blu.
 - Open questions (UNCONFIRMED):
-  - Есть ли доступ к текущему боту в `@BotFather` и к прежнему AssemblyAI account; иначе нужно выпустить новые ключи.
+  - Подтвердит ли владелец добавление inbound TCP 8443 в `sg-09a42c558c890c532` после входа в AWS Console.
   - Нужен ли клиенту полноценный mailbox `info@...`; если да, какой провайдер предпочтителен: Google Workspace, Microsoft 365, mailbox.org или другой.
   - Выбирать ли быстрый AssemblyAI restore или сразу реализовать Amazon Transcribe с IAM role/S3 lifecycle.
 - Working set:

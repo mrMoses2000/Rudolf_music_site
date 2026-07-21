@@ -362,3 +362,18 @@
     - CONTINUITY.md
     - INDEX_REPORT.md
   notes: "Added four normalized phone entries to protected server env, generated a webhook secret, installed ffmpeg and bot dependencies, passed typecheck/audit/HTTPS health/Codex/GitHub SSH checks, and prepared a disabled systemd unit. Confirmed Telegram and AssemblyAI keys plus old SQLite DB are absent on accessible hosts. Researched Route 53 .de transfer, Amazon Transcribe, SES mailbox limitations, and WorkMail end-of-support."
+- timestamp_utc: 2026-07-21T18:03:05Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: verify Telegram and AssemblyAI tokens and activate editor
+  git_branch: main
+  git_head: 2cf7dd4
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+    - services/telegram-bot/src/transcribe.ts
+  notes: "Validated Telegram and AssemblyAI credentials via real API calls without exposing secrets; enabled the bot service; replaced deprecated AssemblyAI universal model with universal-3-5-pro plus universal-2 fallback; passed typecheck and end-to-end transcription. Public webhook remains blocked because EC2 security group sg-09a42c558c890c532 does not admit TCP 8443; AWS Console requires owner sign-in."
