@@ -377,3 +377,19 @@
     - INDEX_REPORT.md
     - services/telegram-bot/src/transcribe.ts
   notes: "Validated Telegram and AssemblyAI credentials via real API calls without exposing secrets; enabled the bot service; replaced deprecated AssemblyAI universal model with universal-3-5-pro plus universal-2 fallback; passed typecheck and end-to-end transcription. Public webhook remains blocked because EC2 security group sg-09a42c558c890c532 does not admit TCP 8443; AWS Console requires owner sign-in."
+- timestamp_utc: 2026-08-04T15:22:17Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: restore non-responsive Telegram editor end-to-end
+  git_branch: main
+  git_head: 4d92c5c
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+    - services/telegram-bot/src/config.ts
+    - services/telegram-bot/src/server.ts
+  notes: "Rechecked EC2, systemd, TLS, Cloudflare/origin 8443, Telegram API, env, SQLite and logs. Found zero received updates and a silent webhook-secret mismatch path. Re-registered the webhook, deployed automatic startup registration plus 403/logging for invalid secrets, passed local/server typecheck, and verified a signed synthetic update through Cloudflare to the auth and outbound Telegram API path. Real user /start and contact authorization remain pending."

@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-08-04T15:08:50Z
-- Last Agent Stamp: 2026-08-04T15:08:50Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-08-04T15:22:17Z
+- Last Agent Stamp: 2026-08-04T15:22:17Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Текущий production-инцидент: Telegram-бот фактически не отвечает; заново проверить всю цепочку до реального входящего сообщения и не считать восстановление успешным по одному локальному health.
@@ -38,15 +38,20 @@
     - Сквозной voice smoke выявил снятую с поддержки модель `universal`; код обновлён на `universal-3-5-pro` с fallback `universal-2`, typecheck прошёл, commit `2cf7dd4` запушен и развёрнут.
     - Повторный сквозной тест `ffmpeg → AssemblyAI upload/submit/poll → text` успешен: непустой текст, 4951 символ, 26 секунд.
     - Telegram уже хранит правильный webhook URL `https://musikschule-cms-bielefeld.de:8443/api/telegram/webhook`, pending updates 0, last error отсутствует.
+    - Повторная диагностика 2026-08-04: EC2 и systemd активны, TLS валиден, `8443` доступен через Cloudflare и напрямую, Telegram/AssemblyAI env присутствуют; SQLite содержала 0 пользователей и 0 сообщений.
+    - Фактический разрыв был на контракте webhook secret: URL существовал, но приложение молча отвечало HTTP 200 запросам с несовпадающим secret, поэтому Telegram не показывал ошибку, а update терялись.
+    - Webhook заново зарегистрирован с текущим server secret; Telegram API ответил `Webhook was set`.
+    - В commit `4d92c5c` добавлены автоматическая идемпотентная регистрация webhook при старте, HTTP 403/лог при неверном secret и лог принятого update; локальный и серверный typecheck прошли, commit развёрнут.
+    - Production restart успешен: `setWebhook result: true`, health ok, неподписанный POST → 403; подписанный synthetic update прошёл Cloudflare и обработчик до ожидаемой ошибки `chat not found`.
   - Now:
-    - Пользователь подтвердил, что Telegram-бот не работает вообще; прежнее восстановление считается незавершённым.
-    - Требуется повторная проверка server runtime, Telegram API/webhook, публичного endpoint, security group, логов и phone-auth state.
+    - Техническая цепочка восстановлена и проверена synthetic update, но после рестарта ещё не получен реальный пользовательский update; SQLite остаётся с 0 авторизованных пользователей.
   - Next:
-    - Установить фактическую точку отказа по API/логам, устранить её минимально и подтвердить реальным end-to-end smoke.
+    - Пользователь повторно отправляет `/start` в `@music_site_admin_bot`, нажимает `📱 Kontakt freigeben` и делится своим Telegram-контактом.
+    - После реального update проверить `[webhook] Accepted update`, запись `authorized_users` и реальное голосовое сообщение.
     - К Amazon-регистрации и DNS вернуться отдельной фазой после подтверждения владельца.
     - Отдельно выбрать почтового провайдера, затем мигрировать `.de`-регистратора и только после проверки отменить контракт 1blu.
 - Open questions (UNCONFIRMED):
-  - Подтвердит ли владелец добавление inbound TCP 8443 в `sg-09a42c558c890c532` после входа в AWS Console.
+  - Какой из четырёх разрешённых номеров привязан к Telegram-аккаунту, которым пользователь тестирует бота.
   - Нужен ли клиенту полноценный mailbox `info@...`; если да, какой провайдер предпочтителен: Google Workspace, Microsoft 365, mailbox.org или другой.
   - Выбирать ли быстрый AssemblyAI restore или сразу реализовать Amazon Transcribe с IAM role/S3 lifecycle.
 - Working set:
