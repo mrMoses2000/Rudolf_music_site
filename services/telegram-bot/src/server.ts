@@ -54,6 +54,9 @@ function startServer(): void {
     console.log(`[server] Allowed users: ${config.allowedUsers.join(', ') || 'NONE — check TELEGRAM_ALLOWED_USERS!'}`);
     console.log(`[server] Allowed phone self-auth entries: ${config.allowedPhones.length}`);
     console.log(`[server] AssemblyAI: ${config.assemblyAiKey ? 'configured ✓' : 'not set (voice disabled)'}`);
+    void bot.setWebhook(config.webhookUrl).catch((err) => {
+      console.error('[server] Failed to register Telegram webhook:', err);
+    });
   });
 
   for (const sig of ['SIGTERM', 'SIGINT'] as const) {
@@ -87,8 +90,9 @@ function handleRequest(req: IncomingMessage, res: ServerResponse): void {
 function handleWebhook(req: IncomingMessage, res: ServerResponse): void {
   const secret = req.headers['x-telegram-bot-api-secret-token'];
   if (secret !== config.webhookSecret) {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true }));
+    console.warn('[webhook] Rejected request with invalid secret token');
+    res.writeHead(403, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: false }));
     return;
   }
 
@@ -111,6 +115,8 @@ async function parseAndProcess(rawBody: string): Promise<void> {
     console.error('[webhook] Failed to parse update JSON');
     return;
   }
+
+  console.log(`[webhook] Accepted update ${update.update_id}`);
 
   if (processedIds.has(update.update_id)) return;
   processedIds.add(update.update_id);

@@ -1,9 +1,10 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-07-21T18:03:05Z
-- Last Agent Stamp: 2026-07-21T18:03:05Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-08-04T15:08:50Z
+- Last Agent Stamp: 2026-08-04T15:08:50Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
+  - Текущий production-инцидент: Telegram-бот фактически не отвечает; заново проверить всю цепочку до реального входящего сообщения и не считать восстановление успешным по одному локальному health.
   - Текущая фаза: безопасно проверить добавленные Telegram/AssemblyAI ключи, запустить Telegram-редактор, зарегистрировать webhook и проверить реальную транскрибацию.
   - Восстановить Telegram-редактор на `SherMos2`: четыре разрешённых телефона, Telegram webhook, Codex-редактирование, подтверждение diff и голосовая транскрибация.
   - Спроектировать полный уход от 1blu: перенос `.de`-регистратора, DNS, почты и стабильный AWS runtime без простоя.
@@ -38,11 +39,10 @@
     - Повторный сквозной тест `ffmpeg → AssemblyAI upload/submit/poll → text` успешен: непустой текст, 4951 символ, 26 секунд.
     - Telegram уже хранит правильный webhook URL `https://musikschule-cms-bielefeld.de:8443/api/telegram/webhook`, pending updates 0, last error отсутствует.
   - Now:
-    - Публичный health через Cloudflare возвращает 522, прямой origin `63.186.147.213:8443` timeout; UFW выключен, значит EC2 Security Group `sg-09a42c558c890c532` не пропускает TCP 8443.
-    - AWS Console в Chrome открыта на форме входа; требуется вход владельца и подтверждение добавления одного inbound-правила TCP 8443.
+    - Пользователь подтвердил, что Telegram-бот не работает вообще; прежнее восстановление считается незавершённым.
+    - Требуется повторная проверка server runtime, Telegram API/webhook, публичного endpoint, security group, логов и phone-auth state.
   - Next:
-    - После входа в AWS добавить inbound TCP 8443 для Cloudflare/origin, проверить публичный health и повторно установить/проверить webhook secret.
-    - После публичного health владелец проходит self-contact auth в Telegram и отправляет реальное голосовое сообщение.
+    - Установить фактическую точку отказа по API/логам, устранить её минимально и подтвердить реальным end-to-end smoke.
     - К Amazon-регистрации и DNS вернуться отдельной фазой после подтверждения владельца.
     - Отдельно выбрать почтового провайдера, затем мигрировать `.de`-регистратора и только после проверки отменить контракт 1blu.
 - Open questions (UNCONFIRMED):

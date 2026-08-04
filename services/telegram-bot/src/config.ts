@@ -48,6 +48,8 @@ function parseCodexSandbox(raw: string): 'read-only' | 'workspace-write' | 'dang
 }
 
 const siteRepoPath = requireEnv('SITE_REPO_PATH').replace(/\/$/, '');
+const botPort = parseInt(optionalEnv('BOT_PORT', '8443'), 10);
+const domain = optionalEnv('DOMAIN', 'musikschule-cms-bielefeld.de');
 
 export const config = {
   // ── Telegram ──────────────────────────────────────────────
@@ -66,10 +68,14 @@ export const config = {
   codexTimeoutMs: parseInt(optionalEnv('CODEX_TIMEOUT_MS', '180000'), 10),
 
   // ── HTTPS server ──────────────────────────────────────────
-  port: parseInt(optionalEnv('BOT_PORT', '8443'), 10),
+  port: botPort,
   host: optionalEnv('BOT_HOST', '0.0.0.0'),
   sslCert: optionalEnv('SSL_CERT', '/etc/letsencrypt/live/musikschule-cms-bielefeld.de/fullchain.pem'),
   sslKey: optionalEnv('SSL_KEY', '/etc/letsencrypt/live/musikschule-cms-bielefeld.de/privkey.pem'),
+  webhookUrl: optionalEnv(
+    'TELEGRAM_WEBHOOK_URL',
+    `https://${domain}:${botPort}/api/telegram/webhook`,
+  ),
 
   // ── Site ──────────────────────────────────────────────────
   siteRepoPath,
