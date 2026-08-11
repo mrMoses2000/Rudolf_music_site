@@ -40,7 +40,7 @@ Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The l
 - Working set files ids commands
 
 ## Agent Stamp (обновляется агентом)
-Last agent stamp: 2026-08-11T11:36:53Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=verify Telegram editor and AWS payment deadline
+Last agent stamp: 2026-08-11T11:41:33Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=confirm real Telegram start and guide contact authorization
 
 ## Базовые правила
 - **Язык общения: только русский.**

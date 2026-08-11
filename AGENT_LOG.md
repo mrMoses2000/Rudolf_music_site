@@ -407,3 +407,16 @@
     - CONTINUITY.md
     - INDEX_REPORT.md
   notes: "Fresh production verification: service active with zero restarts, local/public health OK, configured Telegram token matched by hash, Telegram and AssemblyAI APIs returned 200, webhook healthy with no pending/error. SQLite still has zero real users/messages, so client auth remains pending. Read-only AWS Billing check found $0 outstanding, zero payments due, pending $1.14 estimate, $25.12 monthly forecast, and $7.01 actual credit remaining. No secrets were recorded."
+- timestamp_utc: 2026-08-11T11:41:33Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: confirm real Telegram start and guide contact authorization
+  git_branch: main
+  git_head: 531a76b
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Confirmed the user's real /start in production logs: webhook accepted the update and correctly routed the unauthorized user to self-contact authorization. SQLite remains at zero authorized users/messages until the contact button is used. Confirmed bilingual DE+RU system messages are feasible; no runtime change was made."
