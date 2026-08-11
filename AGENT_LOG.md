@@ -393,3 +393,17 @@
     - services/telegram-bot/src/config.ts
     - services/telegram-bot/src/server.ts
   notes: "Rechecked EC2, systemd, TLS, Cloudflare/origin 8443, Telegram API, env, SQLite and logs. Found zero received updates and a silent webhook-secret mismatch path. Re-registered the webhook, deployed automatic startup registration plus 403/logging for invalid secrets, passed local/server typecheck, and verified a signed synthetic update through Cloudflare to the auth and outbound Telegram API path. Real user /start and contact authorization remain pending."
+- timestamp_utc: 2026-08-11T11:36:53Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: verify Telegram editor and AWS payment deadline
+  git_branch: main
+  git_head: b1bbc90
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Fresh production verification: service active with zero restarts, local/public health OK, configured Telegram token matched by hash, Telegram and AssemblyAI APIs returned 200, webhook healthy with no pending/error. SQLite still has zero real users/messages, so client auth remains pending. Read-only AWS Billing check found $0 outstanding, zero payments due, pending $1.14 estimate, $25.12 monthly forecast, and $7.01 actual credit remaining. No secrets were recorded."

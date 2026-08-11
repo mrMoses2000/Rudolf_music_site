@@ -1,9 +1,10 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-08-04T15:22:17Z
-- Last Agent Stamp: 2026-08-04T15:22:17Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-08-11T11:36:53Z
+- Last Agent Stamp: 2026-08-11T11:36:53Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
+  - Текущая проверка: подтвердить production-доступность Telegram-бота свежими данными сервера и предоставленного токена; затем read-only проверить AWS Billing — сумму, срок оплаты и риск блокировки.
   - Текущий production-инцидент: Telegram-бот фактически не отвечает; заново проверить всю цепочку до реального входящего сообщения и не считать восстановление успешным по одному локальному health.
   - Текущая фаза: безопасно проверить добавленные Telegram/AssemblyAI ключи, запустить Telegram-редактор, зарегистрировать webhook и проверить реальную транскрибацию.
   - Восстановить Telegram-редактор на `SherMos2`: четыре разрешённых телефона, Telegram webhook, Codex-редактирование, подтверждение diff и голосовая транскрибация.
@@ -43,11 +44,17 @@
     - Webhook заново зарегистрирован с текущим server secret; Telegram API ответил `Webhook was set`.
     - В commit `4d92c5c` добавлены автоматическая идемпотентная регистрация webhook при старте, HTTP 403/лог при неверном secret и лог принятого update; локальный и серверный typecheck прошли, commit развёрнут.
     - Production restart успешен: `setWebhook result: true`, health ok, неподписанный POST → 403; подписанный synthetic update прошёл Cloudflare и обработчик до ожидаемой ошибки `chat not found`.
+    - Свежая проверка 2026-08-11: SSH доступен; `musikschule-tg-bot.service` active/enabled, uptime около 6.8 суток, restart count 0; локальный и публичный `/health` успешны, `0.0.0.0:8443` слушается.
+    - Предоставленный владельцем token совпадает с production env по SHA-256; Telegram `getMe` и `getWebhookInfo` вернули HTTP 200, webhook URL корректен, pending updates 0, last error отсутствует; AssemblyAI API вернул HTTP 200.
+    - SQLite всё ещё содержит 0 авторизованных пользователей и 0 входящих сообщений: инфраструктура бота исправна, но реальный пользовательский `/start` и self-contact auth не выполнены и end-to-end доступ для клиента пока не доказан.
+    - AWS Billing проверен read-only через Chrome и визуально через Computer Use: outstanding balance `$0.00`, payments due `0`, текущий bill pending с estimated total `$1.14`; raw month-to-date `$8.15`, monthly forecast `$25.12`.
+    - AWS credit: фактически осталось `$7.01`, прогнозируемый остаток `$0.00`, срок до 2027-01-22. Default Visa действует до 2028-12; backup payment method отключён; текущего предупреждения о suspension или назначенной due date нет.
   - Now:
-    - Техническая цепочка восстановлена и проверена synthetic update, но после рестарта ещё не получен реальный пользовательский update; SQLite остаётся с 0 авторизованных пользователей.
+    - Техническая цепочка Telegram доступна, но ожидается реальное сообщение пользователя и подтверждение одного из разрешённых телефонов.
+    - Показанный в чате Telegram token считается раскрытым; после пользовательского smoke-теста рекомендуется перевыпустить его через BotFather и синхронно обновить production env.
   - Next:
-    - Пользователь повторно отправляет `/start` в `@music_site_admin_bot`, нажимает `📱 Kontakt freigeben` и делится своим Telegram-контактом.
-    - После реального update проверить `[webhook] Accepted update`, запись `authorized_users` и реальное голосовое сообщение.
+    - Пользователь отправляет `/start` боту `@music_site_admin_bot`, нажимает `Kontakt freigeben` и делится собственным Telegram-контактом; затем проверить новые записи SQLite и production log.
+    - До начала сентября обеспечить средства на default payment method; текущий счёт к немедленной оплате отсутствует, точная due date появится после финализации invoice.
     - К Amazon-регистрации и DNS вернуться отдельной фазой после подтверждения владельца.
     - Отдельно выбрать почтового провайдера, затем мигрировать `.de`-регистратора и только после проверки отменить контракт 1blu.
 - Open questions (UNCONFIRMED):

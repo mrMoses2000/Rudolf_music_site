@@ -2,15 +2,16 @@
 
 ## Proposed commit message
 
-документация: зафиксировать восстановление Telegram webhook
+документация: зафиксировать проверку Telegram и AWS Billing
 
 ## Details
-- зафиксировать повторную production-диагностику Telegram-редактора
-- записать причину потери update и развёртывание автоматической синхронизации webhook
-- сохранить результаты public health, typecheck и synthetic end-to-end smoke
+- зафиксировать свежую production-проверку Telegram-редактора и внешнего health
+- записать отсутствие реальных пользовательских update и авторизации
+- сохранить read-only результаты AWS Bills, Payments и Credits
 - обновить continuity ledger, agent log и полный индекс проекта
 
 ## Notes for reviewer
 - значения секретов не раскрывались
-- реальный пользовательский `/start` и phone-auth ещё ожидаются
+- реальный пользовательский `/start` и self-contact auth ещё ожидаются
+- точная AWS due date ещё не назначена, потому что invoice имеет статус pending
 - перенос домена и DNS не затрагивался
