@@ -420,3 +420,16 @@
     - COMMIT_MESSAGE.md
     - CONTINUITY.md
   notes: "Confirmed the user's real /start in production logs: webhook accepted the update and correctly routed the unauthorized user to self-contact authorization. SQLite remains at zero authorized users/messages until the contact button is used. Confirmed bilingual DE+RU system messages are feasible; no runtime change was made."
+- timestamp_utc: 2026-08-11T11:44:24Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: diagnose rejected Telegram self-contact
+  git_branch: main
+  git_head: 3150a51
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Confirmed the real self-contact update was accepted by webhook and rejected specifically as phone_not_allowed. Safe membership checks showed the actual +7 707 Telegram number is absent while the previously supplied +7 708 entry is present. No allowlist or runtime changes were made pending explicit owner approval."
