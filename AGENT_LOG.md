@@ -433,3 +433,16 @@
     - COMMIT_MESSAGE.md
     - CONTINUITY.md
   notes: "Confirmed the real self-contact update was accepted by webhook and rejected specifically as phone_not_allowed. Safe membership checks showed the actual +7 707 Telegram number is absent while the previously supplied +7 708 entry is present. No allowlist or runtime changes were made pending explicit owner approval."
+- timestamp_utc: 2026-08-11T11:49:56Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: verify German Telegram allowlist entries
+  git_branch: main
+  git_head: 37c58f0
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Verified each of the three explicitly named German phone numbers is already present in the production Telegram allowlist; service remains active. No runtime or env changes were needed. Recommended final set is the actual +7 707 Telegram number plus the three existing German numbers, pending approval to replace the mistaken +7 708 entry."
