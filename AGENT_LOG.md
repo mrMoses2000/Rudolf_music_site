@@ -446,3 +446,17 @@
     - COMMIT_MESSAGE.md
     - CONTINUITY.md
   notes: "Verified each of the three explicitly named German phone numbers is already present in the production Telegram allowlist; service remains active. No runtime or env changes were needed. Recommended final set is the actual +7 707 Telegram number plus the three existing German numbers, pending approval to replace the mistaken +7 708 entry."
+- timestamp_utc: 2026-08-11T11:57:38Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: replace Telegram allowlist phone in production
+  git_branch: main
+  git_head: 9c48566
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - /etc/music_school.env (production, secret file; value not committed)
+  notes: "With explicit owner approval, created timestamped env backup and replaced the mistaken +7 708 phone with the actual +7 707 Telegram number while preserving all three German entries. Verified exactly four allowlist phones, env ownership/mode, active/enabled service, local/public health, successful setWebhook, correct Telegram webhook, zero pending updates and no last error. User must repeat /start plus self-contact to create authorization."

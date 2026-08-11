@@ -40,7 +40,7 @@ Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The l
 - Working set files ids commands
 
 ## Agent Stamp (обновляется агентом)
-Last agent stamp: 2026-08-11T11:49:56Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=verify German Telegram allowlist entries
+Last agent stamp: 2026-08-11T11:57:38Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=replace Telegram allowlist phone in production
 
 ## Базовые правила
 - **Язык общения: только русский.**
