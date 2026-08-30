@@ -80,11 +80,17 @@ export async function sendContactAuthPrompt(chatId: number, userId?: number): Pr
     `🚫 Zugang verweigert.\n\n` +
       `Deine numerische ID: <code>${userId ?? 'unbekannt'}</code>\n\n` +
       `Wenn deine Telefonnummer freigeschaltet ist, drücke unten auf ` +
-      `<b>Kontakt freigeben</b>. Bitte sende deinen eigenen Telegram-Kontakt, keinen gespeicherten Kontakt.`,
+      `<b>📱 Kontakt freigeben</b>. Eine normale Nachricht übermittelt keine Telefonnummer. ` +
+      `Bitte sende deinen eigenen Telegram-Kontakt, keinen gespeicherten Kontakt.\n\n` +
+      `Falls die Taste nicht erscheint: Tippe neben dem Eingabefeld auf das Tastatur-Symbol ` +
+      `oder öffne den Chat in der Telegram-Mobile-/Desktop-App.`,
     {
       keyboard: [[{ text: '📱 Kontakt freigeben', request_contact: true }]],
       resize_keyboard: true,
-      one_time_keyboard: true,
+      // The auth keyboard must remain visible in Telegram Web until a self-contact arrives.
+      is_persistent: true,
+      one_time_keyboard: false,
+      input_field_placeholder: 'Bitte „Kontakt freigeben“ drücken',
     },
   );
 }
