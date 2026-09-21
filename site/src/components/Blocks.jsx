@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import SmartImage from "./SmartImage";
 
 const TAG_CLASSES = {
     h1: "text-3xl md:text-4xl font-outfit font-black text-ink leading-tight",
@@ -90,6 +91,38 @@ const Blocks = ({ blocks = [], className = "" }) => {
 
     while (index < blocks.length) {
         const block = blocks[index];
+        if (block.type === "image" && block.src) {
+            const image = (
+                <figure className="space-y-3">
+                    <SmartImage
+                        src={block.src}
+                        alt={block.alt || ""}
+                        className="block w-full overflow-hidden rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(43,36,29,0.14)]"
+                        imgClassName="w-full h-auto object-cover"
+                        loading="lazy"
+                        sizes="(min-width: 1024px) 960px, 100vw"
+                        useSrcSet
+                    />
+                    {block.caption && (
+                        <figcaption className="text-sm text-ink-muted text-center">
+                            {block.caption}
+                        </figcaption>
+                    )}
+                </figure>
+            );
+            elements.push(
+                enableMotion ? (
+                    <motion.div key={`image-${index}`} variants={itemVariants}>
+                        {image}
+                    </motion.div>
+                ) : (
+                    <div key={`image-${index}`}>{image}</div>
+                )
+            );
+            index += 1;
+            continue;
+        }
+
         if (block.type === "li") {
             const items = [];
             while (index < blocks.length && blocks[index].type === "li") {

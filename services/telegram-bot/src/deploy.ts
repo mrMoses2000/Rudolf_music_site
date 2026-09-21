@@ -6,12 +6,11 @@
  *   rollback()   → git checkout (user cancelled or Codex failed)
  *   commitAndRebuild() → git commit + bash run.sh (user confirmed)
  */
-import { execSync, spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { config } from './config.ts';
+import { cleanupPreparedImages } from './media.ts';
 
 const REPO = config.siteRepoPath;
-const CONTENT = config.contentFile;
-
 /**
  * Files the admin bot is allowed to modify via Codex.
  * Everything else is rejected to protect the site from accidental breakage.
@@ -25,15 +24,30 @@ const ALLOWED_FILES: readonly string[] = [
   'site/src/components/Layout.jsx', // Header / navigation styling
 ];
 
+const ADMIN_IMAGE_PATTERN = /^site\/public\/images\/admin\/telegram-[a-zA-Z0-9_-]+\.webp$/;
+
 // When running as root (systemd), git refuses to operate in repos owned by other users.
 // This is safe here because we intentionally manage this specific repo.
 const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', HOME: process.env.HOME ?? '/root' };
 
-function git(args: string): string {
-  return execSync(`git -C "${REPO}" -c safe.directory="${REPO}" ${args}`, {
+function git(args: readonly string[]): string {
+  return execFileSync('git', ['-C', REPO, '-c', `safe.directory=${REPO}`, ...args], {
     encoding: 'utf8',
     env: GIT_ENV,
   });
+}
+
+function isAllowedFile(file: string): boolean {
+  return ALLOWED_FILES.includes(file) || ADMIN_IMAGE_PATTERN.test(file);
+}
+
+function getChangedFiles(): string[] {
+  const tracked = [
+    ...git(['diff', '--name-only']).split('\n'),
+    ...git(['diff', '--cached', '--name-only']).split('\n'),
+  ];
+  const untracked = git(['ls-files', '--others', '--exclude-standard']).split('\n');
+  return Array.from(new Set([...tracked, ...untracked].map((file) => file.trim()).filter(Boolean)));
 }
 
 // ── Git helpers ───────────────────────────────────────────────────────────────
@@ -41,7 +55,14 @@ function git(args: string): string {
 /** Returns the git diff for all allowed files, or empty string if no changes. */
 export function getDiff(): string {
   try {
-    return git('diff').trim();
+    const trackedDiff = git(['diff', '--no-ext-diff']).trim();
+    if (!trackedDiff) return '';
+
+    const newImages = getChangedFiles().filter((file) => ADMIN_IMAGE_PATTERN.test(file));
+    const imageSummary = newImages.length
+      ? `\n\nNeue Bilddateien:\n${newImages.map((file) => `+ ${file}`).join('\n')}`
+      : '';
+    return `${trackedDiff}${imageSummary}`.trim();
   } catch {
     return '';
   }
@@ -53,21 +74,22 @@ export function getDiff(): string {
  */
 export function onlyAllowedFilesChanged(): boolean {
   try {
-    const changed = git('diff --name-only').trim();
-    const files = changed.split('\n').filter(Boolean);
-    return files.length > 0 && files.every((f) => ALLOWED_FILES.includes(f));
+    const files = getChangedFiles();
+    return files.length > 0 && files.every(isAllowedFile);
   } catch {
     return false;
   }
 }
 
 /** Discard all uncommitted changes in the working tree (rollback). */
-export function rollback(): void {
+export function rollback(assetPaths: readonly string[] = []): void {
   try {
-    git('checkout -- .');
+    git(['restore', '--staged', '--worktree', '--', '.']);
     console.log('[deploy] Rollback complete');
   } catch (err) {
     console.error('[deploy] Rollback failed:', err);
+  } finally {
+    cleanupPreparedImages(assetPaths);
   }
 }
 
@@ -85,11 +107,14 @@ export async function commitAndRebuild(
 ): Promise<void> {
   // 1. Commit all changed allowed files
   await onProgress('📝 Commit wird erstellt…');
-  const changed = git('diff --name-only').trim().split('\n').filter(Boolean);
-  for (const f of changed) {
-    if (ALLOWED_FILES.includes(f)) git(`add "${f}"`);
+  const changed = getChangedFiles();
+  if (changed.length === 0 || !changed.every(isAllowedFile)) {
+    throw new Error('No allowed changes found to commit.');
   }
-  git(`commit -m "TG Bot: ${sanitizeCommitMsg(userMessage)}"`);
+  for (const f of changed) {
+    git(['add', '--', f]);
+  }
+  git(['commit', '-m', `TG Bot: ${sanitizeCommitMsg(userMessage)}`]);
   console.log('[deploy] Committed changes:', changed.join(', '));
 
   // 2. Rebuild
@@ -100,7 +125,7 @@ export async function commitAndRebuild(
 
 /** Returns the last N git log entries as a formatted string */
 export function getRecentLog(n = 5): string {
-  return git(`log --oneline -${n}`).trim();
+  return git(['log', '--oneline', `-${n}`]).trim();
 }
 
 function sanitizeCommitMsg(msg: string): string {

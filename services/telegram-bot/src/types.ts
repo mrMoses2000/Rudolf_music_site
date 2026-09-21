@@ -85,6 +85,8 @@ export interface PendingChange {
   timeoutHandle: NodeJS.Timeout;
   /** original user request — used for commit message */
   userMessage: string;
+  /** generated website assets to remove if the change is cancelled */
+  assetPaths: string[];
 }
 
 export interface AgentResult {

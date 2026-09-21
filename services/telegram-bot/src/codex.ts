@@ -38,10 +38,13 @@ export function buildPrompt(
   userMessage: string,
   history: HistoryMessage[],
   imagePath?: string,
+  imagePublicUrl?: string,
 ): string {
   const historyText = formatHistory(history);
   const imageSection = imagePath
-    ? `\n[SCREENSHOT]\nThe admin attached a screenshot/image to this Codex run. Use it only to understand the visual context of the request.\n`
+    ? imagePublicUrl
+      ? `\n[PREPARED WEBSITE IMAGE]\nThe admin attached an image. It has already been validated and converted to WebP by the bot.\nIts public website URL is: ${imagePublicUrl}\nIf the admin asks to publish or replace an image, reference exactly this URL in src/data/content.js.\nFor a page hero use its headerImage field. For the homepage hero use content.hero.image.\nFor an image inside page content add a block like { "type": "image", "src": "${imagePublicUrl}", "alt": "short German description" }.\nDo not copy, rename, convert, or modify the binary image file.\n`
+      : `\n[SCREENSHOT]\nThe admin attached a screenshot/image to this Codex run. Use it only to understand the visual context of the request.\n`
     : '';
   const langHint = detectLanguage(userMessage, history);
 
@@ -90,12 +93,13 @@ Use paths relative to this directory.
 2. If the admin is asking a question or chatting → respond with text only, do NOT touch any files
 3. If the admin wants to change text content → edit src/data/content.js
 4. If the admin wants to change colors, fonts, sizes, weight → edit the appropriate CSS/JSX/config file from the list above
-5. Never modify any file not in the editable list above
-6. Never edit package files, lockfiles, AGENTS.md, markdown logs, build scripts, service code, env files, or generated assets
-7. Preserve file structure — no adding/removing keys in JS objects unless the admin explicitly asks
-8. Be surgical — change only the exact field(s)/class(es) specified; never touch adjacent code
-9. If the request is ambiguous or could match multiple things → list the options and ask, make NO changes
-10. When changing Tailwind classes in JSX, only modify the specific class, never rewrite the whole className string
+5. If a prepared website image URL is provided and the admin asks to publish it → update the appropriate image/headerImage field or add an image block in src/data/content.js
+6. Never modify any file not in the editable list above
+7. Never edit package files, lockfiles, AGENTS.md, markdown logs, build scripts, service code, env files, or generated assets
+8. Preserve file structure — no adding/removing keys in JS objects unless the admin explicitly asks, except an explicitly requested image block
+9. Be surgical — change only the exact field(s)/class(es) specified; never touch adjacent code
+10. If the request is ambiguous or could match multiple things → list the options and ask, make NO changes
+11. When changing Tailwind classes in JSX, only modify the specific class, never rewrite the whole className string
 `.trim();
 }
 
@@ -163,7 +167,6 @@ export async function runCodex(prompt: string, imagePath?: string): Promise<Agen
 
     if (config.codexModel) args.push('--model', config.codexModel);
     if (imagePath) args.push('--image', imagePath);
-    args.push(prompt);
 
     console.log(`[codex] Spawning: ${config.codexBin} exec --sandbox ${config.codexSandbox} --cd ${config.codexWorkdir} …`);
 
@@ -181,8 +184,12 @@ export async function runCodex(prompt: string, imagePath?: string): Promise<Agen
         ].filter(Boolean).join(':'),
         ...(config.codexHome ? { CODEX_HOME: config.codexHome } : {}),
       },
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
+
+    // Pass the prompt through stdin. `--image <FILE>...` accepts a variable number
+    // of values in Codex CLI 0.149.0 and otherwise consumes a positional prompt.
+    child.stdin.end(prompt);
 
     let stdout = '';
     let stderr = '';

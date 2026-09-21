@@ -7,14 +7,13 @@
  * Flow overview:
  *   text message   → history-aware Codex call → chat reply OR diff+confirm
  *   voice message  → AssemblyAI transcription → show transcript → same as text
- *   photo message  → download → save temp → same as text (image referenced in prompt)
+ *   photo/document → validate → WebP asset → Codex content reference → confirm/deploy
  *   /command       → instant handler (no Codex)
  *   callback_query → confirm (deploy) or cancel (rollback)
  */
 import https from 'node:https';
-import { readFileSync, writeFileSync, unlinkSync, mkdirSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, extname } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { extname } from 'node:path';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { config } from './config.ts';
 import * as bot from './bot.ts';
@@ -23,13 +22,22 @@ import { getDiff, onlyAllowedFilesChanged, rollback, commitAndRebuild, getRecent
 import { transcribeAudio } from './transcribe.ts';
 import { addMessage, getHistory, clearHistory } from './history.ts';
 import { authorizeFromContact, isUserAuthorized } from './auth.ts';
-import type { TelegramUpdate, PendingChange } from './types.ts';
+import {
+  activateWebsiteImage,
+  cleanupPreparedImages,
+  discardPreparedImage,
+  prepareWebsiteImage,
+} from './media.ts';
+import type { PreparedWebsiteImage } from './media.ts';
+import type { TelegramDocument, TelegramUpdate, PendingChange } from './types.ts';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
 const processedIds = new Set<number>();
 let isBusy = false;
 const pendingChanges = new Map<number, PendingChange>();
+const pendingImages = new Map<number, { image: PreparedWebsiteImage; timeoutHandle: NodeJS.Timeout }>();
+const PENDING_IMAGE_TIMEOUT_MS = 10 * 60 * 1000;
 
 // ── HTTPS Server ──────────────────────────────────────────────────────────────
 
@@ -144,8 +152,12 @@ async function parseAndProcess(rawBody: string): Promise<void> {
     } else if (msg.photo) {
       const caption = msg.caption?.trim() ?? '';
       await handlePhoto(chatId, msg.photo, caption);
+    } else if (msg.document) {
+      const caption = msg.caption?.trim() ?? '';
+      await handleImageDocument(chatId, msg.document, caption);
     } else if (msg.text) {
-      await processRequest(chatId, msg.text.trim());
+      const pendingImage = takePendingImage(chatId);
+      await processRequest(chatId, msg.text.trim(), pendingImage);
     }
   } else if (update.callback_query) {
     await handleCallback(update);
@@ -204,7 +216,8 @@ async function handleCommand(text: string, chatId: number): Promise<void> {
           `• Fragen zur Website beantworten\n` +
           `• Texte, Preise, Kontaktdaten ändern\n` +
           `• Sprachnachrichten verstehen (transkribiere und verarbeite sie)\n` +
-          `• Screenshots analysieren (schick ein Bild + Beschreibung)\n\n` +
+          `• Bilder veröffentlichen oder ersetzen (Foto + Beschreibung)\n` +
+          `• Screenshots analysieren\n\n` +
           `<b>Befehle:</b>\n` +
           `/help — diese Hilfe\n` +
           `/status — letzte Änderungen an der Website\n` +
@@ -226,6 +239,7 @@ async function handleCommand(text: string, chatId: number): Promise<void> {
           `• "Какой сейчас номер телефона?" → ответ из content.js\n` +
           `• "Измени телефон на 0521-123456" → покажу diff\n` +
           `• 🎤 Голосовое: "Добавь новость про летний концерт" → транскрибирую и выполню\n` +
+          `• 📷 Foto + "Setze dieses Bild auf Aktuelles" → bereite Bild und Änderung zur Bestätigung vor\n` +
           `• 📷 Скриншот + "Измени вот этот заголовок" → пойму контекст и изменю`,
       );
       break;
@@ -242,6 +256,7 @@ async function handleCommand(text: string, chatId: number): Promise<void> {
 
     case '/clear':
       clearHistory(chatId);
+      discardPendingImage(chatId);
       await bot.sendMessage(chatId, '🧹 Gesprächsverlauf gelöscht.');
       break;
 
@@ -251,7 +266,13 @@ async function handleCommand(text: string, chatId: number): Promise<void> {
         return;
       }
       try {
-        rollback();
+        const pending = pendingChanges.get(chatId);
+        if (pending) {
+          clearTimeout(pending.timeoutHandle);
+          pendingChanges.delete(chatId);
+        }
+        rollback(pending?.assetPaths);
+        discardPendingImage(chatId);
         await bot.sendMessage(chatId, '↩️ Alle nicht übernommenen Änderungen wurden verworfen.');
       } catch {
         await bot.sendMessage(chatId, '❌ Rollback fehlgeschlagen. Prüfe die Server-Logs.');
@@ -326,45 +347,17 @@ async function handlePhoto(
     return;
   }
 
-  if (!caption) {
-    await bot.sendMessage(
-      chatId,
-      '📷 Ich sehe das Bild! Was soll ich ändern? Beschreibe die gewünschte Änderung als Bildunterschrift oder in deiner nächsten Nachricht.',
-    );
-    // Store pending image info in history as context
-    addMessage(chatId, 'user', '[Bild ohne Beschriftung gesendet]');
-    addMessage(chatId, 'assistant', 'Bitte beschreibe, was geändert werden soll.');
-    return;
-  }
-
   try {
     await bot.sendTyping(chatId);
 
     // Download the largest photo size
     const largest = photos.reduce((a, b) => (a.file_size ?? 0) > (b.file_size ?? 0) ? a : b);
-    const fileInfo = await bot.getFile(largest.file_id);
-    const imageBuffer = await bot.downloadFile(fileInfo.file_path);
-
-    // Save to temp file inside the repo so Codex can receive it as an image attachment
-    const adminTmpDir = join(config.siteRepoPath, '.admin_tmp');
-    const tmpPath = join(adminTmpDir, `photo_${Date.now()}.jpg`);
-    try {
-      mkdirSync(adminTmpDir, { recursive: true });
-      writeFileSync(tmpPath, imageBuffer);
-    } catch {
-      // If .admin_tmp doesn't exist, fall back to system temp
-      const fallback = join(tmpdir(), `tgbot_photo_${Date.now()}.jpg`);
-      writeFileSync(fallback, imageBuffer);
-      await processRequest(chatId, caption, fallback);
-      try { unlinkSync(fallback); } catch {}
+    if ((largest.file_size ?? 0) > 15 * 1024 * 1024) {
+      await bot.sendMessage(chatId, '❌ Das Bild ist größer als 15 MB. Bitte sende eine kleinere Datei.');
       return;
     }
-
-    try {
-      await processRequest(chatId, caption, tmpPath);
-    } finally {
-      try { unlinkSync(tmpPath); } catch {}
-    }
+    const image = await downloadAndPrepareImage(largest.file_id, largest.file_unique_id);
+    await handlePreparedImage(chatId, image, caption);
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
     console.error('[photo] Error:', errMsg);
@@ -375,15 +368,105 @@ async function handlePhoto(
   }
 }
 
+async function handleImageDocument(
+  chatId: number,
+  document: TelegramDocument,
+  caption: string,
+): Promise<void> {
+  if (!document.mime_type?.startsWith('image/')) {
+    await bot.sendMessage(chatId, '❌ Bitte sende das Bild als Foto oder als JPEG-, PNG- bzw. WebP-Datei.');
+    return;
+  }
+  if ((document.file_size ?? 0) > 15 * 1024 * 1024) {
+    await bot.sendMessage(chatId, '❌ Das Bild ist größer als 15 MB. Bitte sende eine kleinere Datei.');
+    return;
+  }
+  if (isBusy) {
+    await bot.sendMessage(chatId, '⏳ Gerade läuft eine andere Aktion. Bitte warte.');
+    return;
+  }
+
+  try {
+    await bot.sendTyping(chatId);
+    const image = await downloadAndPrepareImage(document.file_id, document.file_unique_id);
+    await handlePreparedImage(chatId, image, caption);
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error('[document-image] Error:', errMsg);
+    await bot.sendMessage(chatId, `❌ Fehler bei der Bildverarbeitung:\n<pre>${escapeHtml(errMsg.slice(0, 200))}</pre>`);
+  }
+}
+
+async function downloadAndPrepareImage(fileId: string, uniqueId: string): Promise<PreparedWebsiteImage> {
+  const fileInfo = await bot.getFile(fileId);
+  const imageBuffer = await bot.downloadFile(fileInfo.file_path);
+  return prepareWebsiteImage(imageBuffer, uniqueId);
+}
+
+async function handlePreparedImage(
+  chatId: number,
+  image: PreparedWebsiteImage,
+  caption: string,
+): Promise<void> {
+  if (caption) {
+    await processRequest(chatId, caption, image);
+    return;
+  }
+
+  discardPendingImage(chatId);
+  const timeoutHandle = setTimeout(async () => {
+    pendingImages.delete(chatId);
+    discardPreparedImage(image);
+    await bot.sendMessage(chatId, '⏰ Das Bild wurde verworfen, weil keine Beschreibung gesendet wurde.');
+  }, PENDING_IMAGE_TIMEOUT_MS);
+  pendingImages.set(chatId, { image, timeoutHandle });
+  await bot.sendMessage(
+    chatId,
+    '📷 Bild vorbereitet. Schreib mir jetzt innerhalb von 10 Minuten, wo es erscheinen oder welches Bild es ersetzen soll.',
+  );
+}
+
+function takePendingImage(chatId: number): PreparedWebsiteImage | undefined {
+  const pending = pendingImages.get(chatId);
+  if (!pending) return undefined;
+  clearTimeout(pending.timeoutHandle);
+  pendingImages.delete(chatId);
+  return pending.image;
+}
+
+function discardPendingImage(chatId: number): void {
+  const pending = pendingImages.get(chatId);
+  if (!pending) return;
+  clearTimeout(pending.timeoutHandle);
+  pendingImages.delete(chatId);
+  discardPreparedImage(pending.image);
+}
+
 // ── Core request processor ────────────────────────────────────────────────────
 
 /**
  * Shared processing pipeline for text, voice transcript, and photo+caption.
  * Runs Codex → if diff found: show for confirmation; otherwise: show chat reply.
  */
-async function processRequest(chatId: number, userText: string, imagePath?: string): Promise<void> {
+async function processRequest(
+  chatId: number,
+  userText: string,
+  image?: PreparedWebsiteImage,
+): Promise<void> {
   if (isBusy) {
+    if (image) discardPreparedImage(image);
     await bot.sendMessage(chatId, '⏳ Gerade läuft eine andere Aktion. Bitte warte.');
+    return;
+  }
+
+  let websiteImage: PreparedWebsiteImage | undefined;
+  try {
+    websiteImage = image ? activateWebsiteImage(image) : undefined;
+  } catch (err) {
+    if (image) discardPreparedImage(image);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error('[media] Failed to activate prepared image:', errMsg);
+    await bot.sendMessage(chatId, `❌ Bild konnte nicht vorbereitet werden:\n<pre>${escapeHtml(errMsg.slice(0, 200))}</pre>`);
     return;
   }
 
@@ -391,7 +474,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
   const existing = pendingChanges.get(chatId);
   if (existing) {
     clearTimeout(existing.timeoutHandle);
-    rollback();
+    rollback(existing.assetPaths);
     pendingChanges.delete(chatId);
   }
 
@@ -404,8 +487,8 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
     await bot.sendTyping(chatId);
 
     const history = getHistory(chatId);
-    const prompt = buildPrompt(userText, history, imagePath);
-    const agentResult = await runCodex(prompt, imagePath);
+    const prompt = buildPrompt(userText, history, websiteImage?.absolutePath, websiteImage?.publicUrl);
+    const agentResult = await runCodex(prompt, websiteImage?.absolutePath);
 
     if (!agentResult.success) {
       const errText = agentResult.stderr.slice(0, 300);
@@ -413,7 +496,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
         chatId,
         `❌ <b>KI-Fehler:</b>\n<pre>${escapeHtml(errText)}</pre>`,
       );
-      rollback();
+      rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
       return;
     }
 
@@ -427,7 +510,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
           chatId,
           '⚠️ Der KI-Agent hat versucht, andere Dateien zu ändern. Die Änderungen wurden verworfen.',
         );
-        rollback();
+        rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
         return;
       }
 
@@ -435,7 +518,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
 
       const timeoutHandle = setTimeout(async () => {
         pendingChanges.delete(chatId);
-        rollback();
+        rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
         await bot.editMessage(chatId, previewMsgId, '⏰ Zeit abgelaufen. Die Änderung wurde verworfen.');
       }, config.confirmTimeoutMs);
 
@@ -445,6 +528,7 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
         diff,
         timeoutHandle,
         userMessage: userText,
+        assetPaths: websiteImage ? [websiteImage.repoRelativePath] : [],
       });
 
       // Store assistant's response in history
@@ -452,13 +536,14 @@ async function processRequest(chatId: number, userText: string, imagePath?: stri
 
     // ── Path B: Codex just chatted → show its text reply ─────────────────────
     } else {
+      if (websiteImage) cleanupPreparedImages([websiteImage.repoRelativePath]);
       const reply = chatResponse || '✅ Erledigt.';
       await bot.sendMessage(chatId, reply);
       addMessage(chatId, 'assistant', reply);
     }
   } catch (err) {
     console.error('[processRequest] Error:', err);
-    rollback();
+    rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
     await bot.sendMessage(chatId, '❌ Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.');
   } finally {
     isBusy = false;
@@ -493,7 +578,7 @@ async function handleCallback(update: TelegramUpdate): Promise<void> {
 
   if (data === 'cancel') {
     await bot.answerCallback(cb.id, 'Abgebrochen');
-    rollback();
+    rollback(pending.assetPaths);
     await bot.editMessage(chatId, msgId, '❌ Änderung abgebrochen.');
     console.log('[callback] User cancelled change');
     return;

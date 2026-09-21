@@ -92,7 +92,7 @@ const Home = () => {
             >
                 <motion.div style={{ y, scale: scaleHero }} className="absolute inset-0 z-0">
                     <SmartImage
-                        src="/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"
+                        src={content.hero.image || "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp"}
                         alt="Musikschule Background"
                         className="block w-full h-full"
                         imgClassName="w-full h-full object-cover opacity-75"

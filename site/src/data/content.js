@@ -6,6 +6,7 @@ export const content = {
         "acronym": "CMS"
     },
     "hero": {
+        "image": "/images/da36c84bafda7d37407bad3bf5a88da2_1560x1040_fit6eb1.webp",
         "title": "Willkommen in unserer Welt der Klänge und Farben!",
         "subtitle": "Schön, dass Sie zu uns gefunden haben. Ob Instrumentaltechnik, Gesang oder künstlerischer Ausdruck – wir bieten Ihnen professionellen Unterricht an verschiedenen Standorten. Entdecken Sie unser vielseitiges Angebot und lassen Sie sich inspirieren. Wir freuen uns darauf, Sie persönlich kennenzulernen!",
         "psalm": "\"Lobe den Herrn meine Seele und vergiss nicht, was er dir Gutes getan hat...\" Psalm 103",
