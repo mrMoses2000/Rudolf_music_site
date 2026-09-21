@@ -491,11 +491,7 @@ async function processRequest(
     const agentResult = await runCodex(prompt, websiteImage?.absolutePath);
 
     if (!agentResult.success) {
-      const errText = agentResult.stderr.slice(0, 300);
-      await bot.sendMessage(
-        chatId,
-        `❌ <b>KI-Fehler:</b>\n<pre>${escapeHtml(errText)}</pre>`,
-      );
+      await bot.sendMessage(chatId, formatCodexFailure(agentResult.stderr));
       rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
       return;
     }
@@ -620,6 +616,20 @@ async function handleCallback(update: TelegramUpdate): Promise<void> {
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function formatCodexFailure(stderr: string): string {
+  if (/hit your usage limit/i.test(stderr)) {
+    const resetTime = stderr.match(/try again at ([^.\n]+)/i)?.[1]?.trim();
+    return (
+      `⏳ <b>Das KI-Kontingent ist vorübergehend ausgeschöpft.</b>\n\n` +
+      (resetTime ? `Bitte versuche es nach <b>${escapeHtml(resetTime)}</b> erneut. ` : 'Bitte versuche es später erneut. ') +
+      `Das Bild und nicht bestätigte Änderungen wurden sicher verworfen.`
+    );
+  }
+
+  const errText = stderr.trim().slice(0, 300) || 'Unbekannter Codex-Fehler';
+  return `❌ <b>KI-Fehler:</b>\n<pre>${escapeHtml(errText)}</pre>`;
 }
 
 // ── Entry point ───────────────────────────────────────────────────────────────
