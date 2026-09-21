@@ -1,12 +1,12 @@
 # INDEX_REPORT.md — отчёт индексирования проекта
 
 ## Metadata
-- generated_at_utc: 2026-08-11T11:30:02Z
+- generated_at_utc: 2026-09-21T16:34:41Z
 - agent_model: GPT-5 (Codex)
 - agent_account: unknown
 - agent_session_id: unknown
 - git_branch: main
-- git_head: b1bbc90
+- git_head: 517fce3
 - output_path: INDEX_REPORT.md
 - scope: full index
 
@@ -18,7 +18,7 @@
 - крупная реорганизация структуры
 
 ## Сводка
-- total_files: 373
+- total_files: 377
 - inventory_source: rg --files
 - notes: отчёт включает полный список файлов проекта
 
@@ -51,15 +51,19 @@ n8n_doc_base/n8n_nodes_base_1.113.2_nodes_known.json
 n8n_doc_base/n8n_справочник_workflow_json_и_ноды_AI_Agent.pdf
 run.sh
 scripts/generate_index_report.sh
+scripts/migrate_agy_production.sh
+scripts/music-school-agy-wrapper.sh
+scripts/recover_codex_production.sh
 services/telegram-bot/package-lock.json
 services/telegram-bot/package.json
+services/telegram-bot/src/agy.ts
 services/telegram-bot/src/auth.ts
 services/telegram-bot/src/bot.ts
-services/telegram-bot/src/codex.ts
 services/telegram-bot/src/config.ts
 services/telegram-bot/src/db.ts
 services/telegram-bot/src/deploy.ts
 services/telegram-bot/src/history.ts
+services/telegram-bot/src/media.ts
 services/telegram-bot/src/server.ts
 services/telegram-bot/src/transcribe.ts
 services/telegram-bot/src/types.ts

@@ -460,3 +460,130 @@
     - CONTINUITY.md
     - /etc/music_school.env (production, secret file; value not committed)
   notes: "With explicit owner approval, created timestamped env backup and replaced the mistaken +7 708 phone with the actual +7 707 Telegram number while preserving all three German entries. Verified exactly four allowlist phones, env ownership/mode, active/enabled service, local/public health, successful setWebhook, correct Telegram webhook, zero pending updates and no last error. User must repeat /start plus self-contact to create authorization."
+- timestamp_utc: 2026-08-23T19:35:28Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: diagnose Telegram bot and verify AWS billing/payment ownership
+  git_branch: main
+  git_head: 967adc4c48b4c09ce112af49df3a7b4bf5c53601
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Ran the full sync/index protocol and read-only production investigation. Confirmed Telegram/webhook/auth/transcription health, then isolated Codex failure to third-party Snap cgroup enforcement after snapd 2.76.2; documented root-owned .git/index as a secondary blocker. Local typecheck/lint/build passed; site audit findings and missing music_site_copy were recorded. Chrome AWS Billing showed no payment due, a pending $12.92 estimate, $26.80 forecast, and projected credit exhaustion. Compared direct card, Organizations payer, ownership transfer, and Billing Transfer using official AWS docs. Verifier estimate was 18 calls, but live selection could not run because package/source/backend credentials were absent. No production or AWS settings were changed."
+- timestamp_utc: 2026-08-23T23:46:57Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: validate Codex recovery runbook and plan AWS Organizations payer setup
+  git_branch: main
+  git_head: 967adc4c48b4c09ce112af49df3a7b4bf5c53601
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Performed a fresh read-only server preflight, inspected the official OpenAI standalone installer/current CLI flags, and syntax-validated a reversible recovery runbook without executing it on production. Confirmed the service must retain root under the current direct TLS model, while Codex and Git ownership need explicit ubuntu handling. Prepared an AWS Organizations payer plan covering acceptance timing, split billing, credits, tax inheritance, IAM separation, budgets, and exit conditions. No production or AWS settings were changed."
+- timestamp_utc: 2026-08-23T23:56:45Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: run production Codex recovery script with live verification
+  git_branch: main
+  git_head: 967adc4c48b4c09ce112af49df3a7b4bf5c53601
+  touched_files:
+    - scripts/recover_codex_production.sh
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "Created and syntax-checked a rollback-safe recovery script, uploaded it, and began its live production run. Official standalone Codex 0.149.0 installed successfully for ubuntu, but standalone authentication was absent. The script stopped before mutating wrapper/Git/service; the bot remained active. Started the official device authorization flow; it requires the account owner to enter the one-time code before recovery can continue."
+- timestamp_utc: 2026-08-24T00:07:05Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: confirm safe standalone Codex device authorization
+  git_branch: main
+  git_head: 967adc4c48b4c09ce112af49df3a7b4bf5c53601
+  touched_files:
+    - AGENTS.md
+    - AGENT_LOG.md
+    - CONTINUITY.md
+  notes: "Confirmed that the current official device-login is still awaiting approval. Login affects only the new standalone Codex auth profile under ubuntu; it does not restart or modify the Telegram service, Snap installation, wrapper, Git repository, or environment."
+- timestamp_utc: 2026-08-24T00:23:24Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: complete production Codex recovery and verification
+  git_branch: main
+  git_head: 967adc4c48b4c09ce112af49df3a7b4bf5c53601
+  touched_files:
+    - scripts/recover_codex_production.sh
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+  notes: "After successful standalone ChatGPT device login, reran the recovery script. Official Codex 0.149.0 passed standalone and systemd-cgroup read-only smoke tests without the former Snap cgroup error. Wrapper now targets standalone, Git index is ubuntu:ubuntu 660, bot typecheck passed, and the active/enabled service has zero restarts with local/public HTTPS health OK. Backup is stored under /var/backups/musikschule-codex-recovery/20260824T002237Z. Real Telegram text/voice E2E remains pending."
+- timestamp_utc: 2026-08-30T17:57:34Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: restore trusted Telegram contact authorization
+  git_branch: main
+  git_head: a1c4ce1
+  touched_files:
+    - services/telegram-bot/src/bot.ts
+    - AGENTS.md
+    - AGENT_LOG.md
+    - CONTINUITY.md
+    - COMMIT_MESSAGE.md
+  notes: "Confirmed the requested German phone was already in the production phone allowlist; user 6327018818 only sent text, which cannot satisfy self-contact authentication. Made the Telegram reply keyboard persistent and added explicit client guidance, keeping self-contact and phone allowlist checks intact. Local and production typecheck passed; commit a1c4ce1 was pushed and deployed with a clean fast-forward. Service is active/enabled with NRestarts=0, local/public health ok, and startup webhook registration true. A fresh self-contact prompt was delivered to the user chat; authorization remains pending the user's button tap. Verifier estimate was 18 calls; live verifier could not run because llm_verifier/source checkout was unavailable."
+- timestamp_utc: 2026-09-21T09:48:58Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: verify Telegram bot and enable safe image changes
+  git_branch: main
+  git_head: 20b1af4b0faa0704925c20409d9595483a0b10de
+  touched_files:
+    - services/telegram-bot/src/codex.ts
+    - services/telegram-bot/src/deploy.ts
+    - services/telegram-bot/src/media.ts
+    - services/telegram-bot/src/server.ts
+    - services/telegram-bot/src/types.ts
+    - site/AGENTS.md
+    - site/src/components/Blocks.jsx
+    - site/src/data/content.js
+    - site/src/pages/Home.jsx
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Ran the required full resync/index. Confirmed bot/webhook/auth health and traced the failed image request to Codex CLI --image greedily consuming the positional prompt. Implemented stdin prompt transport, validated WebP media ingestion with cleanup, photo/document support, image blocks, configurable home hero, and argv-based Git calls. Preserved and pushed production content commit 688fca8, then deployed commits 73a8778 and 20b1af4 with site rebuild and service restart. Installed bubblewrap. Production health/webhook/site/repo checks pass; real AI execution is temporarily blocked by the ChatGPT/Codex account-wide usage limit (Sol and Terra), with reset displayed as 12:33 PM."
+- timestamp_utc: 2026-09-21T16:32:41Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: migrate Telegram bot brain from Codex to AGY
+  git_branch: main
+  git_head: 517fce3a85cbbc7346c3ad6ef6863f0fc51d0d19
+  touched_files:
+    - services/telegram-bot/src/agy.ts
+    - services/telegram-bot/src/config.ts
+    - services/telegram-bot/src/deploy.ts
+    - services/telegram-bot/src/history.ts
+    - services/telegram-bot/src/server.ts
+    - services/telegram-bot/.env.example
+    - site/AGENTS.md
+    - scripts/music-school-agy-wrapper.sh
+    - scripts/migrate_agy_production.sh
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Replaced the runtime Codex adapter with authenticated AGY 1.2.7 using a pinned Gemini 3.8 Flash Medium model, explicit site workspace, sandbox, NDJSON stdin, machine-validated terminal status, bounded process-group execution and strict worktree policy. Added and executed a rollback-safe production migration; backup is /var/backups/musikschule-agy-migration/20260921T162555Z. Controlled write smoke, typecheck/lint/build, local/public health, webhook, clean repo and full authorized webhook-to-AGY-to-Telegram E2E passed. Service is active/enabled with NRestarts=0 at 517fce3; Codex runtime variables/processes are absent."
