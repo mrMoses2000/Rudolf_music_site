@@ -115,7 +115,8 @@ function markdownToTelegramHtml(text: string): string {
   result = result.replace(/\*\*(.+?)\*\*/gs, '<b>$1</b>');
   result = result.replace(/__(.+?)__/gs, '<b>$1</b>');
   result = result.replace(/\*([^*\n]+)\*/g, '<i>$1</i>');
-  result = result.replace(/_([^_\n]+)_/g, '<i>$1</i>');
+  // Do not treat underscores inside identifiers (for example AGY_E2E_OK) as italics.
+  result = result.replace(/(?<![\p{L}\p{N}])_([^_\n]+)_(?![\p{L}\p{N}])/gu, '<i>$1</i>');
   result = result.replace(/`([^`]+)`/g, '<code>$1</code>');
   result = result.replace(/^#{1,4}\s+(.+)$/gm, '<b>$1</b>');
   result = result.replace(/^---+$/gm, '──────────');
