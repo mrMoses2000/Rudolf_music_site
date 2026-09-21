@@ -3,16 +3,18 @@
  *
  * Flow:
  *   getDiff()    → show diff to user for confirmation
- *   rollback()   → git checkout (user cancelled or Codex failed)
+ *   rollback()   → git restore (user cancelled or AGY failed)
  *   commitAndRebuild() → git commit + bash run.sh (user confirmed)
  */
 import { execFileSync, spawn } from 'node:child_process';
+import { rmSync } from 'node:fs';
+import { resolve, sep } from 'node:path';
 import { config } from './config.ts';
 import { cleanupPreparedImages } from './media.ts';
 
 const REPO = config.siteRepoPath;
 /**
- * Files the admin bot is allowed to modify via Codex.
+ * Files the admin bot is allowed to modify via AGY.
  * Everything else is rejected to protect the site from accidental breakage.
  */
 const ALLOWED_FILES: readonly string[] = [
@@ -50,6 +52,27 @@ function getChangedFiles(): string[] {
   return Array.from(new Set([...tracked, ...untracked].map((file) => file.trim()).filter(Boolean)));
 }
 
+function getUntrackedFiles(): string[] {
+  return git(['ls-files', '--others', '--exclude-standard'])
+    .split('\n')
+    .map((file) => file.trim())
+    .filter(Boolean);
+}
+
+/**
+ * AGY must start from a clean repository. The only accepted pre-existing
+ * change is the image asset prepared by this request.
+ */
+export function isWorkspaceReadyForAgent(expectedPaths: readonly string[] = []): boolean {
+  try {
+    const expected = new Set(expectedPaths);
+    const changed = getChangedFiles();
+    return changed.length === expected.size && changed.every((file) => expected.has(file));
+  } catch {
+    return false;
+  }
+}
+
 // ── Git helpers ───────────────────────────────────────────────────────────────
 
 /** Returns the git diff for all allowed files, or empty string if no changes. */
@@ -70,7 +93,7 @@ export function getDiff(): string {
 
 /**
  * Check that ONLY allowed files were modified.
-   * Extra safety: if Codex touched other files we roll back and reject.
+   * Extra safety: if AGY touched other files we roll back and reject.
  */
 export function onlyAllowedFilesChanged(): boolean {
   try {
@@ -81,10 +104,28 @@ export function onlyAllowedFilesChanged(): boolean {
   }
 }
 
+/** Detect a policy violation even when the agent produced no tracked diff. */
+export function hasDisallowedFilesChanged(): boolean {
+  try {
+    return getChangedFiles().some((file) => !isAllowedFile(file));
+  } catch {
+    return true;
+  }
+}
+
 /** Discard all uncommitted changes in the working tree (rollback). */
 export function rollback(assetPaths: readonly string[] = []): void {
   try {
+    const untrackedFiles = getUntrackedFiles();
     git(['restore', '--staged', '--worktree', '--', '.']);
+    for (const file of untrackedFiles) {
+      const absolutePath = resolve(REPO, file);
+      if (!absolutePath.startsWith(`${resolve(REPO)}${sep}`)) {
+        console.error('[deploy] Refusing to remove untracked path outside repository:', file);
+        continue;
+      }
+      rmSync(absolutePath, { force: true });
+    }
     console.log('[deploy] Rollback complete');
   } catch (err) {
     console.error('[deploy] Rollback failed:', err);

@@ -5,10 +5,10 @@
  * Uses the same Let's Encrypt certs as the main nginx site.
  *
  * Flow overview:
- *   text message   → history-aware Codex call → chat reply OR diff+confirm
+ *   text message   → history-aware AGY call → chat reply OR diff+confirm
  *   voice message  → AssemblyAI transcription → show transcript → same as text
- *   photo/document → validate → WebP asset → Codex content reference → confirm/deploy
- *   /command       → instant handler (no Codex)
+ *   photo/document → validate → WebP asset → AGY content reference → confirm/deploy
+ *   /command       → instant handler (no AGY)
  *   callback_query → confirm (deploy) or cancel (rollback)
  */
 import https from 'node:https';
@@ -17,8 +17,16 @@ import { extname } from 'node:path';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { config } from './config.ts';
 import * as bot from './bot.ts';
-import { buildPrompt, runCodex, extractChatResponse } from './codex.ts';
-import { getDiff, onlyAllowedFilesChanged, rollback, commitAndRebuild, getRecentLog } from './deploy.ts';
+import { buildPrompt, runAgy, extractChatResponse } from './agy.ts';
+import {
+  getDiff,
+  hasDisallowedFilesChanged,
+  onlyAllowedFilesChanged,
+  isWorkspaceReadyForAgent,
+  rollback,
+  commitAndRebuild,
+  getRecentLog,
+} from './deploy.ts';
 import { transcribeAudio } from './transcribe.ts';
 import { addMessage, getHistory, clearHistory } from './history.ts';
 import { authorizeFromContact, isUserAuthorized } from './auth.ts';
@@ -446,7 +454,7 @@ function discardPendingImage(chatId: number): void {
 
 /**
  * Shared processing pipeline for text, voice transcript, and photo+caption.
- * Runs Codex → if diff found: show for confirmation; otherwise: show chat reply.
+ * Runs AGY → if diff found: show for confirmation; otherwise: show chat reply.
  */
 async function processRequest(
   chatId: number,
@@ -457,6 +465,14 @@ async function processRequest(
     if (image) discardPreparedImage(image);
     await bot.sendMessage(chatId, '⏳ Gerade läuft eine andere Aktion. Bitte warte.');
     return;
+  }
+
+  // A new request replaces any previous unconfirmed change for this chat.
+  const existing = pendingChanges.get(chatId);
+  if (existing) {
+    clearTimeout(existing.timeoutHandle);
+    rollback(existing.assetPaths);
+    pendingChanges.delete(chatId);
   }
 
   let websiteImage: PreparedWebsiteImage | undefined;
@@ -470,12 +486,15 @@ async function processRequest(
     return;
   }
 
-  // Cancel any pending (unconfirmed) change for this chat
-  const existing = pendingChanges.get(chatId);
-  if (existing) {
-    clearTimeout(existing.timeoutHandle);
-    rollback(existing.assetPaths);
-    pendingChanges.delete(chatId);
+  const expectedWorkspaceChanges = websiteImage ? [websiteImage.repoRelativePath] : [];
+  if (!isWorkspaceReadyForAgent(expectedWorkspaceChanges)) {
+    if (websiteImage) cleanupPreparedImages(expectedWorkspaceChanges);
+    console.error('[processRequest] Refusing AGY run because the repository is not clean');
+    await bot.sendMessage(
+      chatId,
+      '⚠️ Der Website-Arbeitsbereich enthält bereits eine andere Änderung. Bitte versuche es später erneut.',
+    );
+    return;
   }
 
   // Add user message to history
@@ -488,18 +507,27 @@ async function processRequest(
 
     const history = getHistory(chatId);
     const prompt = buildPrompt(userText, history, websiteImage?.absolutePath, websiteImage?.publicUrl);
-    const agentResult = await runCodex(prompt, websiteImage?.absolutePath);
+    const agentResult = await runAgy(prompt);
 
     if (!agentResult.success) {
-      await bot.sendMessage(chatId, formatCodexFailure(agentResult.stderr));
+      await bot.sendMessage(chatId, formatAgyFailure(agentResult.stderr));
       rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
       return;
     }
 
     const chatResponse = extractChatResponse(agentResult.stdout);
+    if (hasDisallowedFilesChanged()) {
+      await bot.sendMessage(
+        chatId,
+        '⚠️ Der KI-Agent hat versucht, andere Dateien zu ändern. Die Änderungen wurden verworfen.',
+      );
+      rollback(websiteImage ? [websiteImage.repoRelativePath] : []);
+      return;
+    }
+
     const diff = getDiff();
 
-    // ── Path A: Codex made a content change → show diff for confirmation ─────
+    // ── Path A: AGY made a content change → show diff for confirmation ───────
     if (diff) {
       if (!onlyAllowedFilesChanged()) {
         await bot.sendMessage(
@@ -530,7 +558,7 @@ async function processRequest(
       // Store assistant's response in history
       addMessage(chatId, 'assistant', chatResponse || 'Änderung vorbereitet. Bitte bestätigen.');
 
-    // ── Path B: Codex just chatted → show its text reply ─────────────────────
+    // ── Path B: AGY just chatted → show its text reply ───────────────────────
     } else {
       if (websiteImage) cleanupPreparedImages([websiteImage.repoRelativePath]);
       const reply = chatResponse || '✅ Erledigt.';
@@ -618,8 +646,8 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function formatCodexFailure(stderr: string): string {
-  if (/hit your usage limit/i.test(stderr)) {
+function formatAgyFailure(stderr: string): string {
+  if (/(usage limit|quota|resource exhausted|rate limit)/i.test(stderr)) {
     const resetTime = stderr.match(/try again at ([^.\n]+)/i)?.[1]?.trim();
     return (
       `⏳ <b>Das KI-Kontingent ist vorübergehend ausgeschöpft.</b>\n\n` +
@@ -628,13 +656,13 @@ function formatCodexFailure(stderr: string): string {
     );
   }
 
-  const errText = stderr.trim().slice(0, 300) || 'Unbekannter Codex-Fehler';
+  const errText = stderr.trim().slice(0, 300) || 'Unbekannter AGY-Fehler';
   return `❌ <b>KI-Fehler:</b>\n<pre>${escapeHtml(errText)}</pre>`;
 }
 
 // ── Entry point ───────────────────────────────────────────────────────────────
 
 console.log('[server] Starting Musikschule Telegram Admin Bot…');
-console.log(`[server] Codex binary: ${config.codexBin}`);
-console.log(`[server] Codex model: ${config.codexModel || '(default)'}`);
+console.log(`[server] AGY binary: ${config.agyBin}`);
+console.log(`[server] AGY model: ${config.agyModel}`);
 startServer();

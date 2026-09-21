@@ -40,13 +40,6 @@ function parseAllowedPhones(raw: string): string[] {
   ));
 }
 
-function parseCodexSandbox(raw: string): 'read-only' | 'workspace-write' | 'danger-full-access' {
-  if (raw === 'read-only' || raw === 'workspace-write' || raw === 'danger-full-access') {
-    return raw;
-  }
-  throw new Error(`CODEX_SANDBOX: "${raw}" is not a supported sandbox mode`);
-}
-
 const siteRepoPath = requireEnv('SITE_REPO_PATH').replace(/\/$/, '');
 const botPort = parseInt(optionalEnv('BOT_PORT', '8443'), 10);
 const domain = optionalEnv('DOMAIN', 'musikschule-cms-bielefeld.de');
@@ -58,14 +51,12 @@ export const config = {
   allowedUsers: parseAllowedUsers(optionalEnv('TELEGRAM_ALLOWED_USERS', '')),
   allowedPhones: parseAllowedPhones(optionalEnv('TELEGRAM_ALLOWED_PHONES', '')),
 
-  // ── Codex CLI ─────────────────────────────────────────────
-  codexBin: optionalEnv('CODEX_BIN', 'codex'),
-  codexModel: optionalEnv('CODEX_MODEL', ''),
-  codexHome: optionalEnv('CODEX_HOME', process.env.CODEX_HOME || ''),
-  codexWorkdir: optionalEnv('CODEX_WORKDIR', `${siteRepoPath}/site`),
-  codexSandbox: parseCodexSandbox(optionalEnv('CODEX_SANDBOX', 'workspace-write')),
-  /** ms before Codex CLI child process is killed */
-  codexTimeoutMs: parseInt(optionalEnv('CODEX_TIMEOUT_MS', '180000'), 10),
+  // ── Google Antigravity (AGY) CLI ──────────────────────────
+  agyBin: optionalEnv('AGY_BIN', 'agy'),
+  agyModel: optionalEnv('AGY_MODEL', 'gemini-3.8-flash-medium'),
+  agyWorkdir: optionalEnv('AGY_WORKDIR', `${siteRepoPath}/site`),
+  /** ms before the AGY CLI process group is terminated */
+  agyTimeoutMs: parseInt(optionalEnv('AGY_TIMEOUT_MS', '180000'), 10),
 
   // ── HTTPS server ──────────────────────────────────────────
   port: botPort,

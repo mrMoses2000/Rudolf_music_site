@@ -1,6 +1,6 @@
-# AGENTS.md — Telegram Codex Automation Scope
+# AGENTS.md — Telegram AGY Automation Scope
 
-These instructions apply when Codex is run from the `site/` directory by the Telegram admin bot.
+These instructions apply when AGY is run from the `site/` directory by the Telegram admin bot.
 
 ## Goal
 - Help the admin update the public website safely.
