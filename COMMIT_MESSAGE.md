@@ -2,19 +2,14 @@
 
 ## Proposed commit message
 
-Перевести Telegram-бот с Codex на AGY
+Исправить публикацию изображений через Telegram-бота
 
 ## Details
-- запускать Google Antigravity CLI 1.2.7 headless через непривилегированного `ubuntu`
-- передавать prompt через NDJSON stdin и принимать только terminal status `SUCCESS`
-- закрепить `gemini-3.8-flash-medium`, sandbox, workspace и timeout
-- проверять чистоту worktree, allowlist изменений и очищать неожиданные untracked files
-- добавить rollback-safe production migration и root-owned AGY wrapper
-- сохранять подчёркивания внутри технических идентификаторов Telegram
+- сохранять владельца репозитория для подготовленных WebP и редактируемых файлов после rollback
+- восстанавливать доступ AGY перед каждой проверкой worktree
+- не отправлять ложное `Erledigt`, если изображение не привело к изменению сайта
 
 ## Notes for reviewer
-- значения секретов не записывались и не выводились
-- production commits: `f9077af`, `4658d8e`, `517fce3`
-- backup: `/var/backups/musikschule-agy-migration/20260921T162555Z`
-- bot active/enabled, `NRestarts=0`, webhook/health/site/worktree проверены
-- write smoke и webhook → AGY → Telegram E2E успешны; Codex не участвует в runtime
+- причина подтверждена production-журналом и правами файлов после истёкшего подтверждения
+- Telegram bot typecheck, site lint и build прошли локально
+- production image smoke и финальные health/worktree проверки выполняются после deploy

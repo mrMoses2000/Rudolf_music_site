@@ -1,9 +1,11 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-21T16:32:41Z
-- Last Agent Stamp: 2026-09-21T16:32:41Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-22T13:35:48Z
+- Last Agent Stamp: 2026-09-22T13:35:48Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
+  - Актуальный запрос: синхронизировать локальный проект с GitHub, установить подтверждённую причину, по которой Telegram-бот отвечает `Erledigt`, но не публикует присланное изображение на `/aktuelles`, исправить runtime-цепочку и проверить результат.
+  - Success: локальная `main` соответствует `origin/main`; photo/document flow не выдаёт ложного успеха, сохраняет WebP и ссылку в разрешённых файлах, проходит typecheck/lint/build и, если production-доступ подтверждён безопасно, развёрнут и проверен end-to-end.
   - Актуальный запрос: заменить Codex в роли исполнительного AI-агента Telegram-бота на AGY (Google Antigravity CLI), сохранив Telegram-вход, авторизацию, безопасный image pipeline, diff/confirm, deploy и rollback.
   - Success: production-бот вызывает AGY 1.2.7 headless под отдельным непривилегированным пользователем; модель явно закреплена; результат и ошибки машинно проверяются; AGY ограничен workspace/sandbox; Codex не участвует в runtime; typecheck, AGY smoke, service/webhook/health и сценарий изменения контента проверены.
   - Актуальный запрос: проверить, работает ли production Telegram-бот, выяснить причину отказа пользователю при замене изображения на главной странице и расширить функциональность для безопасной корректной замены изображений с последующим production-деплоем.
@@ -109,8 +111,9 @@
     - Production verification: service active/enabled, `NRestarts=0`, local/public health `ok`, site HTTP 200, webhook URL совпадает, pending 0, last_error null, repo clean at `517fce3`. Контролируемый AGY write smoke изменил ровно разрешённый `content.js` и был восстановлен.
     - Полный синтетический E2E webhook → authorized user → AGY → Telegram/history успешен; финальный assistant response сохранён ровно как `AGY_E2E_OK`, сайт и worktree не изменились.
   - Now:
-    - Миграция Codex → AGY завершена и проверена на production; Telegram-бот работает с AGY как исполнительным агентом.
+    - Локальная `main` fast-forward обновлена с `967adc4` до `bc99634`; исследуется реальный photo → AGY → diff/confirm/deploy путь и production-состояние.
   - Next:
+    - Воспроизвести сбой, найти точную точку ложного `Erledigt`, внести минимальный совместимый патч и выполнить локальную и production-проверку.
     - Пользователю отправить реальное фото с подписью, подтвердить предложенный diff и проверить фактический photo → publish → rebuild сценарий; сам AGY/text E2E уже доказан.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.

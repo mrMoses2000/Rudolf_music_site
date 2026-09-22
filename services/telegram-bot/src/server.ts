@@ -560,7 +560,16 @@ async function processRequest(
 
     // ── Path B: AGY just chatted → show its text reply ───────────────────────
     } else {
-      if (websiteImage) cleanupPreparedImages([websiteImage.repoRelativePath]);
+      if (websiteImage) {
+        cleanupPreparedImages([websiteImage.repoRelativePath]);
+        console.error('[processRequest] AGY returned success without publishing the prepared image');
+        const reply =
+          '⚠️ <b>Das Bild wurde nicht veröffentlicht.</b>\n\n' +
+          'Der KI-Agent hat keine Änderung an der Website erzeugt. Bitte sende das Bild erneut und nenne die Zielseite oder das Bild, das ersetzt werden soll.';
+        await bot.sendMessage(chatId, reply);
+        addMessage(chatId, 'assistant', reply);
+        return;
+      }
       const reply = chatResponse || '✅ Erledigt.';
       await bot.sendMessage(chatId, reply);
       addMessage(chatId, 'assistant', reply);

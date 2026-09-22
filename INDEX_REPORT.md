@@ -1,12 +1,12 @@
 # INDEX_REPORT.md — отчёт индексирования проекта
 
 ## Metadata
-- generated_at_utc: 2026-09-21T16:34:41Z
+- generated_at_utc: 2026-09-22T13:36:33Z
 - agent_model: GPT-5 (Codex)
 - agent_account: unknown
 - agent_session_id: unknown
 - git_branch: main
-- git_head: 517fce3
+- git_head: bc99634
 - output_path: INDEX_REPORT.md
 - scope: full index
 
@@ -18,7 +18,7 @@
 - крупная реорганизация структуры
 
 ## Сводка
-- total_files: 377
+- total_files: 376
 - inventory_source: rg --files
 - notes: отчёт включает полный список файлов проекта
 
@@ -53,7 +53,6 @@ run.sh
 scripts/generate_index_report.sh
 scripts/migrate_agy_production.sh
 scripts/music-school-agy-wrapper.sh
-scripts/recover_codex_production.sh
 services/telegram-bot/package-lock.json
 services/telegram-bot/package.json
 services/telegram-bot/src/agy.ts

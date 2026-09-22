@@ -7,7 +7,7 @@
  *   commitAndRebuild() → git commit + bash run.sh (user confirmed)
  */
 import { execFileSync, spawn } from 'node:child_process';
-import { rmSync } from 'node:fs';
+import { chownSync, lstatSync, rmSync, statSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
 import { config } from './config.ts';
 import { cleanupPreparedImages } from './media.ts';
@@ -43,6 +43,22 @@ function isAllowedFile(file: string): boolean {
   return ALLOWED_FILES.includes(file) || ADMIN_IMAGE_PATTERN.test(file);
 }
 
+function restoreAgentFileOwnership(): void {
+  if (typeof process.getuid !== 'function' || process.getuid() !== 0) return;
+
+  const { uid, gid } = statSync(REPO);
+  for (const file of ALLOWED_FILES) {
+    const absolutePath = resolve(REPO, file);
+    try {
+      const fileStat = lstatSync(absolutePath);
+      if (fileStat.isFile()) chownSync(absolutePath, uid, gid);
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException).code;
+      if (code !== 'ENOENT') throw err;
+    }
+  }
+}
+
 function getChangedFiles(): string[] {
   const tracked = [
     ...git(['diff', '--name-only']).split('\n'),
@@ -65,6 +81,9 @@ function getUntrackedFiles(): string[] {
  */
 export function isWorkspaceReadyForAgent(expectedPaths: readonly string[] = []): boolean {
   try {
+    // Root-owned git restores must not make editable files unreadable to AGY,
+    // which intentionally runs as the non-privileged repository owner.
+    restoreAgentFileOwnership();
     const expected = new Set(expectedPaths);
     const changed = getChangedFiles();
     return changed.length === expected.size && changed.every((file) => expected.has(file));
@@ -126,6 +145,7 @@ export function rollback(assetPaths: readonly string[] = []): void {
       }
       rmSync(absolutePath, { force: true });
     }
+    restoreAgentFileOwnership();
     console.log('[deploy] Rollback complete');
   } catch (err) {
     console.error('[deploy] Rollback failed:', err);

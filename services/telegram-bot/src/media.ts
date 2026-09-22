@@ -1,4 +1,14 @@
-import { constants, copyFileSync, mkdirSync, mkdtempSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import {
+  chownSync,
+  constants,
+  copyFileSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { spawn } from 'node:child_process';
 import { join, resolve, sep } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -6,6 +16,13 @@ import { config } from './config.ts';
 
 const ADMIN_IMAGE_DIR = 'site/public/images/admin';
 const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
+
+function giveToRepositoryOwner(path: string): void {
+  if (typeof process.getuid !== 'function' || process.getuid() !== 0) return;
+
+  const { uid, gid } = statSync(config.siteRepoPath);
+  chownSync(path, uid, gid);
+}
 
 export interface PreparedWebsiteImage {
   absolutePath: string;
@@ -109,7 +126,11 @@ export function activateWebsiteImage(image: PreparedWebsiteImage): PreparedWebsi
   const absolutePath = resolve(config.siteRepoPath, image.repoRelativePath);
   mkdirSync(outputDir, { recursive: true });
   try {
+    // The HTTPS service runs as root, while AGY runs as the repository owner.
+    // Keep both the managed directory and asset accessible to the agent.
+    giveToRepositoryOwner(outputDir);
     copyFileSync(image.absolutePath, absolutePath, constants.COPYFILE_EXCL);
+    giveToRepositoryOwner(absolutePath);
     rmSync(image.tempDirectory, { recursive: true, force: true });
   } catch (err) {
     try { unlinkSync(absolutePath); } catch {}
