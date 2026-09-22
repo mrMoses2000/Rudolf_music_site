@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-22T13:35:48Z
-- Last Agent Stamp: 2026-09-22T13:35:48Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-22T13:48:24Z
+- Last Agent Stamp: 2026-09-22T13:48:24Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Актуальный запрос: синхронизировать локальный проект с GitHub, установить подтверждённую причину, по которой Telegram-бот отвечает `Erledigt`, но не публикует присланное изображение на `/aktuelles`, исправить runtime-цепочку и проверить результат.
@@ -110,16 +110,18 @@
     - Rollback-safe production migration успешна; backup `/var/backups/musikschule-agy-migration/20260921T162555Z`. `/etc/music_school.env` содержит только `AGY_*` runtime keys, wrapper `/usr/local/bin/music-school-agy` запускает AGY как `ubuntu`; Codex процессов нет.
     - Production verification: service active/enabled, `NRestarts=0`, local/public health `ok`, site HTTP 200, webhook URL совпадает, pending 0, last_error null, repo clean at `517fce3`. Контролируемый AGY write smoke изменил ровно разрешённый `content.js` и был восстановлен.
     - Полный синтетический E2E webhook → authorized user → AGY → Telegram/history успешен; финальный assistant response сохранён ровно как `AGY_E2E_OK`, сайт и worktree не изменились.
+    - Инцидент 2026-09-22 подтверждён production-журналом: после истечения первого confirm-timeout root-процесс выполнил Git rollback и оставил `content.js` как `root:root 640`; следующий photo flow создал `site/public/images/admin/` как `root:root 750`. AGY под `ubuntu` не мог читать контент и изображение, но terminal status оставался `SUCCESS`, а пустой diff превращался в ложное `✅ Erledigt.`.
+    - Commit `ff21330` сохраняет владельца репозитория для WebP и editable files после root-операций, восстанавливает ownership перед запуском AGY и запрещает success-ответ при image request без реального diff. Изменение запушено и fast-forward развёрнуто.
+    - Локально прошли bot typecheck, site lint/build. Production image smoke успешен: WebP `uid=1000`, AGY изменил `content.js`, diff включил content и image, allowlist чист; rollback удалил smoke asset и вернул clean worktree. Service active, `NRestarts=0`, webhook pending 0/last error null, `/health` ok, `/aktuelles` HTTP 200.
   - Now:
-    - Локальная `main` fast-forward обновлена с `967adc4` до `bc99634`; исследуется реальный photo → AGY → diff/confirm/deploy путь и production-состояние.
+    - Image publishing pipeline исправлен и проверен на production; локальный и серверный HEAD синхронизированы через GitHub.
   - Next:
-    - Воспроизвести сбой, найти точную точку ложного `Erledigt`, внести минимальный совместимый патч и выполнить локальную и production-проверку.
-    - Пользователю отправить реальное фото с подписью, подтвердить предложенный diff и проверить фактический photo → publish → rebuild сценарий; сам AGY/text E2E уже доказан.
+    - Пользователю повторно отправить исходное фото с подписью и нажать `Подтвердить` в течение пяти минут; удалённое после неудачной попытки изображение восстановить из worktree нельзя.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
     - После решения клиента выполнить Organizations change window: export billing history, invite, accept у UTC month boundary, verify payer/tax/credit sharing/budgets и наблюдать 24–48h.
 - Open questions (UNCONFIRMED):
-  - UNCONFIRMED: реальный пользовательский photo+caption → confirm → deploy E2E на AGY; text E2E и отдельный write smoke успешны.
+  - UNCONFIRMED: финальный пользовательский photo+caption → Telegram confirm → rebuild после исправления; внутренний production image → AGY → diff → rollback smoke успешен.
   - UNCONFIRMED: клиент должен только платить, владеть AWS account целиком или быть management/payer через AWS Organizations.
   - Нужен ли клиенту полноценный mailbox `info@...`; если да, какой провайдер предпочтителен: Google Workspace, Microsoft 365, mailbox.org или другой.
   - Выбирать ли быстрый AssemblyAI restore или сразу реализовать Amazon Transcribe с IAM role/S3 lifecycle.

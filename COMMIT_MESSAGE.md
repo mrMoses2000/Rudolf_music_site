@@ -12,4 +12,6 @@
 ## Notes for reviewer
 - причина подтверждена production-журналом и правами файлов после истёкшего подтверждения
 - Telegram bot typecheck, site lint и build прошли локально
-- production image smoke и финальные health/worktree проверки выполняются после deploy
+- commit `ff21330` запушен и развёрнут fast-forward на production
+- production image smoke подтвердил content diff, asset diff, allowlist и корректный rollback
+- service active, `NRestarts=0`, webhook/health/site/worktree проверены

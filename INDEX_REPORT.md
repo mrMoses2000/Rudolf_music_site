@@ -1,12 +1,12 @@
 # INDEX_REPORT.md — отчёт индексирования проекта
 
 ## Metadata
-- generated_at_utc: 2026-09-22T13:36:33Z
+- generated_at_utc: 2026-09-22T13:49:48Z
 - agent_model: GPT-5 (Codex)
 - agent_account: unknown
 - agent_session_id: unknown
 - git_branch: main
-- git_head: bc99634
+- git_head: ff21330
 - output_path: INDEX_REPORT.md
 - scope: full index
 

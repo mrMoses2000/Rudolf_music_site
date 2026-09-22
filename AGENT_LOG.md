@@ -587,3 +587,20 @@
     - CONTINUITY.md
     - INDEX_REPORT.md
   notes: "Replaced the runtime Codex adapter with authenticated AGY 1.2.7 using a pinned Gemini 3.8 Flash Medium model, explicit site workspace, sandbox, NDJSON stdin, machine-validated terminal status, bounded process-group execution and strict worktree policy. Added and executed a rollback-safe production migration; backup is /var/backups/musikschule-agy-migration/20260921T162555Z. Controlled write smoke, typecheck/lint/build, local/public health, webhook, clean repo and full authorized webhook-to-AGY-to-Telegram E2E passed. Service is active/enabled with NRestarts=0 at 517fce3; Codex runtime variables/processes are absent."
+- timestamp_utc: 2026-09-22T13:48:24Z
+  model: GPT-5 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: diagnose and fix Telegram image publishing
+  git_branch: main
+  git_head: ff21330403c871fbe54a50289687cad156634380
+  touched_files:
+    - services/telegram-bot/src/deploy.ts
+    - services/telegram-bot/src/media.ts
+    - services/telegram-bot/src/server.ts
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Fast-forwarded local main by 8 GitHub commits. Production logs and permissions proved that a root Git rollback changed content.js to root:root 640 and root media ingestion created an unreadable root:root 750 admin directory, so AGY under ubuntu returned SUCCESS without a diff and the bot emitted a false Erledigt. Commit ff21330 restores repository ownership for editable files and managed WebP assets and reports image no-op as failure. Bot typecheck, site lint/build, controlled production image-to-AGY diff/rollback smoke, service/webhook/health/site/clean-worktree checks passed; user must resend the original cleaned-up photo and confirm within five minutes."
