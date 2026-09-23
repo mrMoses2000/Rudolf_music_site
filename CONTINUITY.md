@@ -1,10 +1,10 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-23T07:18:13Z
-- Last Agent Stamp: 2026-09-23T07:18:13Z | GPT-6 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-23T09:20:00Z
+- Last Agent Stamp: 2026-09-23T09:20:00Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
-  - Актуальный запрос: проверить production-отказ Telegram-бота при повторной отправке фото 2026-09-23 09:03–09:04 и исправить ложное сообщение о непубликации, если фото уже присутствует на сайте.
+  - Актуальный запрос: исправить повторный production-отказ Telegram-бота при публикации новой фотографии на `/about` и сделать так, чтобы AGY корректно добавлял фото на страницу.
   - Актуальный запрос: исправить реальную публикацию фото на `/aktuelles` после Telegram confirm: ссылка и Docker build есть, но браузер показывает битое изображение. Success: публичный WebP возвращает HTTP 200, будущие загрузки получают доступные nginx права, bot не объявляет success при недоступном asset.
   - Актуальный запрос: синхронизировать локальный проект с GitHub, установить подтверждённую причину, по которой Telegram-бот отвечает `Erledigt`, но не публикует присланное изображение на `/aktuelles`, исправить runtime-цепочку и проверить результат.
   - Success: локальная `main` соответствует `origin/main`; photo/document flow не выдаёт ложного успеха, сохраняет WebP и ссылку в разрешённых файлах, проходит typecheck/lint/build и, если production-доступ подтверждён безопасно, развёрнут и проверен end-to-end.
@@ -119,10 +119,13 @@
     - Точечный production chmod `644` на source и активном контейнере немедленно восстановил public HTTP 200. Commit `36c52b0` добавил `chmodSync(0644)` при активации WebP и origin HTTP 200 verification для новых image assets после rebuild; bot typecheck, site lint/build прошли.
     - Production fast-forward до `36c52b0`, bot active `NRestarts=0`, Docker site пересобран из исходников. В новом контейнере WebP `root:root 644`, nginx читает его; origin/public `200 image/webp` (227158 bytes), `/aktuelles` HTTP 200, server worktree clean.
     - Updates `623942980/981` повторно прислали то же фото; AGY завершился `SUCCESS` без diff, потому что оно уже присутствует на `/aktuelles`. Commit `c238669` сообщает о существующем опубликованном URL при совпадении Telegram unique id, сохраняя отказ для нового фото без правки. Локальные typecheck и known/unknown проверки успешны; production fast-forward, typecheck, restart, webhook, health и image/page HTTP 200 прошли; worktree clean.
+    - Новый update `623942982` (Telegram unique id `AQADjxxrG4WgoUl8`) доставил другую фотографию с целью `/about`; серверный журнал подтвердил загрузку и AGY `SUCCESS`, но без diff, после чего новый asset был удалён. `/about` использовал жёсткий hero в `About.jsx` и не умел рендерить `image`-блоки.
+    - В текущей рабочей ветке `About.jsx` теперь поддерживает `data.headerImage` и inline `{type: "image"}` блоки; AGY prompt явно трактует «post this image on /about» как добавление блока в `content.pages.about.blocks`, а `headerImage` оставляет только для явной замены hero/background. Локальные bot typecheck, site lint и build прошли.
   - Now:
-    - Production бот активен на `c238669`; повторное фото распознаётся как уже опубликованное по данным контента.
+    - Локальная ветка содержит исправление для `/about`; production всё ещё на `c238669` до deploy.
   - Next:
-    - Если нужно другое размещение того же фото, пользователь должен назвать точное место; существующая публикация на `/aktuelles` доступна.
+    - Закоммитить и запушить исправление, fast-forward развернуть на SherMos2, пройти typecheck/service/health и контролируемый AGY image smoke с rollback.
+    - После smoke попросить пользователя повторить фото для `/about`; ожидается diff с image-блоком и обычное Telegram-подтверждение.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
     - После решения клиента выполнить Organizations change window: export billing history, invite, accept у UTC month boundary, verify payer/tax/credit sharing/budgets и наблюдать 24–48h.

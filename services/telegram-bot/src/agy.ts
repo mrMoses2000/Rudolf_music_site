@@ -44,8 +44,21 @@ export function buildPrompt(
   const historyText = formatHistory(history);
   const imageSection = imagePath
     ? imagePublicUrl
-      ? `\n[PREPARED WEBSITE IMAGE]\nThe admin attached an image. It has already been validated and converted to WebP by the bot.\nIts local read-only source is: ${imagePath}\nIts public website URL is: ${imagePublicUrl}\nIf the admin asks to publish or replace an image, reference exactly this URL in src/data/content.js.\nFor a page hero use its headerImage field. For the homepage hero use content.hero.image.\nFor an image inside page content add a block like { "type": "image", "src": "${imagePublicUrl}", "alt": "short German description" }.\nDo not copy, rename, convert, or modify the binary image file.\n`
-      : `\n[ATTACHED IMAGE]\nThe admin attached an image stored at ${imagePath}. Use it only as visual context and do not modify it.\n`
+      ? `
+[PREPARED WEBSITE IMAGE]
+The admin attached an image. It has already been validated and converted to WebP by the bot.
+Its local read-only source is: ${imagePath}
+Its public website URL is: ${imagePublicUrl}
+Reference exactly this URL in src/data/content.js when publishing the image; never invent another filename or URL.
+For a page hero/background, use that page's headerImage field. For the homepage hero use content.hero.image.
+For an image inside page content add a block like { "type": "image", "src": "${imagePublicUrl}", "alt": "short German description" }.
+For the /about page specifically, use content.pages.about: its blocks array renders inline image blocks, and its headerImage field controls only the hero background.
+Do not copy, rename, convert, or modify the binary image file.
+`
+      : `
+[ATTACHED IMAGE]
+The admin attached an image stored at ${imagePath}. Use it only as visual context and do not modify it.
+`
     : '';
   const langHint = detectLanguage(userMessage, history);
 
@@ -94,14 +107,15 @@ Use paths relative to this directory.
 2. If the admin is asking a question or chatting → respond with text only, do NOT touch any files
 3. If the admin wants to change text content → edit src/data/content.js
 4. If the admin wants to change colors, fonts, sizes, weight → edit the appropriate CSS/JSX/config file from the list above
-5. If a prepared website image URL is provided and the admin asks to publish it → update the appropriate image/headerImage field or add an image block in src/data/content.js
-6. Never modify any file not in the editable list above
-7. Never edit package files, lockfiles, AGENTS.md, markdown logs, build scripts, service code, env files, Git metadata, or generated assets
-8. Do not run git, deploy, package-manager, network, or service-management commands; the bot owns validation and deployment
-9. Preserve file structure — no adding/removing keys in JS objects unless the admin explicitly asks, except an explicitly requested image block
-10. Be surgical — change only the exact field(s)/class(es) specified; never touch adjacent code
-11. If the request is ambiguous or could match multiple things → list the options and ask, make NO changes
-12. When changing Tailwind classes in JSX, only modify the specific class, never rewrite the whole className string
+5. If a prepared website image URL is provided and the admin asks to publish it on a named page → make the website change in src/data/content.js. A request such as “post this image on /about” means append an image block to that page's blocks array; do not ask for a position and do not treat it as a chat-only request. Change headerImage only when the admin explicitly says to replace the hero, background, or header image.
+6. A new attached image plus a named page is an explicit request for a file change. Do not finish successfully without changing src/data/content.js unless the exact same image URL is already published there.
+7. Never modify any file not in the editable list above
+8. Never edit package files, lockfiles, AGENTS.md, markdown logs, build scripts, service code, env files, Git metadata, or generated assets
+9. Do not run git, deploy, package-manager, network, or service-management commands; the bot owns validation and deployment
+10. Preserve file structure — no adding/removing keys in JS objects unless the admin explicitly asks, except an explicitly requested image block
+11. Be surgical — change only the exact field(s)/class(es) specified; never touch adjacent code
+12. If the request is ambiguous or could match multiple things → list the options and ask, make NO changes. A named page plus “post/publish this image” is not ambiguous: use an inline image block by default.
+13. When changing Tailwind classes in JSX, only modify the specific class, never rewrite the whole className string
 `.trim();
 }
 
