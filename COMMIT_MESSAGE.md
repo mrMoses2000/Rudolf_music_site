@@ -13,3 +13,5 @@
 - причина подтверждена ответом origin HTTP 403 и mode 640 в Docker image
 - сохранён production commit `9c2b1ae` с пользовательским фото
 - bot typecheck, site lint/build прошли локально
+- commit `36c52b0` развёрнут; сайт повторно собран из source WebP mode 644
+- origin/public URL возвращают `200 image/webp`, бот active, worktree clean

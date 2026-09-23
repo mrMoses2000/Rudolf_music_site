@@ -604,3 +604,19 @@
     - CONTINUITY.md
     - INDEX_REPORT.md
   notes: "Fast-forwarded local main by 8 GitHub commits. Production logs and permissions proved that a root Git rollback changed content.js to root:root 640 and root media ingestion created an unreadable root:root 750 admin directory, so AGY under ubuntu returned SUCCESS without a diff and the bot emitted a false Erledigt. Commit ff21330 restores repository ownership for editable files and managed WebP assets and reports image no-op as failure. Bot typecheck, site lint/build, controlled production image-to-AGY diff/rollback smoke, service/webhook/health/site/clean-worktree checks passed; user must resend the original cleaned-up photo and confirm within five minutes."
+- timestamp_utc: 2026-09-23T06:59:41Z
+  model: GPT-6 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: restore published Telegram image and prevent unreadable assets
+  git_branch: main
+  git_head: 36c52b01a521996ecd7c910e477b3e55384eb2a6
+  touched_files:
+    - services/telegram-bot/src/media.ts
+    - services/telegram-bot/src/deploy.ts
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Confirmed user photo and content were committed as 9c2b1ae and the site rebuilt, but Docker COPY preserved WebP mode 640, producing origin/public HTTP 403 for nginx uid 101. Saved the user content commit to GitHub. Restored current source/container asset to mode 644 and public HTTP 200. Commit 36c52b0 makes future assets readable and verifies image HTTP 200 after rebuild. Local bot typecheck/site lint/build and production rebuild passed; fresh container serves the original WebP at HTTP 200, bot active with NRestarts=0 and worktree clean."

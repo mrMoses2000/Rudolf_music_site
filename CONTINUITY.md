@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-23T06:55:00Z
-- Last Agent Stamp: 2026-09-22T13:48:24Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-23T06:59:41Z
+- Last Agent Stamp: 2026-09-23T06:59:41Z | GPT-6 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Актуальный запрос: исправить реальную публикацию фото на `/aktuelles` после Telegram confirm: ссылка и Docker build есть, но браузер показывает битое изображение. Success: публичный WebP возвращает HTTP 200, будущие загрузки получают доступные nginx права, bot не объявляет success при недоступном asset.
@@ -114,16 +114,18 @@
     - Инцидент 2026-09-22 подтверждён production-журналом: после истечения первого confirm-timeout root-процесс выполнил Git rollback и оставил `content.js` как `root:root 640`; следующий photo flow создал `site/public/images/admin/` как `root:root 750`. AGY под `ubuntu` не мог читать контент и изображение, но terminal status оставался `SUCCESS`, а пустой diff превращался в ложное `✅ Erledigt.`.
     - Commit `ff21330` сохраняет владельца репозитория для WebP и editable files после root-операций, восстанавливает ownership перед запуском AGY и запрещает success-ответ при image request без реального diff. Изменение запушено и fast-forward развёрнуто.
     - Локально прошли bot typecheck, site lint/build. Production image smoke успешен: WebP `uid=1000`, AGY изменил `content.js`, diff включил content и image, allowlist чист; rollback удалил smoke asset и вернул clean worktree. Service active, `NRestarts=0`, webhook pending 0/last error null, `/health` ok, `/aktuelles` HTTP 200.
+    - Пользовательская photo+confirm публикация 2026-09-23 создала commit `9c2b1ae`: `content.js` ссылается на WebP 227158 bytes. Docker build прошёл, но WebP сохранил source mode `640`, а внутри контейнера стал `root:root 640`; nginx uid 101 отдавал HTTP 403. Commit сохранён в origin.
+    - Точечный production chmod `644` на source и активном контейнере немедленно восстановил public HTTP 200. Commit `36c52b0` добавил `chmodSync(0644)` при активации WebP и origin HTTP 200 verification для новых image assets после rebuild; bot typecheck, site lint/build прошли.
+    - Production fast-forward до `36c52b0`, bot active `NRestarts=0`, Docker site пересобран из исходников. В новом контейнере WebP `root:root 644`, nginx читает его; origin/public `200 image/webp` (227158 bytes), `/aktuelles` HTTP 200, server worktree clean.
   - Now:
-    - Подтверждена новая ошибка прав: после confirm 2026-09-23 bot создал WebP `640`; Docker COPY сохранил `640 root:root`, nginx uid 101 отвечал origin HTTP 403. Точечный chmod `644` на production worktree и активном контейнере восстановил origin/public HTTP 200. Пользовательский commit `9c2b1ae` сохранён в GitHub и подтянут локально; требуется постоянная правка media/deploy и проверка.
+    - Изображение на `/aktuelles` опубликовано и доступно; новый image pipeline проверяет доступность перед success-ответом.
   - Next:
-    - Задать WebP mode 644 при активации, добавить проверку HTTP доступности asset после rebuild, проверить и развернуть bot; затем подтвердить чистоту repo и public HTTP 200.
-    - Пользователю повторно отправить исходное фото с подписью и нажать `Подтвердить` в течение пяти минут; удалённое после неудачной попытки изображение восстановить из worktree нельзя.
+    - Пользователю можно обновить страницу `/aktuelles`; повторная отправка исходного фото не требуется.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
     - После решения клиента выполнить Organizations change window: export billing history, invite, accept у UTC month boundary, verify payer/tax/credit sharing/budgets и наблюдать 24–48h.
 - Open questions (UNCONFIRMED):
-  - UNCONFIRMED: финальный пользовательский photo+caption → Telegram confirm → rebuild после исправления; внутренний production image → AGY → diff → rollback smoke успешен.
+  - Пользовательский photo+caption → Telegram confirm → commit/rebuild завершён; проверены URL и чтение asset новым контейнером.
   - UNCONFIRMED: клиент должен только платить, владеть AWS account целиком или быть management/payer через AWS Organizations.
   - Нужен ли клиенту полноценный mailbox `info@...`; если да, какой провайдер предпочтителен: Google Workspace, Microsoft 365, mailbox.org или другой.
   - Выбирать ли быстрый AssemblyAI restore или сразу реализовать Amazon Transcribe с IAM role/S3 lifecycle.
