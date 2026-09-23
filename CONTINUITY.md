@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-23T09:35:00Z
-- Last Agent Stamp: 2026-09-23T09:35:00Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-23T09:45:00Z
+- Last Agent Stamp: 2026-09-23T09:45:00Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Актуальный запрос: исправить повторный production-отказ Telegram-бота при публикации новой фотографии на `/about` и сделать так, чтобы AGY корректно добавлял фото на страницу.
@@ -124,11 +124,11 @@
     - Production fast-forward до `ad4de4e`, Docker blue-green rebuild и bot restart прошли; site `/about` HTTP 200, bot `/health` на `:8443` возвращает `{"ok":true}`, service active и `NRestarts=0`.
     - Контролируемый production AGY smoke с тестовым WebP сначала подтвердил headless soft-deny `RunCommand`; после timestamped backup настроен `/home/ubuntu/.gemini/antigravity-cli/settings.json` с `toolPermission: proceed-in-sandbox` и deny для `sudo`, `git`, `rm -rf`, `curl`, `wget`. Повторный smoke создал корректный image-блок в `content.pages.about.blocks`, затем trap удалил тестовый asset и восстановил чистый worktree.
     - `runAgy` теперь распознаёт headless permission soft-deny даже при коде 0/статусе SUCCESS и не допускает ложный no-op; `formatAgyFailure` сообщает причину без раскрытия внутреннего stderr. Локальные typecheck/lint/build прошли.
+    - Production fast-forward до `a3aaa02`, bot typecheck и restart прошли; service active, `NRestarts=0`, локальный HTTPS `/health` возвращает `{"ok":true}`, repo clean и `HEAD=origin/main`.
   - Now:
-    - Production сайт на `ad4de4e`; бот работает с кодом soft-deny guard из незапушенной локальной рабочей ветки, ожидается отдельный push/deploy этого guard.
+    - Production сайт и бот работают на `a3aaa02`; новые фото для `/about` должны давать diff с image-блоком перед подтверждением.
   - Next:
-    - Закоммитить/запушить soft-deny guard, fast-forward обновить production bot и проверить restart/health.
-    - После deploy попросить пользователя повторить фото для `/about`; ожидается diff с image-блоком и обычное Telegram-подтверждение.
+    - Попросить пользователя повторить фото для `/about`; ожидается diff с image-блоком и обычное Telegram-подтверждение.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
     - После решения клиента выполнить Organizations change window: export billing history, invite, accept у UTC month boundary, verify payer/tax/credit sharing/budgets и наблюдать 24–48h.

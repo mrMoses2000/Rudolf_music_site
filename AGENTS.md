@@ -40,7 +40,7 @@ Maintain a single Continuity Ledger for this workspace in `CONTINUITY.md`. The l
 - Working set files ids commands
 
 ## Agent Stamp (обновляется агентом)
-Last agent stamp: 2026-09-23T09:35:00Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=fix AGY publication of new photos on the /about page and headless permissions
+Last agent stamp: 2026-09-23T09:45:00Z | model=GPT-5 (Codex) | account=unknown | session_id=unknown | purpose=verify production deployment of AGY photo publication and headless permissions
 
 ## Базовые правила
 - **Язык общения: только русский.**
