@@ -232,9 +232,16 @@ export async function runAgy(prompt: string): Promise<AgentResult> {
         parseError = err instanceof Error ? err.message : String(err);
       }
 
+      // Headless AGY soft-denies tools that would normally wait for a user
+      // confirmation. It still exits with code 0 and status SUCCESS, so treat
+      // that diagnostic as a failed turn instead of reporting a false no-op.
+      const permissionDenied = /(?:soft[- ]deny|auto[- ]denied|cannot prompt|requires? .*permission|permission .*denied)/i.test(
+        `${stderr}\n${envelope?.error || ''}`,
+      );
       const success = code === 0
         && !timedOut
         && !captureExceeded
+        && !permissionDenied
         && envelope?.status === 'SUCCESS'
         && typeof envelope.response === 'string';
 

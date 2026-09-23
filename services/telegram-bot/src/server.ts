@@ -670,6 +670,14 @@ function formatAgyFailure(stderr: string): string {
     );
   }
 
+  if (/(soft[- ]deny|auto[- ]denied|cannot prompt|requires? .*permission|permission .*denied)/i.test(stderr)) {
+    return (
+      '❌ <b>AGY не смог выполнить изменение.</b>\n\n' +
+      'Команда агента была остановлена политикой разрешений headless-режима. ' +
+      'Изображение и незаписанные изменения удалены; сайт не затронут.'
+    );
+  }
+
   const errText = stderr.trim().slice(0, 300) || 'Unbekannter AGY-Fehler';
   return `❌ <b>KI-Fehler:</b>\n<pre>${escapeHtml(errText)}</pre>`;
 }

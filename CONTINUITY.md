@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-23T09:20:00Z
-- Last Agent Stamp: 2026-09-23T09:20:00Z | GPT-5 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-23T09:35:00Z
+- Last Agent Stamp: 2026-09-23T09:35:00Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Актуальный запрос: исправить повторный production-отказ Telegram-бота при публикации новой фотографии на `/about` и сделать так, чтобы AGY корректно добавлял фото на страницу.
@@ -121,11 +121,14 @@
     - Updates `623942980/981` повторно прислали то же фото; AGY завершился `SUCCESS` без diff, потому что оно уже присутствует на `/aktuelles`. Commit `c238669` сообщает о существующем опубликованном URL при совпадении Telegram unique id, сохраняя отказ для нового фото без правки. Локальные typecheck и known/unknown проверки успешны; production fast-forward, typecheck, restart, webhook, health и image/page HTTP 200 прошли; worktree clean.
     - Новый update `623942982` (Telegram unique id `AQADjxxrG4WgoUl8`) доставил другую фотографию с целью `/about`; серверный журнал подтвердил загрузку и AGY `SUCCESS`, но без diff, после чего новый asset был удалён. `/about` использовал жёсткий hero в `About.jsx` и не умел рендерить `image`-блоки.
     - В текущей рабочей ветке `About.jsx` теперь поддерживает `data.headerImage` и inline `{type: "image"}` блоки; AGY prompt явно трактует «post this image on /about» как добавление блока в `content.pages.about.blocks`, а `headerImage` оставляет только для явной замены hero/background. Локальные bot typecheck, site lint и build прошли.
+    - Production fast-forward до `ad4de4e`, Docker blue-green rebuild и bot restart прошли; site `/about` HTTP 200, bot `/health` на `:8443` возвращает `{"ok":true}`, service active и `NRestarts=0`.
+    - Контролируемый production AGY smoke с тестовым WebP сначала подтвердил headless soft-deny `RunCommand`; после timestamped backup настроен `/home/ubuntu/.gemini/antigravity-cli/settings.json` с `toolPermission: proceed-in-sandbox` и deny для `sudo`, `git`, `rm -rf`, `curl`, `wget`. Повторный smoke создал корректный image-блок в `content.pages.about.blocks`, затем trap удалил тестовый asset и восстановил чистый worktree.
+    - `runAgy` теперь распознаёт headless permission soft-deny даже при коде 0/статусе SUCCESS и не допускает ложный no-op; `formatAgyFailure` сообщает причину без раскрытия внутреннего stderr. Локальные typecheck/lint/build прошли.
   - Now:
-    - Локальная ветка содержит исправление для `/about`; production всё ещё на `c238669` до deploy.
+    - Production сайт на `ad4de4e`; бот работает с кодом soft-deny guard из незапушенной локальной рабочей ветки, ожидается отдельный push/deploy этого guard.
   - Next:
-    - Закоммитить и запушить исправление, fast-forward развернуть на SherMos2, пройти typecheck/service/health и контролируемый AGY image smoke с rollback.
-    - После smoke попросить пользователя повторить фото для `/about`; ожидается diff с image-блоком и обычное Telegram-подтверждение.
+    - Закоммитить/запушить soft-deny guard, fast-forward обновить production bot и проверить restart/health.
+    - После deploy попросить пользователя повторить фото для `/about`; ожидается diff с image-блоком и обычное Telegram-подтверждение.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
     - После решения клиента выполнить Organizations change window: export billing history, invite, accept у UTC month boundary, verify payer/tax/credit sharing/budgets и наблюдать 24–48h.
