@@ -1,5 +1,6 @@
 import {
   chownSync,
+  chmodSync,
   constants,
   copyFileSync,
   mkdirSync,
@@ -131,6 +132,9 @@ export function activateWebsiteImage(image: PreparedWebsiteImage): PreparedWebsi
     giveToRepositoryOwner(outputDir);
     copyFileSync(image.absolutePath, absolutePath, constants.COPYFILE_EXCL);
     giveToRepositoryOwner(absolutePath);
+    // ffmpeg inherits the service's 0027 umask. Docker COPY preserves that
+    // 0640 mode, but nginx runs as a different user inside the image.
+    chmodSync(absolutePath, 0o644);
     rmSync(image.tempDirectory, { recursive: true, force: true });
   } catch (err) {
     try { unlinkSync(absolutePath); } catch {}

@@ -181,7 +181,29 @@ export async function commitAndRebuild(
   // 2. Rebuild
   await onProgress('🏗️ Website wird neu gebaut… (dauert ~2-4 Minuten)');
   await runRebuild();
+  verifyPublishedImages(changed.filter((file) => ADMIN_IMAGE_PATTERN.test(file)));
   console.log('[deploy] Rebuild complete');
+}
+
+function verifyPublishedImages(paths: readonly string[]): void {
+  if (paths.length === 0) return;
+
+  const domain = new URL(config.webhookUrl).hostname;
+  for (const file of paths) {
+    const url = `https://${domain}/${file.replace(/^site\/public\//, '')}`;
+    const status = execFileSync('curl', [
+      '--silent', '--show-error', '--fail', '--head',
+      '--max-time', '10',
+      '--resolve', `${domain}:443:127.0.0.1`,
+      '--output', '/dev/null',
+      '--write-out', '%{http_code}',
+      url,
+    ], { encoding: 'utf8' }).trim();
+    if (status !== '200') {
+      throw new Error(`Published image is not accessible (HTTP ${status}): ${file}`);
+    }
+    console.log(`[deploy] Verified published image: ${file}`);
+  }
 }
 
 /** Returns the last N git log entries as a formatted string */

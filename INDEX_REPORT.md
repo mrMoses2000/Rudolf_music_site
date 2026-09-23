@@ -1,12 +1,12 @@
 # INDEX_REPORT.md — отчёт индексирования проекта
 
 ## Metadata
-- generated_at_utc: 2026-09-22T13:49:48Z
-- agent_model: GPT-5 (Codex)
+- generated_at_utc: 2026-09-23T06:57:48Z
+- agent_model: GPT-6 (Codex)
 - agent_account: unknown
 - agent_session_id: unknown
 - git_branch: main
-- git_head: ff21330
+- git_head: 9c2b1ae
 - output_path: INDEX_REPORT.md
 - scope: full index
 
@@ -18,7 +18,7 @@
 - крупная реорганизация структуры
 
 ## Сводка
-- total_files: 376
+- total_files: 377
 - inventory_source: rg --files
 - notes: отчёт включает полный список файлов проекта
 
@@ -227,6 +227,7 @@ site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit-512.webp
 site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit.avif
 site/public/images/a5ec80309870f8e02ecee1673f45dc32_fit.webp
 site/public/images/a7d59964eab3dcf99e07407b12211b73_fit6eb1.webp
+site/public/images/admin/telegram-1790146036637-AQAD9xtrG4WgoUl8.webp
 site/public/images/attachments-Image-IMG_11926eb1-1280.avif
 site/public/images/attachments-Image-IMG_11926eb1-1280.webp
 site/public/images/attachments-Image-IMG_11926eb1-1920.webp

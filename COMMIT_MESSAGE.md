@@ -2,16 +2,14 @@
 
 ## Proposed commit message
 
-Исправить публикацию изображений через Telegram-бота
+Исправить права опубликованных Telegram-изображений
 
 ## Details
-- сохранять владельца репозитория для подготовленных WebP и редактируемых файлов после rollback
-- восстанавливать доступ AGY перед каждой проверкой worktree
-- не отправлять ложное `Erledigt`, если изображение не привело к изменению сайта
+- задавать новым WebP mode 644, доступный nginx после Docker COPY
+- проверять HTTP 200 у новых изображений после пересборки перед сообщением об успехе
+- сохранить опубликованное пользователем изображение и ссылку на него
 
 ## Notes for reviewer
-- причина подтверждена production-журналом и правами файлов после истёкшего подтверждения
-- Telegram bot typecheck, site lint и build прошли локально
-- commit `ff21330` запушен и развёрнут fast-forward на production
-- production image smoke подтвердил content diff, asset diff, allowlist и корректный rollback
-- service active, `NRestarts=0`, webhook/health/site/worktree проверены
+- причина подтверждена ответом origin HTTP 403 и mode 640 в Docker image
+- сохранён production commit `9c2b1ae` с пользовательским фото
+- bot typecheck, site lint/build прошли локально

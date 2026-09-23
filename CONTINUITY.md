@@ -1,9 +1,10 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-22T13:48:24Z
+- Last Updated (UTC): 2026-09-23T06:55:00Z
 - Last Agent Stamp: 2026-09-22T13:48:24Z | GPT-5 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
+  - Актуальный запрос: исправить реальную публикацию фото на `/aktuelles` после Telegram confirm: ссылка и Docker build есть, но браузер показывает битое изображение. Success: публичный WebP возвращает HTTP 200, будущие загрузки получают доступные nginx права, bot не объявляет success при недоступном asset.
   - Актуальный запрос: синхронизировать локальный проект с GitHub, установить подтверждённую причину, по которой Telegram-бот отвечает `Erledigt`, но не публикует присланное изображение на `/aktuelles`, исправить runtime-цепочку и проверить результат.
   - Success: локальная `main` соответствует `origin/main`; photo/document flow не выдаёт ложного успеха, сохраняет WebP и ссылку в разрешённых файлах, проходит typecheck/lint/build и, если production-доступ подтверждён безопасно, развёрнут и проверен end-to-end.
   - Актуальный запрос: заменить Codex в роли исполнительного AI-агента Telegram-бота на AGY (Google Antigravity CLI), сохранив Telegram-вход, авторизацию, безопасный image pipeline, diff/confirm, deploy и rollback.
@@ -114,8 +115,9 @@
     - Commit `ff21330` сохраняет владельца репозитория для WebP и editable files после root-операций, восстанавливает ownership перед запуском AGY и запрещает success-ответ при image request без реального diff. Изменение запушено и fast-forward развёрнуто.
     - Локально прошли bot typecheck, site lint/build. Production image smoke успешен: WebP `uid=1000`, AGY изменил `content.js`, diff включил content и image, allowlist чист; rollback удалил smoke asset и вернул clean worktree. Service active, `NRestarts=0`, webhook pending 0/last error null, `/health` ok, `/aktuelles` HTTP 200.
   - Now:
-    - Image publishing pipeline исправлен и проверен на production; локальный и серверный HEAD синхронизированы через GitHub.
+    - Подтверждена новая ошибка прав: после confirm 2026-09-23 bot создал WebP `640`; Docker COPY сохранил `640 root:root`, nginx uid 101 отвечал origin HTTP 403. Точечный chmod `644` на production worktree и активном контейнере восстановил origin/public HTTP 200. Пользовательский commit `9c2b1ae` сохранён в GitHub и подтянут локально; требуется постоянная правка media/deploy и проверка.
   - Next:
+    - Задать WebP mode 644 при активации, добавить проверку HTTP доступности asset после rebuild, проверить и развернуть bot; затем подтвердить чистоту repo и public HTTP 200.
     - Пользователю повторно отправить исходное фото с подписью и нажать `Подтвердить` в течение пяти минут; удалённое после неудачной попытки изображение восстановить из worktree нельзя.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
