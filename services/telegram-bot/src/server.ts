@@ -34,6 +34,7 @@ import {
   activateWebsiteImage,
   cleanupPreparedImages,
   discardPreparedImage,
+  findPublishedImageUrl,
   prepareWebsiteImage,
 } from './media.ts';
 import type { PreparedWebsiteImage } from './media.ts';
@@ -561,11 +562,15 @@ async function processRequest(
     // ── Path B: AGY just chatted → show its text reply ───────────────────────
     } else {
       if (websiteImage) {
+        const publishedUrl = findPublishedImageUrl(websiteImage);
         cleanupPreparedImages([websiteImage.repoRelativePath]);
-        console.error('[processRequest] AGY returned success without publishing the prepared image');
-        const reply =
-          '⚠️ <b>Das Bild wurde nicht veröffentlicht.</b>\n\n' +
-          'Der KI-Agent hat keine Änderung an der Website erzeugt. Bitte sende das Bild erneut und nenne die Zielseite oder das Bild, das ersetzt werden soll.';
+        const reply = publishedUrl
+          ? 'ℹ️ <b>Dieses Foto ist bereits auf der Website veröffentlicht.</b>\n\n' +
+            `Bild öffnen: <a href="https://${new URL(config.webhookUrl).hostname}${publishedUrl}">Foto ansehen</a>. ` +
+            'Wenn du es an einer weiteren Stelle zeigen oder ein anderes Bild ersetzen möchtest, nenne bitte die genaue Stelle.'
+          : '⚠️ <b>Das Bild wurde nicht veröffentlicht.</b>\n\n' +
+            'Der KI-Agent hat keine Änderung an der Website erzeugt. Bitte sende das Bild erneut und nenne die Zielseite oder das Bild, das ersetzt werden soll.';
+        console.log(`[processRequest] AGY returned no website change; duplicate=${Boolean(publishedUrl)}`);
         await bot.sendMessage(chatId, reply);
         addMessage(chatId, 'assistant', reply);
         return;

@@ -4,6 +4,7 @@
 - Last Agent Stamp: 2026-09-23T06:59:41Z | GPT-6 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
+  - Актуальный запрос: проверить production-отказ Telegram-бота при повторной отправке фото 2026-09-23 09:03–09:04 и исправить ложное сообщение о непубликации, если фото уже присутствует на сайте.
   - Актуальный запрос: исправить реальную публикацию фото на `/aktuelles` после Telegram confirm: ссылка и Docker build есть, но браузер показывает битое изображение. Success: публичный WebP возвращает HTTP 200, будущие загрузки получают доступные nginx права, bot не объявляет success при недоступном asset.
   - Актуальный запрос: синхронизировать локальный проект с GitHub, установить подтверждённую причину, по которой Telegram-бот отвечает `Erledigt`, но не публикует присланное изображение на `/aktuelles`, исправить runtime-цепочку и проверить результат.
   - Success: локальная `main` соответствует `origin/main`; photo/document flow не выдаёт ложного успеха, сохраняет WebP и ссылку в разрешённых файлах, проходит typecheck/lint/build и, если production-доступ подтверждён безопасно, развёрнут и проверен end-to-end.
@@ -118,8 +119,9 @@
     - Точечный production chmod `644` на source и активном контейнере немедленно восстановил public HTTP 200. Commit `36c52b0` добавил `chmodSync(0644)` при активации WebP и origin HTTP 200 verification для новых image assets после rebuild; bot typecheck, site lint/build прошли.
     - Production fast-forward до `36c52b0`, bot active `NRestarts=0`, Docker site пересобран из исходников. В новом контейнере WebP `root:root 644`, nginx читает его; origin/public `200 image/webp` (227158 bytes), `/aktuelles` HTTP 200, server worktree clean.
   - Now:
-    - Изображение на `/aktuelles` опубликовано и доступно; новый image pipeline проверяет доступность перед success-ответом.
+    - Production webhook принял updates `623942980/981`; AGY дважды завершился `SUCCESS` без diff; бот удалил новые временные WebP и ответил «Das Bild wurde nicht veröffentlicht». Оба файла имеют тот же Telegram unique id `AQAD9xtrG4WgoUl8`, что уже опубликованный asset в `content.js`. Нужен точный ответ о дубликате вместо общего отказа.
   - Next:
+    - Добавить проверку уже опубликованного image URL при no-diff, сохранить существующую обработку новых изображений, проверить typecheck и production-поведение.
     - Пользователю можно обновить страницу `/aktuelles`; повторная отправка исходного фото не требуется.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.

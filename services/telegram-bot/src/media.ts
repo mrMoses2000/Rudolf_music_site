@@ -3,8 +3,10 @@ import {
   chmodSync,
   constants,
   copyFileSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
   statSync,
   unlinkSync,
@@ -150,6 +152,21 @@ export function discardPreparedImage(image: PreparedWebsiteImage): void {
     return;
   }
   cleanupPreparedImages([image.repoRelativePath]);
+}
+
+/** Find an already published copy of the same Telegram photo. */
+export function findPublishedImageUrl(image: PreparedWebsiteImage): string | undefined {
+  const match = image.repoRelativePath.match(/^site\/public\/images\/admin\/telegram-\d+-([a-zA-Z0-9_-]+)\.webp$/);
+  if (!match) return undefined;
+
+  try {
+    const content = readFileSync(resolve(config.siteRepoPath, config.contentFile), 'utf8');
+    const urls = content.match(new RegExp(`/images/admin/telegram-\\d+-${match[1]}\\.webp`, 'g')) ?? [];
+    return urls.find((url) => existsSync(resolve(config.siteRepoPath, 'site/public', url.slice(1))));
+  } catch (err) {
+    console.error('[media] Could not check existing published images:', err);
+    return undefined;
+  }
 }
 
 export function cleanupPreparedImages(paths: readonly string[]): void {
