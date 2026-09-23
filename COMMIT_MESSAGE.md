@@ -13,3 +13,4 @@
 - production updates `623942980/981` обработаны без ошибки; AGY вернул success без diff
 - обе повторные отправки имеют unique id опубликованного фото `AQAD9xtrG4WgoUl8`
 - typecheck и локальная проверка known/unknown photo прошли
+- commit `c238669` развёрнут; бот active, webhook/health и image/page HTTP 200 проверены

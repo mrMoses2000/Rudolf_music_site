@@ -620,3 +620,19 @@
     - CONTINUITY.md
     - INDEX_REPORT.md
   notes: "Confirmed user photo and content were committed as 9c2b1ae and the site rebuilt, but Docker COPY preserved WebP mode 640, producing origin/public HTTP 403 for nginx uid 101. Saved the user content commit to GitHub. Restored current source/container asset to mode 644 and public HTTP 200. Commit 36c52b0 makes future assets readable and verifies image HTTP 200 after rebuild. Local bot typecheck/site lint/build and production rebuild passed; fresh container serves the original WebP at HTTP 200, bot active with NRestarts=0 and worktree clean."
+- timestamp_utc: 2026-09-23T07:18:13Z
+  model: GPT-6 (Codex)
+  account: unknown
+  session_id: unknown
+  purpose: diagnose repeated Telegram photo and clarify duplicate response
+  git_branch: main
+  git_head: c238669844afb1a4a807bd69a2f1c665808097fa
+  touched_files:
+    - services/telegram-bot/src/media.ts
+    - services/telegram-bot/src/server.ts
+    - AGENTS.md
+    - AGENT_LOG.md
+    - COMMIT_MESSAGE.md
+    - CONTINUITY.md
+    - INDEX_REPORT.md
+  notes: "Production updates 623942980/981 delivered the same Telegram photo already published on /aktuelles. AGY returned SUCCESS without a new diff and bot gave a misleading no-publication response. Commit c238669 identifies an existing content URL for the Telegram unique id and tells the admin the image is already published. Local typecheck and known/unknown lookup passed; production deployment, typecheck, service restart, webhook registration, local health, origin image/page HTTP 200 and clean worktree passed."

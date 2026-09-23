@@ -1,7 +1,7 @@
 # CONTINUITY.md
 
-- Last Updated (UTC): 2026-09-23T06:59:41Z
-- Last Agent Stamp: 2026-09-23T06:59:41Z | GPT-6 (Codex) | account=unknown
+- Last Updated (UTC): 2026-09-23T07:18:13Z
+- Last Agent Stamp: 2026-09-23T07:18:13Z | GPT-6 (Codex) | account=unknown
 
 - Goal (incl. success criteria):
   - Актуальный запрос: проверить production-отказ Telegram-бота при повторной отправке фото 2026-09-23 09:03–09:04 и исправить ложное сообщение о непубликации, если фото уже присутствует на сайте.
@@ -118,11 +118,11 @@
     - Пользовательская photo+confirm публикация 2026-09-23 создала commit `9c2b1ae`: `content.js` ссылается на WebP 227158 bytes. Docker build прошёл, но WebP сохранил source mode `640`, а внутри контейнера стал `root:root 640`; nginx uid 101 отдавал HTTP 403. Commit сохранён в origin.
     - Точечный production chmod `644` на source и активном контейнере немедленно восстановил public HTTP 200. Commit `36c52b0` добавил `chmodSync(0644)` при активации WebP и origin HTTP 200 verification для новых image assets после rebuild; bot typecheck, site lint/build прошли.
     - Production fast-forward до `36c52b0`, bot active `NRestarts=0`, Docker site пересобран из исходников. В новом контейнере WebP `root:root 644`, nginx читает его; origin/public `200 image/webp` (227158 bytes), `/aktuelles` HTTP 200, server worktree clean.
+    - Updates `623942980/981` повторно прислали то же фото; AGY завершился `SUCCESS` без diff, потому что оно уже присутствует на `/aktuelles`. Commit `c238669` сообщает о существующем опубликованном URL при совпадении Telegram unique id, сохраняя отказ для нового фото без правки. Локальные typecheck и known/unknown проверки успешны; production fast-forward, typecheck, restart, webhook, health и image/page HTTP 200 прошли; worktree clean.
   - Now:
-    - Production webhook принял updates `623942980/981`; AGY дважды завершился `SUCCESS` без diff; бот удалил новые временные WebP и ответил «Das Bild wurde nicht veröffentlicht». Оба файла имеют тот же Telegram unique id `AQAD9xtrG4WgoUl8`, что уже опубликованный asset в `content.js`. Нужен точный ответ о дубликате вместо общего отказа.
+    - Production бот активен на `c238669`; повторное фото распознаётся как уже опубликованное по данным контента.
   - Next:
-    - Добавить проверку уже опубликованного image URL при no-diff, сохранить существующую обработку новых изображений, проверить typecheck и production-поведение.
-    - Пользователю можно обновить страницу `/aktuelles`; повторная отправка исходного фото не требуется.
+    - Если нужно другое размещение того же фото, пользователь должен назвать точное место; существующая публикация на `/aktuelles` доступна.
     - После периода наблюдения решить, удалять ли неиспользуемые Codex binary/wrapper/auth artifacts; сейчас они не участвуют в runtime и оставлены как обратимый fallback.
     - Отдельно обновить `react-router`/`react-router-dom` после проверки совместимости и rebuild; advisory не эксплуатируется текущей статической SPA-архитектурой, но зависимость следует актуализировать.
     - После решения клиента выполнить Organizations change window: export billing history, invite, accept у UTC month boundary, verify payer/tax/credit sharing/budgets и наблюдать 24–48h.
