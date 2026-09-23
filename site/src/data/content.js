@@ -355,6 +355,7 @@ export const content = {
             "blocks": [
                 { "type": "h2", "text": "NEU BEI UNS: Musikalische Früherziehung" },
                 { "type": "h4", "text": "Musik entdecken, erleben und von Anfang an lieben lernen!" },
+                { "type": "image", "src": "/images/admin/telegram-1790146036637-AQAD9xtrG4WgoUl8.webp", "alt": "Musikalische Früherziehung" },
                 { "type": "p", "text": "Wir freuen uns sehr, unser Angebot zu erweitern: Ab sofort bieten wir in der Christlichen Musikschule Bielefeld e.V. Kurse für musikalische Früherziehung an." },
                 { "type": "p", "text": "Gemeinsam gehen wir auf eine spielerische Klangreise! Ob im fröhlichen Gruppenunterricht gemeinsam mit anderen Kindern oder im individuellen Einzelunterricht – durch Singen, Bewegen, Tanzen und das Ausprobieren erster Instrumente (wie Rassel, Trommel und Glockenspiel) entdecken die Kinder die Welt der Töne. Das stärkt nicht nur das Rhythmusgefühl und das Gehör, sondern fördert auch die Kreativität, die Konzentration und die Freude am Ausdruck." },
                 { "type": "p", "text": "Für wen? Kinder im Vorschulalter" },
